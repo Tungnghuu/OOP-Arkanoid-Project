@@ -1,25 +1,6 @@
-# IDE
-.idea/
-.vscode/
-
-# Build output
-out/
-build/
-bin/
-obj/
-
-# Compiled files
-*.exe
-*.out
-*.o
-*.obj
-
-# System files
-.DS_Store
-Thumbs.db
-
-# Logs
-*.log
-
-# Backup files
-*~
+#Default Ignored Files
+/shelf/
+/.idea
+/.out
+/.target
+out/production/
