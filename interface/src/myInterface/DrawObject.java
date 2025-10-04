@@ -44,6 +44,10 @@ public class DrawObject extends JPanel {
         return height;
     }
 
+    public Color getColor() {
+        return this.color;
+    }
+
     public void setColor(Color color) {
         this.color = color;
     }

@@ -21,6 +21,7 @@ public class GamePanel extends JPanel implements Runnable {
     InputHandler inputHandler = new InputHandler();
     GameManager gameManager = new GameManager();
     Paddle paddle = gameManager.getPaddle();
+    Ball ball = gameManager.getBall();
     Thread gameThread;
 
     public GamePanel() {
@@ -59,8 +60,9 @@ public class GamePanel extends JPanel implements Runnable {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
+        DrawObject drawBall = new DrawBall(ball.getX(), ball.getY(), ball.getWidth(), ball.getHeight(), Color.white);
         DrawObject drawPaddle = new DrawObject(paddle.getX(), paddle.getY(), paddle.getWidth(), paddle.getHeight(), Color.blue);
         drawPaddle.draw(g2);
-
+        drawBall.draw(g2);
     }
 }
