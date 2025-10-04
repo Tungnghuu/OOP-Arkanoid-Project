@@ -1,6 +1,8 @@
-import java.util.ArrayList;
-import java.util.List;
+package myLogic;
+// import java.util.ArrayList;
+// import java.util.List;
 /** Lop quan ly game. */
+
 public class GameManager {
     /**
      * cac thuoc tinh.
@@ -10,7 +12,6 @@ public class GameManager {
    // private List<Brick> brickList;
     private int score;
     private int lives;
-
 
     /**
      * Constructor cua GameManager.

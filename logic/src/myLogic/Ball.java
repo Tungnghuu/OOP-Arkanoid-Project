@@ -1,3 +1,4 @@
+package myLogic;
 /** Lop dai dien cho bong. */
 public class Ball extends MovableObject {
     /** Cac thuoc tinh. */

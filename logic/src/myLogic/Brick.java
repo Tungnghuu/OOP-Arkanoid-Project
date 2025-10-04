@@ -1,3 +1,5 @@
+package myLogic;
+
 /** Class dai dien cho 1 vien gach. */
 public class Brick {
 

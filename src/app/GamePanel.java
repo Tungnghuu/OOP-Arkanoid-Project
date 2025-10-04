@@ -1,10 +1,15 @@
+package app;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.JPanel;
 
-public class GamePanel  extends JPanel implements Runnable {
+import myInterface.*;
+import myLogic.*;
+
+public class GamePanel extends JPanel implements Runnable {
     final int originalTileSize = 16;
     final int scale = 3;
     final int tileSize = originalTileSize * scale;
@@ -14,6 +19,8 @@ public class GamePanel  extends JPanel implements Runnable {
     final int screenHeight = tileSize * maxScreenRow;
 
     InputHandler inputHandler = new InputHandler();
+    GameManager gameManager = new GameManager();
+    Paddle paddle = gameManager.getPaddle();
     Thread gameThread;
 
     public GamePanel() {
@@ -34,19 +41,26 @@ public class GamePanel  extends JPanel implements Runnable {
         while (gameThread != null) {
             update();
             repaint();
+            // limits CPU's usage reduced to 60 fps
+            try {
+                Thread.sleep(16);
+            } catch (InterruptedException e) {}
         }
     }
 
     public void update() {
-        
+        if (inputHandler.leftPressed) {
+            paddle.moveLeft();
+        } else if (inputHandler.rightPressed) {
+            paddle.moveRight();
+        }
     }
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        g2.setColor(Color.white);
-        g2.fillRect(0, 0, tileSize * 3, tileSize / 2);
-        g2.dispose();
-        
+        DrawObject drawPaddle = new DrawObject(paddle.getX(), paddle.getY(), paddle.getWidth(), paddle.getHeight(), Color.blue);
+        drawPaddle.draw(g2);
+
     }
 }
