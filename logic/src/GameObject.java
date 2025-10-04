@@ -6,19 +6,24 @@ public  abstract class GameObject {
     private int height;
     private int width;
 
-
+    /** getter  cua x.*/
     public int getX() {
         return x;
     }
 
+
+    /** getter  cua y.*/
     public  int getY() {
         return y;
     }
 
+
+    /** getter  cua height.*/
     public int getHeight() {
         return height;
     }
 
+    /** getter cua width.*/
     public int getWidth() {
         return width;
     }
@@ -31,6 +36,6 @@ public  abstract class GameObject {
     }
 
     /** Phuong thu cap nhat doi tuong. */
-    public abstract void update();
+    //public abstract void update();
 
 }

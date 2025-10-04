@@ -25,8 +25,10 @@ public class Brick {
     /**Phuong thuc giam so hitPoints khi bong va cham.
      * Neu hitPoins <= 0 ,gach bi pha
      */
-    public void takeHits() {}
+    //public void takeHits() {}
 
     /** Phuong thuc kiem tra xem gach da bi pha chua. */
-    public boolean isDestroy() {}
+    public boolean isDestroy() {
+        return this.hitPoints <= 0;
+    }
 }
