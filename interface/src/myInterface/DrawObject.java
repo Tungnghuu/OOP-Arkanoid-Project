@@ -44,20 +44,18 @@ public class DrawObject extends JPanel {
         return height;
     }
 
-    public Color getColor() {
-        return this.color;
-    }
-
     public void setColor(Color color) {
         this.color = color;
     }
 
-    public void draw(Graphics2D g2) {
+    public void drawRect(Graphics2D g2) {
         g2.setColor(color);
         g2.fillRect(x, y, width, height);
     }
 
-    public Rectangle getBounds() {
-        return new Rectangle(x, y, width, height);
+    public void drawBall(Graphics2D g2) {
+        g2.setColor(color);
+        g2.fillOval(x, y, width, height);
     }
+
 }

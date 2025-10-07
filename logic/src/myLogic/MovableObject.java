@@ -1,5 +1,7 @@
 package myLogic;
 
+import java.awt.*;
+
 /** Lop dai dien cho cac doi tuong di chuyen duoc. */
 public abstract  class MovableObject extends GameObject {
     /** cac thuoc tinh cua MovableObject. */
@@ -20,4 +22,13 @@ public abstract  class MovableObject extends GameObject {
     public int getDy() {
         return this.dy;
     }
+
+    public void setDx(int dx) {
+        this.dx = dx;
+    }
+
+    public void setDy(int dy) {
+        this.dy = dy;
+    }
+
 }

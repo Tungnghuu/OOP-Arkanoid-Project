@@ -1,4 +1,7 @@
 package myLogic;
+
+import java.awt.*;
+
 /** Lop dai dien cho cac doi tuong cua game. **/
 public  abstract class GameObject {
     /** cac thuoc tinh cua GameObject. */
@@ -42,6 +45,9 @@ public  abstract class GameObject {
         this.width = width;
     }
 
+    public Rectangle getBounds() {
+        return new Rectangle(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+    }
     /** Phuong thu cap nhat doi tuong. */
     //public abstract void update();
 

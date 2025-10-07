@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.JPanel;
+import java.util.ArrayList;
+import java.util.List;
 
 import myInterface.*;
 import myLogic.*;
@@ -20,8 +22,10 @@ public class GamePanel extends JPanel implements Runnable {
 
     InputHandler inputHandler = new InputHandler();
     GameManager gameManager = new GameManager();
+    BrickManager brickManager = new BrickManager();
     Paddle paddle = gameManager.getPaddle();
     Ball ball = gameManager.getBall();
+    List<List<Brick>> brickList = brickManager.getBricks();
     Thread gameThread;
 
     public GamePanel() {
@@ -50,19 +54,84 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void update() {
+        ball.BallFollowPaddle(paddle);
         if (inputHandler.leftPressed) {
             paddle.moveLeft();
-        } else if (inputHandler.rightPressed) {
+        }
+        if (inputHandler.rightPressed) {
             paddle.moveRight();
+        }
+        if (inputHandler.spacePressed) {
+            ball.startBall();
+        } else {
+            updateIfCollision(ball, paddle, brickList);
+            ball.updateBall();
+        }
+    }
+
+    public void updateIfCollision(Ball ball, Paddle paddle, List<List<Brick>> brickList) {
+        if (gameManager.checkCollision(paddle, ball)) {
+            ball.setDy(-ball.getDy());
+        }
+
+        for (int i = 0; i < brickList.size(); i++) {
+            for (int j = 0; j < brickList.get(i).size(); j++) {
+                Brick brick = brickList.get(i).get(j);
+                if (gameManager.checkCollision(brick, ball)) {
+                    ball.setDy(-ball.getDy());
+                    brick.takeHits();
+                    if (brick.isDestroy()) {
+                        brickList.get(i).remove(j);
+                        j--;
+                    }
+                }
+            }
         }
     }
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        DrawObject drawBall = new DrawBall(ball.getX(), ball.getY(), ball.getWidth(), ball.getHeight(), Color.white);
         DrawObject drawPaddle = new DrawObject(paddle.getX(), paddle.getY(), paddle.getWidth(), paddle.getHeight(), Color.blue);
-        drawPaddle.draw(g2);
-        drawBall.draw(g2);
+        DrawObject drawBall = new DrawObject(ball.getX(), ball.getY(), ball.getWidth(), ball.getHeight(),Color.orange);
+        drawPaddle.drawRect(g2);
+        drawBall.drawBall(g2);
+        renderBrick(g2);
+    }
+
+    public void renderBrick(Graphics g) {
+        Graphics2D g2 = (Graphics2D) g;
+        for (int i = 0; i < brickList.size(); i++) {
+            for (int j = 0; j < brickList.get(i).size(); j++) {
+                Brick b = brickList.get(i).get(j);
+                Color brickColor;
+
+                switch (b.getType()) {
+                    case NORMAL:
+                        brickColor = Color.GREEN;
+                        break;
+                    case STRONG:
+                        brickColor = Color.GRAY;
+                        break;
+                    case UNBREAKABLE:
+                        brickColor = Color.RED;
+                        break;
+                    case EXPLOSIVE:
+                        brickColor = Color.ORANGE;
+                        break;
+                    default:
+                        brickColor = Color.WHITE;
+                }
+
+                DrawObject drawBrick = new DrawObject(
+                        b.getX(),
+                        b.getY(),
+                        b.getWidth(),
+                        b.getHeight(),
+                        brickColor
+                );
+                drawBrick.drawRect(g2);
+            }
+        }
     }
 }
