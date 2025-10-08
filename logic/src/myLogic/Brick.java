@@ -8,13 +8,13 @@ public class Brick  extends GameObject {
      * type la loai gach
      * */
     private int hitPoints;
-    private BrickType type;;
+    private BrickType type;
     public final static int WIDTH = 70;
     public final static int HEIGHT = 30;
 
     /** Constructor cua Brick. */
-    public Brick(int hitPoints, BrickType type,int x, int y) {
-        super(x, y, 20, 50);
+    public Brick(int hitPoints, BrickType type, int x, int y) {
+        super(x, y, HEIGHT, WIDTH);
         this.hitPoints = hitPoints;
         this.type = type;
 

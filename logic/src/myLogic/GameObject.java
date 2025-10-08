@@ -33,10 +33,19 @@ public  abstract class GameObject {
         return height;
     }
 
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
     /** getter cua width.*/
     public int getWidth() {
         return width;
     }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
     /** Constructor cua GameObjaect. */
     public GameObject(int x, int y, int height, int width) {
         this.x = x;

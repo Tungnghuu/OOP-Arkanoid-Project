@@ -21,6 +21,10 @@ public class Ball extends MovableObject {
         this.radius = other.radius;
     }
 
+    public int getRadius() {
+        return this.radius;
+    }
+
     /** cho bong di chuyen theo paddle khi chua bat dau.*/
     public void BallFollowPaddle(Paddle paddle) {
         int ballX = this.getX();
