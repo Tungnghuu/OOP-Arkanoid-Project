@@ -1,5 +1,6 @@
 package app;
 
+import java.awt.RenderingHints.Key;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -25,6 +26,14 @@ public class InputHandler implements KeyListener {
         if (code == KeyEvent.VK_SPACE) {
             spacePressed = true;
         }
+
+        if (code == KeyEvent.VK_LEFT) {
+            leftPressed = true;
+        }
+
+        if (code == KeyEvent.VK_RIGHT) {
+            rightPressed = true;
+        }
     }
 
     @Override
@@ -41,6 +50,14 @@ public class InputHandler implements KeyListener {
 
         if (code == KeyEvent.VK_SPACE) {
             spacePressed = false;
+        }
+
+        if (code == KeyEvent.VK_LEFT) {
+            leftPressed = false;
+        }
+
+        if (code == KeyEvent.VK_RIGHT) {
+            rightPressed = false;
         }
     }
 }
