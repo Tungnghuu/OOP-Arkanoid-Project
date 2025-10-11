@@ -9,7 +9,7 @@ public class Brick  extends GameObject {
      * */
     private int hitPoints;
     private BrickType type;
-    public final static int WIDTH = 70;
+    public final static int WIDTH = 50;
     public final static int HEIGHT = 30;
 
     /** Constructor cua Brick. */

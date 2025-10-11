@@ -1,8 +1,11 @@
 package myLogic;
-// import java.util.ArrayList;
+import java.awt.*;
+import java.util.ArrayList;
 // import java.util.List;
 
 // import java.awt.*;
+
+import java.util.List;
 
 /** Lop quan ly game. */
 
@@ -12,15 +15,15 @@ public class GameManager {
      */
     private Paddle paddle;
     private Ball ball;
-    // private int score;
-    // private int lives;
+    private int score;
+    private int lives = 3;
 
     /**
      * Constructor cua GameManager.
      */
     public GameManager() {
         paddle = new Paddle(1, 0, 5, 324, 526, 20, 120);
-        ball = new Ball(5, 1, 1, 374, 506, 10);
+        ball = new Ball(5, 1, 1, 374, 506, 8);
         // this.score = 0;
         // this.lives = 3;
     }
@@ -32,6 +35,18 @@ public class GameManager {
 
     public Ball getBall() {
         return  new Ball(this.ball);
+    }
+
+    public int getLives() {
+        return lives;
+    }
+
+    public void setLives(int lives) {
+        this.lives = lives;
+    }
+
+    public int getScore() {
+        return score;
     }
 
     // public boolean checkCollision(Paddle paddle, Ball ball) {
@@ -92,6 +107,40 @@ public class GameManager {
         return (dx * dx + dy * dy) <= radius * radius;
     }
 
+    public void updateIfCollision(Ball ball, Paddle paddle, List<List<Brick>> brickList) {
+        if (checkCollision(paddle, ball)) {
+            ball.setDy(-ball.getDy());
+        }
+
+        List<Brick> hitBricks = new ArrayList<>();
+
+        for (int i = 0; i < brickList.size(); i++) {
+            for (int j = 0; j < brickList.get(i).size(); j++) {
+                Brick brick = brickList.get(i).get(j);
+                if (checkCollision(brick, ball)) {
+                    hitBricks.add(brick);
+                    if (hitBricks.size() >= 2) break;
+                }
+            }
+            if (hitBricks.size() >= 2) break;
+        }
+
+        if (!hitBricks.isEmpty()) {
+            ball.setDy(-ball.getDy());
+            for (Brick b : hitBricks) {
+                b.takeHits();
+                System.out.print("Hitpoints: " + b.getHitPoints());
+                if (b.isDestroy()) {
+                    this.score += 10;
+              //      System.out.println("Score: " + this.score);
+                }
+            }
+
+            for (List<Brick> row : brickList) {
+                row.removeIf(Brick::isDestroy);
+            }
+        }
+    }
 
 }
 

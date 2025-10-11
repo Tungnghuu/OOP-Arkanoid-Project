@@ -16,7 +16,7 @@ public class BrickManager {
     }
 
     private void initBricks() {
-        int startX = 90;
+        int startX = 184;
         int startY = 50;
 
         for (int i = 0; i < 8; i++) {
