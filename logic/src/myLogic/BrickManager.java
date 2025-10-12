@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import entity.Brick;
+
 public class BrickManager {
     private List<List<Brick>> brickList;
 

@@ -1,4 +1,4 @@
-package myLogic;
+package entity;
 
 import java.awt.*;
 

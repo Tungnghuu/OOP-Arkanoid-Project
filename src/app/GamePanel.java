@@ -5,8 +5,9 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.JPanel;
-// import java.util.ArrayList;
+import entity.*;
 import java.util.List;
+// import java.util.ArrayList;
 
 import myInterface.*;
 import myLogic.*;
@@ -70,21 +71,19 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void updateIfCollision(Ball ball, Paddle paddle, List<List<Brick>> brickList) {
-        if (gameManager.checkCollision(paddle, ball)) {
-            ball.setDy(-ball.getDy());
-        }
+        gameManager.checkCollision(paddle, ball);
 
         for (int i = 0; i < brickList.size(); i++) {
             for (int j = 0; j < brickList.get(i).size(); j++) {
                 Brick brick = brickList.get(i).get(j);
                 if (gameManager.checkCollision(brick, ball)) {
-                    ball.setDy(-ball.getDy());
                     brick.takeHits();
-                    if (brick.isDestroy()) {
+                }
+
+                if (brick.isDestroy()) {
                         brickList.get(i).remove(j);
                         j--;
                     }
-                }
             }
         }
     }
@@ -93,7 +92,7 @@ public class GamePanel extends JPanel implements Runnable {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         DrawObject drawPaddle = new DrawObject(paddle.getX(), paddle.getY(), paddle.getWidth(), paddle.getHeight(), Color.blue);
-        DrawObject drawBall = new DrawObject(ball.getX(), ball.getY(), ball.getWidth(), ball.getHeight(),Color.orange);
+        DrawObject drawBall = new DrawObject(ball.getX(), ball.getY(), ball.getWidth(), ball.getHeight(), Color.orange);
         drawPaddle.drawRect(g2);
         drawBall.drawBall(g2);
         renderBrick(g2);

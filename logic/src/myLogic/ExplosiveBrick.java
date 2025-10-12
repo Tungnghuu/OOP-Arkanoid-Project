@@ -1,5 +1,7 @@
 package myLogic;
 
+import entity.Brick;
+
 public class ExplosiveBrick extends Brick {
     /** Toa do cua vien gach Ẽplosive.*/
 

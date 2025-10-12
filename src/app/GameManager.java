@@ -1,6 +1,7 @@
-package myLogic;
+package app;
 // import java.util.ArrayList;
 // import java.util.List;
+import entity.*;
 
 // import java.awt.*;
 
@@ -20,7 +21,7 @@ public class GameManager {
      */
     public GameManager() {
         paddle = new Paddle(1, 0, 5, 324, 526, 20, 120);
-        ball = new Ball(5, 1, 1, 374, 506, 10);
+        ball = new Ball(5, 374, 506, 10);
         // this.score = 0;
         // this.lives = 3;
     }
@@ -34,39 +35,13 @@ public class GameManager {
         return  new Ball(this.ball);
     }
 
-    // public boolean checkCollision(Paddle paddle, Ball ball) {
-    //     double centerBallX = ball.getX() + (double)ball.getWidth() / 2;
-    //     double centerBallY = ball.getY() + (double)ball.getHeight() / 2;
-
-    //     double Ax = centerBallX;
-    //     double Ay = centerBallY;
-
-    //     if (centerBallX <= paddle.getX()) {
-    //         Ax = paddle.getX();
-    //     } else if (centerBallX >= paddle.getX() + paddle.getWidth()){
-    //         Ax = paddle.getX() + paddle.getWidth();
-    //     }
-
-    //     if (centerBallY <= paddle.getY() - paddle.getHeight() + 10) {
-    //         Ay = paddle.getY() + paddle.getHeight();
-    //     } else if (centerBallY >= paddle.getY()) {
-    //         Ay = paddle.getY();
-    //     }
-
-    //     double directionX = centerBallX - Ax;
-    //     double directionY = centerBallY - Ay;
-
-    //     return (directionX * directionX + directionY * directionY)
-    //             < (double)(ball.getHeight() * ball.getHeight()) / 4;
-    // }
-
     /** abcxyz
      * Thuat toan tham khao tu:
      * https://www.iostream.co/article/collision-detection-xet-va-cham-giua-hinh-tron-voi-hinh-chu-nhat-Diru1.
     */
     public boolean checkCollision(GameObject gameObject, Ball ball) {
-        double centerBallX = ball.getX() + ball.getWidth() / 2.0;
-        double centerBallY = ball.getY() + ball.getHeight() / 2.0;
+        double centerBallX = ball.getX() + ball.getRadius();
+        double centerBallY = ball.getY() + ball.getRadius();
 
         double closestX = centerBallX;
         double closestY = centerBallY;
@@ -89,10 +64,16 @@ public class GameManager {
         double dy = centerBallY - closestY;
         double radius = ball.getRadius();
 
+        if ((dx * dx + dy * dy) <= radius * radius) {
+            if (Math.abs(dx) > Math.abs(dy)) {
+                ball.bounceOff(-ball.getDx(), ball.getDy()); // hit left or right
+            } else {
+                ball.bounceOff(ball.getDx(), -ball.getDy()); // hit top or bottom
+            }
+        }
+
         return (dx * dx + dy * dy) <= radius * radius;
     }
-
-
 }
 
 

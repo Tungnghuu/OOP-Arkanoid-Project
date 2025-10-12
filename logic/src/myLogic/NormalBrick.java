@@ -1,5 +1,7 @@
 package myLogic;
 
+import entity.Brick;
+
 public class NormalBrick extends Brick {
 
      /** Constructor cua NormalBrick.*/
