@@ -5,7 +5,6 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.JPanel;
-// import java.util.ArrayList;
 import java.util.List;
 
 import myInterface.*;
@@ -19,6 +18,8 @@ public class GamePanel extends JPanel implements Runnable {
     int maxScreenRow = 12;
     final int screenWidth = tileSize * maxScreenCol;
     final int screenHeight = tileSize * maxScreenRow;
+    int lives = 3;
+    int score = 0;
 
     InputHandler inputHandler = new InputHandler();
     GameManager gameManager = new GameManager();
@@ -67,6 +68,10 @@ public class GamePanel extends JPanel implements Runnable {
             updateIfCollision(ball, paddle, brickList);
             ball.updateBall();
         }
+        if (ball.getY() > screenHeight) {
+            lives -= 1;
+            ball.resetBall(paddle);
+        }
     }
 
     public void updateIfCollision(Ball ball, Paddle paddle, List<List<Brick>> brickList) {
@@ -81,6 +86,17 @@ public class GamePanel extends JPanel implements Runnable {
                     ball.setDy(-ball.getDy());
                     brick.takeHits();
                     if (brick.isDestroy()) {
+                        switch (brick.getType()) {
+                            case NORMAL:
+                                score += 10;
+                                break;
+                            case STRONG:
+                                score += 20;
+                                break;
+                            case EXPLOSIVE:
+                                score += 50;
+                                break;
+                        }
                         brickList.get(i).remove(j);
                         j--;
                     }
@@ -97,6 +113,10 @@ public class GamePanel extends JPanel implements Runnable {
         drawPaddle.drawRect(g2);
         drawBall.drawBall(g2);
         renderBrick(g2);
+        g2.setColor(Color.white);
+        g2.drawString("Lives: " + lives, 10, 20);
+        g2.drawString("Score: " + score, screenWidth - 80, 20);
+        g2.dispose();
     }
 
     public void renderBrick(Graphics g) {
@@ -131,7 +151,11 @@ public class GamePanel extends JPanel implements Runnable {
                         brickColor
                 );
                 drawBrick.drawRect(g2);
+                g2.setColor(Color.BLACK);
+                g2.drawRect(b.getX(), b.getY(), b.getWidth(), b.getHeight());
             }
         }
     }
+
+    
 }

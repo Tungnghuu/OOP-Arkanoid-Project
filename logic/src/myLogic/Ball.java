@@ -66,4 +66,9 @@ public class Ball extends MovableObject {
     }
     //public void bouceOff() {}
 
+    public void resetBall(Paddle paddle) {
+        // Phuong thức này sẽ đặt lại vị trí của bóng về vị trí ban đầu trên thanh trượt
+        
+    }
+
 }
