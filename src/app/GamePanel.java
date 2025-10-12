@@ -20,8 +20,6 @@ public class GamePanel extends JPanel implements Runnable {
     int maxScreenRow = 12;
     final int screenWidth = tileSize * maxScreenCol;
     final int screenHeight = tileSize * maxScreenRow;
-    int lives = 3;
-    int score = 0;
 
     InputHandler inputHandler = new InputHandler();
     GameManager gameManager = new GameManager();
@@ -105,6 +103,11 @@ public class GamePanel extends JPanel implements Runnable {
         drawBall.drawBall(g2);
         drawPaddle.drawRect(g2);
         renderBrick(g2);
+        g2.setColor(Color.white);
+        g2.setFont(new Font("Arial", Font.PLAIN, 20));
+        g2.drawString("Score: " + gameManager.getScore(), 600, 20);
+        g2.drawString("Lives: " + gameManager.getLives(), 50, 20);
+        g2.dispose();
     }
 
     public void renderBrick(Graphics g) {

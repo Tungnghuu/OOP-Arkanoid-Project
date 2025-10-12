@@ -16,7 +16,7 @@ public class GameManager {
      */
     private Paddle paddle;
     private Ball ball;
-    private int score;
+    private int score = 0;
     private int lives = 3;
 
     /**
@@ -111,7 +111,17 @@ public class GameManager {
                 b.takeHits();
                 System.out.print("Hitpoints: " + b.getHitPoints());
                 if (b.isDestroy()) {
-                    this.score += 10;
+                    switch (b.getType()) {
+                        case NORMAL:
+                            score += 10;
+                            break;
+                        case STRONG:
+                            score += 20;
+                            break;
+                        case EXPLOSIVE:
+                            score += 50;
+                            break;
+                    }
                     //System.out.println("Score: " + this.score);
                 }
             }

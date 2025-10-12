@@ -98,7 +98,7 @@ public class Ball extends MovableObject {
 
         if (ballY >= 576) {
             int lives = gm.getLives();
-            lives--;
+            lives -= 1;
             gm.setLives(lives);
         //    System.out.println("Lives: " + lives);
             resetBall();
