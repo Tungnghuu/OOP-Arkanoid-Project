@@ -1,33 +1,37 @@
-package myLogic;
+package entity;
 
 // import java.awt.*;
 
 /** Lop dai dien cho cac doi tuong di chuyen duoc. */
 public abstract  class MovableObject extends GameObject {
     /** cac thuoc tinh cua MovableObject. */
-    private int dx;
-    private int dy;
+    private double dx;
+    private double dy;
 
     /** Constructor cua MovableObject. */
-    public MovableObject(int dx, int dy,int x, int y, int height, int length) {
+    public MovableObject(double dx, double dy, int x, int y, int height, int length) {
         super(x,y,height, length);
         this.dx = dx;
         this.dy = dy;
     }
 
-    public int getDx() {
+    public MovableObject(int x, int y, int height, int length) {
+        super(x, y, height, length);
+    }
+
+    public double getDx() {
         return this.dx;
     }
 
-    public int getDy() {
+    public double getDy() {
         return this.dy;
     }
 
-    public void setDx(int dx) {
+    public void setDx(double dx) {
         this.dx = dx;
     }
 
-    public void setDy(int dy) {
+    public void setDy(double dy) {
         this.dy = dy;
     }
 

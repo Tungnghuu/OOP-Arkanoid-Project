@@ -1,4 +1,6 @@
-package myLogic;
+package entity;
+
+import myLogic.BrickType;
 
 /** Class dai dien cho 1 vien gach. */
 public class Brick  extends GameObject {
@@ -9,7 +11,7 @@ public class Brick  extends GameObject {
      * */
     private int hitPoints;
     private BrickType type;
-    public final static int WIDTH = 70;
+    public final static int WIDTH = 50;
     public final static int HEIGHT = 30;
 
     /** Constructor cua Brick. */

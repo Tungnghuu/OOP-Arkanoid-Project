@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import entity.Brick;
+
 public class BrickManager {
     private List<List<Brick>> brickList;
 
@@ -16,7 +18,7 @@ public class BrickManager {
     }
 
     private void initBricks() {
-        int startX = 90;
+        int startX = 184;
         int startY = 50;
 
         for (int i = 0; i < 8; i++) {
@@ -30,7 +32,7 @@ public class BrickManager {
                 switch (new Random().nextInt(5)) {
                     case 0 -> brick = new NormalBrick(x, y);
                     case 1 -> brick = new StrongBrick(x, y);
-                    case 3 -> brick = new ExplosiveBrick(x, y);
+                    case 2 -> brick = new ExplosiveBrick(x, y);
                     default -> brick = new NormalBrick(x, y);
                 }
                 row.add(brick);

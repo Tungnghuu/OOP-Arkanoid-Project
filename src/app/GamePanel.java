@@ -6,8 +6,10 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.JPanel;
 import java.util.List;
+import java.awt.Font;
 
 import myInterface.*;
+import entity.*;
 import myLogic.*;
 
 public class GamePanel extends JPanel implements Runnable {
@@ -47,6 +49,11 @@ public class GamePanel extends JPanel implements Runnable {
         while (gameThread != null) {
             update();
             repaint();
+            int lives = gameManager.getLives();
+            if (lives <= 0) {
+                gameThread = null;
+                break;
+            }
             // limits CPU's usage reduced to 60 fps
             try {
                 Thread.sleep(16);
@@ -55,22 +62,16 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void update() {
-        ball.BallFollowPaddle(paddle);
         if (inputHandler.leftPressed) {
             paddle.moveLeft();
         }
         if (inputHandler.rightPressed) {
             paddle.moveRight();
         }
-        if (inputHandler.spacePressed) {
+
+        if (inputHandler.spacePressed && ball.isStuck()) {
             ball.startBall();
-        } else {
-            updateIfCollision(ball, paddle, brickList);
-            ball.updateBall();
-        }
-        if (ball.getY() > screenHeight) {
-            lives -= 1;
-            ball.resetBall(paddle);
+            inputHandler.spacePressed = false;
         }
     }
 
@@ -86,17 +87,6 @@ public class GamePanel extends JPanel implements Runnable {
                     ball.setDy(-ball.getDy());
                     brick.takeHits();
                     if (brick.isDestroy()) {
-                        switch (brick.getType()) {
-                            case NORMAL:
-                                score += 10;
-                                break;
-                            case STRONG:
-                                score += 20;
-                                break;
-                            case EXPLOSIVE:
-                                score += 50;
-                                break;
-                        }
                         brickList.get(i).remove(j);
                         j--;
                     }
@@ -108,15 +98,13 @@ public class GamePanel extends JPanel implements Runnable {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        DrawObject drawPaddle = new DrawObject(paddle.getX(), paddle.getY(), paddle.getWidth(), paddle.getHeight(), Color.blue);
-        DrawObject drawBall = new DrawObject(ball.getX(), ball.getY(), ball.getWidth(), ball.getHeight(),Color.orange);
-        drawPaddle.drawRect(g2);
+        DrawObject drawPaddle = new DrawObject(paddle.getX(), paddle.getY()
+                , paddle.getWidth(), paddle.getHeight(), Color.blue);
+        DrawObject drawBall = new DrawObject(ball.getX(), ball.getY(), ball.getWidth(),
+                    ball.getHeight(), Color.orange);
         drawBall.drawBall(g2);
+        drawPaddle.drawRect(g2);
         renderBrick(g2);
-        g2.setColor(Color.white);
-        g2.drawString("Lives: " + lives, 10, 20);
-        g2.drawString("Score: " + score, screenWidth - 80, 20);
-        g2.dispose();
     }
 
     public void renderBrick(Graphics g) {

@@ -1,4 +1,5 @@
-package myLogic;
+package entity;
+
 /** Lop dai dien cho thanh truot. */
 public class Paddle extends MovableObject {
 
@@ -6,10 +7,10 @@ public class Paddle extends MovableObject {
      * speed : toc do di chuyen
      * currentPower: hieu ung hien tai hien tai
      */
-    private int speed;
+    private double speed;
 
     /** constructor cua paddle.*/
-    public Paddle(int dx, int dy, int speed,int x, int y, int height, int length) {
+    public Paddle(double dx, double dy, double speed, int x, int y, int height, int length) {
         super(dx, dy, x, y, height, length);
         this.speed = speed;
     }
@@ -40,5 +41,4 @@ public class Paddle extends MovableObject {
         }
         setX(Px);
     }
-
 }
