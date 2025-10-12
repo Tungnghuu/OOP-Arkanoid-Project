@@ -32,7 +32,7 @@ public class BrickManager {
                 switch (new Random().nextInt(5)) {
                     case 0 -> brick = new NormalBrick(x, y);
                     case 1 -> brick = new StrongBrick(x, y);
-                    case 3 -> brick = new ExplosiveBrick(x, y);
+                    case 2 -> brick = new ExplosiveBrick(x, y);
                     default -> brick = new NormalBrick(x, y);
                 }
                 row.add(brick);

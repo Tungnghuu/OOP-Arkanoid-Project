@@ -1,12 +1,14 @@
 package entity;
 
+import app.GameManager;
+
 /** Lop dai dien cho bong. */
 public class Ball extends MovableObject {
     /** Cac thuoc tinh. */
     private double speed;
     private int radius;
     public double angleOfAttack;
-    public static boolean ballStuck = true;
+    private static boolean ballStuck = true;
 
     /** Constructor cua Ball.*/
     public Ball(double speed, int x, int y, int radius ) {
@@ -36,43 +38,70 @@ public class Ball extends MovableObject {
         return this.radius;
     }
 
-    /** cho bong di chuyen theo paddle khi chua bat dau.*/
+    /**
+     * cho bong di chuyen theo paddle khi chua bat dau.
+     */
     public void BallFollowPaddle(Paddle paddle) {
         int ballX = this.getX();
         int ballY = this.getY();
-        if (ballStuck) {
-            ballX = paddle.getX() + paddle.getWidth() / 2 - this.radius;
-            ballY = paddle.getY() - paddle.getHeight() - 10 ;
 
-            this.setX(ballX);
-            this.setY(ballY);
-        }
+        ballX = paddle.getX() + paddle.getWidth() / 2 - this.radius;
+        ballY = paddle.getY() - paddle.getHeight() - 10;
+
+        this.setX(ballX);
+        this.setY(ballY);
     }
 
-    /** Cho bong bat dau bay .*/
+    public boolean isStuck() {
+        return ballStuck;
+    }
+
+    /**
+     * Cho bong bat dau bay .
+     */
     public void startBall() {
         ballStuck = false;
     }
 
-    public void updateBall() {
+    public void resetBall() {
+        ballStuck = true;
+        this.setX(374);
+        this.setY(506);
+        this.speed = 4;
+        this.radius = 8;
+        angleOfAttack = Math.random() * Math.PI / 2 + Math.PI / 4;
+        double Dx = speed * Math.cos(angleOfAttack);
+        double Dy = speed * Math.sin(angleOfAttack);
+
+        this.setDx(Dx);
+        this.setDy(Dy);
+    }
+
+    public void updateBall(GameManager gm) {
         int ballY = this.getY();
         int ballX = this.getX();
-        if(!ballStuck) {
-            ballY -= this.getDy();
-            ballX += this.getDx();
-            this.setX(ballX);
-            this.setY(ballY);
+        ballY += this.getDy();
+        ballX += this.getDx();
+        this.setY(ballY);
+        this.setX(ballX);
 
-            if (ballY <= 0) {
-                this.setY(1);
-                this.setDy(-this.getDy());
-            } else if (ballX >= 750) {
-                this.setX(749);
-                this.setDx(-this.getDx());
-            } else if (ballX <= 0) {
-                this.setX(1);
-                this.setDx(-this.getDx());
-            }
+        if (ballY <= 0) {
+            this.setY(0);
+            this.setDy(-this.getDy());
+        } else if (ballX >= 750) {
+            this.setX(750);
+            this.setDx(-this.getDx());
+        } else if (ballX <= 0) {
+            this.setX(0);
+            this.setDx(-this.getDx());
+        }
+
+        if (ballY >= 576) {
+            int lives = gm.getLives();
+            lives--;
+            gm.setLives(lives);
+        //    System.out.println("Lives: " + lives);
+            resetBall();
         }
     }
 
