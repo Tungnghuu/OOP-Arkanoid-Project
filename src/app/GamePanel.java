@@ -5,11 +5,11 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.JPanel;
-import entity.*;
 import java.util.List;
-// import java.util.ArrayList;
+import java.awt.Font;
 
 import myInterface.*;
+import entity.*;
 import myLogic.*;
 
 public class GamePanel extends JPanel implements Runnable {
@@ -47,6 +47,11 @@ public class GamePanel extends JPanel implements Runnable {
         while (gameThread != null) {
             update();
             repaint();
+            int lives = gameManager.getLives();
+            if (lives <= 0) {
+                gameThread = null;
+                break;
+            }
             // limits CPU's usage reduced to 60 fps
             try {
                 Thread.sleep(16);
@@ -55,47 +60,51 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void update() {
-        ball.BallFollowPaddle(paddle);
         if (inputHandler.leftPressed) {
             paddle.moveLeft();
         }
         if (inputHandler.rightPressed) {
             paddle.moveRight();
         }
-        if (inputHandler.spacePressed) {
+
+        if (inputHandler.spacePressed && ball.isStuck()) {
             ball.startBall();
-        } else {
-            updateIfCollision(ball, paddle, brickList);
-            ball.updateBall();
+            inputHandler.spacePressed = false;
         }
-    }
 
-    public void updateIfCollision(Ball ball, Paddle paddle, List<List<Brick>> brickList) {
-        gameManager.checkCollision(paddle, ball);
-
-        for (int i = 0; i < brickList.size(); i++) {
-            for (int j = 0; j < brickList.get(i).size(); j++) {
-                Brick brick = brickList.get(i).get(j);
-                if (gameManager.checkCollision(brick, ball)) {
-                    brick.takeHits();
-                }
-
-                if (brick.isDestroy()) {
-                        brickList.get(i).remove(j);
-                        j--;
-                    }
-            }
+        if (ball.isStuck() && !inputHandler.spacePressed) {
+            ball.BallFollowPaddle(paddle);
         }
+        ball.updateBall(gameManager);
+        gameManager.updateIfCollision(ball, paddle, brickList);
     }
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        DrawObject drawPaddle = new DrawObject(paddle.getX(), paddle.getY(), paddle.getWidth(), paddle.getHeight(), Color.blue);
-        DrawObject drawBall = new DrawObject(ball.getX(), ball.getY(), ball.getWidth(), ball.getHeight(), Color.orange);
-        drawPaddle.drawRect(g2);
+        DrawObject drawPaddle = new DrawObject(paddle.getX(), paddle.getY()
+                , paddle.getWidth(), paddle.getHeight(), Color.blue);
+        DrawObject drawBall = new DrawObject(ball.getX(), ball.getY(), ball.getWidth(),
+                    ball.getHeight(), Color.orange);
         drawBall.drawBall(g2);
+        drawPaddle.drawRect(g2);
         renderBrick(g2);
+
+        g.setFont(new Font("Arial", Font.BOLD, 30));
+
+        /** Render GameOver.*/
+        if (gameManager.getLives() <= 0) {
+            g.setColor(Color.RED);
+            g.drawString("GAME OVER ", 250, 280);
+        }
+
+        /** Render Score.*/
+        g.setColor(Color.GREEN);
+        g.drawString("SCORE: " + Integer.toString(gameManager.getScore()), 580, 40);
+
+        /** Render Lives.*/
+        g.setColor(Color.BLUE);
+        g.drawString("LIVES: " + Integer.toString(gameManager.getLives()), 10, 40);
     }
 
     public void renderBrick(Graphics g) {
