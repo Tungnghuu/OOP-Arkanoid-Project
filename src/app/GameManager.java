@@ -25,8 +25,8 @@ public class GameManager {
     public GameManager() {
         paddle = new Paddle(1, 0, 5, 324, 526, 20, 120);
         ball = new Ball(5, 374, 506, 10);
-        // this.score = 0;
-        // this.lives = 3;
+        this.score = 0;
+        this.lives = 3;
     }
 
     /** geter cua cac thuoc tinh.*/

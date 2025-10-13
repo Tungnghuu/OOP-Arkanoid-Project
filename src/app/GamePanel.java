@@ -71,33 +71,22 @@ public class GamePanel extends JPanel implements Runnable {
             ball.startBall();
             inputHandler.spacePressed = false;
         }
-    }
 
-    public void updateIfCollision(Ball ball, Paddle paddle, List<List<Brick>> brickList) {
-        if (gameManager.checkCollision(paddle, ball)) {
-            ball.setDy(-ball.getDy());
+        if (!ball.isStuck()) {
+            ball.updateBall(gameManager);
+            gameManager.updateIfCollision(ball, paddle, brickList);
         }
 
-        for (int i = 0; i < brickList.size(); i++) {
-            for (int j = 0; j < brickList.get(i).size(); j++) {
-                Brick brick = brickList.get(i).get(j);
-                if (gameManager.checkCollision(brick, ball)) {
-                    ball.setDy(-ball.getDy());
-                    brick.takeHits();
-                    if (brick.isDestroy()) {
-                        brickList.get(i).remove(j);
-                        j--;
-                    }
-                }
-            }
+        if(ball.isStuck()) {
+            ball.BallFollowPaddle(paddle);
         }
     }
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        DrawObject drawPaddle = new DrawObject(paddle.getX(), paddle.getY()
-                , paddle.getWidth(), paddle.getHeight(), Color.blue);
+        DrawObject drawPaddle = new DrawObject(paddle.getX(), paddle.getY(),
+                                                paddle.getWidth(), paddle.getHeight(), Color.blue);
         DrawObject drawBall = new DrawObject(ball.getX(), ball.getY(), ball.getWidth(),
                     ball.getHeight(), Color.orange);
         drawBall.drawBall(g2);
@@ -135,11 +124,11 @@ public class GamePanel extends JPanel implements Runnable {
                 }
 
                 DrawObject drawBrick = new DrawObject(
-                        b.getX(),
-                        b.getY(),
-                        b.getWidth(),
-                        b.getHeight(),
-                        brickColor
+                    b.getX(),
+                    b.getY(),
+                    b.getWidth(),
+                    b.getHeight(),
+                    brickColor
                 );
                 drawBrick.drawRect(g2);
                 g2.setColor(Color.BLACK);

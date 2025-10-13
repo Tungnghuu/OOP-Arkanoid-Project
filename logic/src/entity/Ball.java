@@ -69,6 +69,7 @@ public class Ball extends MovableObject {
         this.setY(506);
         this.speed = 4;
         this.radius = 8;
+
         angleOfAttack = Math.random() * Math.PI / 2 + Math.PI / 4;
         double Dx = speed * Math.cos(angleOfAttack);
         double Dy = speed * Math.sin(angleOfAttack);
@@ -80,7 +81,7 @@ public class Ball extends MovableObject {
     public void updateBall(GameManager gm) {
         int ballY = this.getY();
         int ballX = this.getX();
-        ballY += this.getDy();
+        ballY -= this.getDy();
         ballX += this.getDx();
         this.setY(ballY);
         this.setX(ballX);
