@@ -3,10 +3,14 @@ package app;
 import java.util.ArrayList;
 // import java.util.List;
 import entity.*;
+import myLogic.BrickType;
+import myLogic.PowerUp;
+import myLogic.PowerUpType;
 
 // import java.awt.*;
 
 import java.util.List;
+import java.util.Random;
 
 /** Lop quan ly game. */
 
@@ -14,6 +18,7 @@ public class GameManager {
     /**
      * cac thuoc tinh.
      */
+    private List<PowerUp> powerUpList = new ArrayList<>();
     private Paddle paddle;
     private Ball ball;
     private int score = 0;
@@ -23,8 +28,8 @@ public class GameManager {
      * Constructor cua GameManager.
      */
     public GameManager() {
-        paddle = new Paddle(1, 0, 5, 324, 526, 20, 120);
-        ball = new Ball(5, 374, 506, 10);
+        paddle = new Paddle(1, 0, 5, 324, 526, 15, 120);
+        ball = new Ball(4, 374, 506, 8);
         this.score = 0;
         this.lives = 3;
     }
@@ -49,6 +54,11 @@ public class GameManager {
     public int getScore() {
         return score;
     }
+
+    public List<PowerUp> getPowerUpList() {
+        return powerUpList;
+    }
+
 
     /** abcxyz
      * Thuat toan tham khao tu:
@@ -91,6 +101,7 @@ public class GameManager {
     }
 
     public void updateIfCollision(Ball ball, Paddle paddle, List<List<Brick>> brickList) {
+
         checkCollision(paddle, ball);
 
         List<Brick> hitBricks = new ArrayList<>();
@@ -100,17 +111,24 @@ public class GameManager {
                 Brick brick = brickList.get(i).get(j);
                 if (checkCollision(brick, ball)) {
                     hitBricks.add(brick);
-                    if (hitBricks.size() >= 2) break;
                 }
             }
-            if (hitBricks.size() >= 2) break;
         }
 
         if (!hitBricks.isEmpty()) {
             for (Brick b : hitBricks) {
                 b.takeHits();
-                System.out.print("Hitpoints: " + b.getHitPoints());
+                //System.out.print("Hitpoints: " + b.getHitPoints());
                 if (b.isDestroy()) {
+                    if (b.getType() == BrickType.EXPLOSIVE) {
+                       PowerUp powerUp;
+                       switch (new Random().nextInt(2)) {
+                           case 0 -> powerUp = new PowerUp(b.getX(), b.getY(), 15, 15, PowerUpType.EXPAND_PADDLE);
+                           case 1 -> powerUp = new PowerUp(b.getX(), b.getY(), 15, 15, PowerUpType.SHRINK_PADDLE);
+                           default -> powerUp = new PowerUp(b.getX(), b.getY(), 15, 15, PowerUpType.EXPAND_PADDLE);
+                       }
+                        powerUpList.add(powerUp);
+                    }
                     switch (b.getType()) {
                         case NORMAL:
                             score += 10;
@@ -131,7 +149,6 @@ public class GameManager {
             }
         }
     }
-
 }
 
 

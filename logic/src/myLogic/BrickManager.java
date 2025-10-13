@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import app.GameManager;
 import entity.Brick;
 
 public class BrickManager {

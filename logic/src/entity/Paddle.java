@@ -1,5 +1,8 @@
 package entity;
 
+import myLogic.PowerUp;
+import myLogic.PowerUpType;
+
 /** Lop dai dien cho thanh truot. */
 public class Paddle extends MovableObject {
 
@@ -41,4 +44,27 @@ public class Paddle extends MovableObject {
         }
         setX(Px);
     }
+
+    public void resetPaddle() {
+        this.setX(324);
+        this.setY(526);
+        this.speed = 5;
+    }
+
+    public void applyPowerUp(PowerUp powerUp) {
+        int paddleWidth = this.getWidth();
+        if (powerUp.getType() == PowerUpType.EXPAND_PADDLE) {
+            paddleWidth += 20;
+        } else if (powerUp.getType() == PowerUpType.SHRINK_PADDLE) {
+            paddleWidth -= 40;
+        }
+        this.setWidth(paddleWidth);
+        System.out.println("Chieu dai paddle: " + this.getWidth());
+    }
+
+    public void endPowerUp(PowerUp powerUp) {
+        this.setWidth(120);
+        System.out.println("Do dai paddle: " + this.getWidth());
+    }
+
 }

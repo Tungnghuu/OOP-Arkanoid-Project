@@ -24,6 +24,7 @@ public class GamePanel extends JPanel implements Runnable {
     InputHandler inputHandler = new InputHandler();
     GameManager gameManager = new GameManager();
     BrickManager brickManager = new BrickManager();
+    List<PowerUp> powerUpList = gameManager.getPowerUpList();
     Paddle paddle = gameManager.getPaddle();
     Ball ball = gameManager.getBall();
     List<List<Brick>> brickList = brickManager.getBricks();
@@ -55,7 +56,8 @@ public class GamePanel extends JPanel implements Runnable {
             // limits CPU's usage reduced to 60 fps
             try {
                 Thread.sleep(16);
-            } catch (InterruptedException e) {}
+            } catch (InterruptedException e) {
+            }
         }
     }
 
@@ -77,8 +79,22 @@ public class GamePanel extends JPanel implements Runnable {
             gameManager.updateIfCollision(ball, paddle, brickList);
         }
 
-        if(ball.isStuck()) {
+        if (ball.isStuck()) {
             ball.BallFollowPaddle(paddle);
+        }
+
+        for (PowerUp p : powerUpList) {
+            p.updatePowerUp();
+
+            if (!p.isPowerUp() && paddle.getBounds().intersects(p.getBounds())) {
+                paddle.applyPowerUp(p);
+                p.activate();
+            }
+
+            if (p.isPowerUp() && p.isExpired(5000)) {
+                paddle.endPowerUp(p);
+                p.end();
+            }
         }
     }
 
@@ -86,12 +102,13 @@ public class GamePanel extends JPanel implements Runnable {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         DrawObject drawPaddle = new DrawObject(paddle.getX(), paddle.getY(),
-                                                paddle.getWidth(), paddle.getHeight(), Color.blue);
+                paddle.getWidth(), paddle.getHeight(), Color.blue);
         DrawObject drawBall = new DrawObject(ball.getX(), ball.getY(), ball.getWidth(),
-                    ball.getHeight(), Color.orange);
+                ball.getHeight(), Color.orange);
         drawBall.drawBall(g2);
         drawPaddle.drawRect(g2);
         renderBrick(g2);
+        renderPowerUp(g2);
         g2.setColor(Color.white);
         g2.setFont(new Font("Arial", Font.PLAIN, 20));
         g2.drawString("Score: " + gameManager.getScore(), 600, 20);
@@ -124,11 +141,11 @@ public class GamePanel extends JPanel implements Runnable {
                 }
 
                 DrawObject drawBrick = new DrawObject(
-                    b.getX(),
-                    b.getY(),
-                    b.getWidth(),
-                    b.getHeight(),
-                    brickColor
+                        b.getX(),
+                        b.getY(),
+                        b.getWidth(),
+                        b.getHeight(),
+                        brickColor
                 );
                 drawBrick.drawRect(g2);
                 g2.setColor(Color.BLACK);
@@ -137,5 +154,28 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
-    
+    public void renderPowerUp(Graphics g) {
+        Graphics2D g2 = (Graphics2D) g;
+        for (PowerUp p : powerUpList) {
+            Color powerUpColor;
+            switch (p.getType()) {
+                case EXPAND_PADDLE:
+                    powerUpColor = Color.YELLOW;
+                    break;
+                case SHRINK_PADDLE:
+                    powerUpColor = Color.RED;
+                    break;
+                default:
+                    powerUpColor = Color.WHITE;
+            }
+            DrawObject drawPowerUp = new DrawObject(
+                    p.getX(),
+                    p.getY(),
+                    p.getWidth(),
+                    p.getHeight(),
+                    powerUpColor
+            );
+            drawPowerUp.drawRect(g2);
+        }
+    }
 }

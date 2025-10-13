@@ -46,7 +46,7 @@ public class Ball extends MovableObject {
         int ballY = this.getY();
 
         ballX = paddle.getX() + paddle.getWidth() / 2 - this.radius;
-        ballY = paddle.getY() - paddle.getHeight() - 10;
+        ballY = paddle.getY() - 2 * this.radius;
 
         this.setX(ballX);
         this.setY(ballY);
