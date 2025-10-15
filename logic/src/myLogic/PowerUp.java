@@ -1,7 +1,7 @@
 package myLogic;
 
 import entity.GameObject;
-import entity.Paddle;
+// import entity.Paddle;
 
 public class PowerUp extends GameObject {
     /** Thuoc tinh .*/

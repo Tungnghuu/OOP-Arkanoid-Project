@@ -49,6 +49,7 @@ public class GamePanel extends JPanel implements Runnable {
             update();
             repaint();
             int lives = gameManager.getLives();
+            //TODO: resolve ways for user to replay after GameOver
             if (lives <= 0) {
                 gameThread = null;
                 break;

@@ -139,6 +139,12 @@ public class GameManager {
                         case EXPLOSIVE:
                             score += 50;
                             break;
+                        case BONUS:
+                            //TODO: Handle BONUS brick type if needed
+                            break;
+                        case UNBREAKABLE:
+                            //TODO: Handle UNBREAKABLE brick type if needed
+                            break;
                     }
                     //System.out.println("Score: " + this.score);
                 }

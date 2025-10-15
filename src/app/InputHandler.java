@@ -11,6 +11,7 @@ public class InputHandler implements KeyListener {
     public void keyTyped(KeyEvent e) {
     }
 
+    //TODO : add method to play with Mouse
     @Override
     public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode();

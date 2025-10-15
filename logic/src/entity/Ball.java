@@ -16,14 +16,13 @@ public class Ball extends MovableObject {
         this.speed = speed;
         this.radius = radius;
 
-        //Math.random gives [0,1) then * PI / 2 gives [0, PI /2) then + PI / 4 gives [PI/4, (3PI) / 4) radian;
-        //which is 45 degree to 135 degree
-        angleOfAttack = Math.random() * Math.PI / 2 + Math.PI / 4;
-        double Dx = speed * Math.cos(angleOfAttack);
-        double Dy = speed * Math.sin(angleOfAttack);
-
-        this.setDx(Dx);
-        this.setDy(Dy);
+        int rand = (int) Math.random() * 2; // rand is either 0 or 1
+        if(rand == 0) {
+            this.setDx(0.1);
+        } else {
+            this.setDx(-0.1);
+        }
+        this.setDy(speed);
     }
 
     /** copy Constructor cua Ball.*/
@@ -70,12 +69,13 @@ public class Ball extends MovableObject {
         this.speed = 4;
         this.radius = 8;
 
-        angleOfAttack = Math.random() * Math.PI / 2 + Math.PI / 4;
-        double Dx = speed * Math.cos(angleOfAttack);
-        double Dy = speed * Math.sin(angleOfAttack);
-
-        this.setDx(Dx);
-        this.setDy(Dy);
+        int rand = (int) Math.random() * 2; // rand is either 0 or 1
+        if(rand == 0) {
+            this.setDx(0.1);
+        } else {
+            this.setDx(-0.1);
+        }
+        this.setDy(speed);
     }
 
     public void updateBall(GameManager gm) {
