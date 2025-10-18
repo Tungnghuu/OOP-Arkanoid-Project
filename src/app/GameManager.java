@@ -1,5 +1,6 @@
 package app;
 // import java.awt.*;
+import java.awt.*;
 import java.util.ArrayList;
 // import java.util.List;
 import entity.*;
@@ -21,17 +22,19 @@ public class GameManager {
     private List<PowerUp> powerUpList = new ArrayList<>();
     private Paddle paddle;
     private Ball ball;
-    private int score = 0;
-    private int lives = 3;
+    private int score;
+    private int lives;
+    private double dropChance;
 
     /**
      * Constructor cua GameManager.
      */
     public GameManager() {
-        paddle = new Paddle(1, 0, 5, 324, 526, 15, 120);
-        ball = new Ball(4, 374, 506, 8);
+        paddle = new Paddle(1, 0, 5, 324, 526, 15, 100);
+        ball = new Ball(4, 374, 506, 1, 1, 8);
         this.score = 0;
         this.lives = 3;
+        this.dropChance = 0.4;
     }
 
     /** geter cua cac thuoc tinh.*/
@@ -89,28 +92,33 @@ public class GameManager {
         double dy = centerBallY - closestY;
         double radius = ball.getRadius();
 
-        if ((dx * dx + dy * dy) <= radius * radius) {
+        /*if ((dx * dx + dy * dy) <= radius * radius) {
             if (Math.abs(dx) > Math.abs(dy)) {
                 ball.bounceOff(-ball.getDx(), ball.getDy()); // hit left or right
             } else {
                 ball.bounceOff(ball.getDx(), -ball.getDy()); // hit top or bottom
             }
-        }
+        }*/
 
         return (dx * dx + dy * dy) <= radius * radius;
     }
 
     public void updateIfCollision(Ball ball, Paddle paddle, List<List<Brick>> brickList) {
 
-        checkCollision(paddle, ball);
-
+        if (checkCollision(paddle, ball)) {
+            handlePaddleCollision(ball, paddle);
+        }
         List<Brick> hitBricks = new ArrayList<>();
-
+        outer:
         for (int i = 0; i < brickList.size(); i++) {
+            List<Brick> row = brickList.get(i);
             for (int j = 0; j < brickList.get(i).size(); j++) {
                 Brick brick = brickList.get(i).get(j);
                 if (checkCollision(brick, ball)) {
                     hitBricks.add(brick);
+                    handleBrickCollision(ball, brick);
+                    brick.takeHits();
+                    break outer; // Thoát vòng lặp
                 }
             }
         }
@@ -118,43 +126,95 @@ public class GameManager {
         if (!hitBricks.isEmpty()) {
             for (Brick b : hitBricks) {
                 b.takeHits();
-                //System.out.print("Hitpoints: " + b.getHitPoints());
                 if (b.isDestroy()) {
-                    if (b.getType() == BrickType.EXPLOSIVE) {
-                       PowerUp powerUp;
-                       switch (new Random().nextInt(2)) {
-                           case 0 -> powerUp = new PowerUp(b.getX(), b.getY(), 15, 15, PowerUpType.EXPAND_PADDLE);
-                           case 1 -> powerUp = new PowerUp(b.getX(), b.getY(), 15, 15, PowerUpType.SHRINK_PADDLE);
-                           default -> powerUp = new PowerUp(b.getX(), b.getY(), 15, 15, PowerUpType.EXPAND_PADDLE);
-                       }
-                        powerUpList.add(powerUp);
-                    }
-                    switch (b.getType()) {
-                        case NORMAL:
-                            score += 10;
-                            break;
-                        case STRONG:
-                            score += 20;
-                            break;
-                        case EXPLOSIVE:
-                            score += 50;
-                            break;
-                        case BONUS:
-                            //TODO: Handle BONUS brick type if needed
-                            break;
-                        case UNBREAKABLE:
-                            //TODO: Handle UNBREAKABLE brick type if needed
-                            break;
-                    }
-                    //System.out.println("Score: " + this.score);
+                    createPowerUp(b);
+                    addScore(b);
                 }
             }
 
-            for (List<Brick> row : brickList) {
-                row.removeIf(Brick::isDestroy);
+            for (List <Brick> row : brickList) {
+                row.removeIf(Brick :: isDestroy);
             }
         }
     }
+
+    public void createPowerUp(Brick brick) {
+        if (brick.getType() == BrickType.EXPLOSIVE) {
+            PowerUp powerUp;
+            if (Math.random() < this. dropChance) {
+                switch (new Random().nextInt(2)) {
+                    case 0 -> powerUp = new PowerUp(brick.getX(), brick.getY(), 15, 15, PowerUpType.EXPAND_PADDLE);
+                    case 1 -> powerUp = new PowerUp(brick.getX(), brick.getY(), 15, 15, PowerUpType.SHRINK_PADDLE);
+                    default -> powerUp = new PowerUp(brick.getX(), brick.getY(), 15, 15, PowerUpType.EXPAND_PADDLE);
+                }
+                powerUpList.add(powerUp);
+            }
+        }
+    }
+
+    public void addScore(Brick brick) {
+        switch (brick.getType()) {
+            case NORMAL:
+                score += 10;
+                break;
+            case STRONG:
+                score += 20;
+                break;
+            case EXPLOSIVE:
+                score += 50;
+                break;
+            case BONUS:
+                //TODO: Handle BONUS brick type if needed
+                break;
+            case UNBREAKABLE:
+                //TODO: Handle UNBREAKABLE brick type if needed
+                break;
+        }
+        //System.out.println("Score: " + this.score);
+    }
+
+    /** Xu li va cham paddle va ball.*/
+    public void handlePaddleCollision(Ball ball, Paddle paddle) {
+        double ballCenterX = ball.getX() + ball.getRadius();
+        double paddleCenterX = paddle.getX() + paddle.getWidth() / 2.0;
+
+        double distance = ballCenterX - paddleCenterX;
+        double normalizeDistance = distance / (paddle.getWidth() / 2.0);
+
+        double maxAngle = Math.toRadians(60);
+        double bounceAngle = maxAngle * normalizeDistance;
+
+        double speed = ball.getSpeed();
+        double newDx =  speed * Math.sin(bounceAngle);
+        double newDy = -speed * Math.cos(bounceAngle);
+
+        ball.setDx(newDx);
+        ball.setDy(newDy);
+
+    }
+
+    /** Xu li va cham bong va gach.*/
+    public void handleBrickCollision(Ball ball, Brick brick) {
+        double ballCenterX = ball.getX() + ball.getRadius();
+        double ballCenterY = ball.getY() + ball.getRadius();
+        double brickCenterX = brick.getX() + brick.getWidth() / 2.0;
+        double brickCenterY = brick.getY() + brick.getHeight() / 2.0;
+
+        double dx = ballCenterX - brickCenterX;
+        double dy = ballCenterY - brickCenterY;
+
+        double overlapX = (brick.getWidth() / 2.0 + ball.getRadius()) - Math.abs(dx);
+        double overlapY = (brick.getHeight() / 2.0 + ball.getRadius()) - Math.abs(dy);
+
+        if (overlapX < overlapY) {
+            // Va cham trai hoac phai
+            ball.setDx(-ball.getDx());
+        } else {
+            // Va cham tren hoac duoi
+            ball.setDy(-ball.getDy());
+        }
+    }
+
 }
 
 

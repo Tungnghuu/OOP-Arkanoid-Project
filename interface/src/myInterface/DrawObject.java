@@ -3,8 +3,8 @@ package myInterface;
 import java.awt.Graphics2D;
 import java.awt.Color;
 // import java.awt.Rectangle;
-
-import javax.swing.JPanel;
+import javax.swing.*;
+import app.*;
 
 public class DrawObject extends JPanel {
     private int x;
@@ -48,14 +48,17 @@ public class DrawObject extends JPanel {
         this.color = color;
     }
 
-    public void drawRect(Graphics2D g2) {
-        g2.setColor(color);
-        g2.fillRect(x, y, width, height);
+    public void drawRect(Graphics2D g2, ImageIcon image) {
+        g2.drawImage(image.getImage(), this.x, this.y, this.width, this.height, null);
     }
 
-    public void drawBall(Graphics2D g2) {
+    public void drawRect(Graphics2D g2) {
         g2.setColor(color);
-        g2.fillOval(x, y, width, height);
+        g2.fillRect(this.x, this.y, this.width, this.height);
+    }
+
+    public void drawBall(Graphics2D g2, ImageIcon ballImage ) {
+        g2.drawImage(ballImage.getImage(), this.x, this.y, this.width, this.height, null);
     }
 
 }

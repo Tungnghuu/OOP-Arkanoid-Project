@@ -11,7 +11,7 @@ public class Ball extends MovableObject {
     private static boolean ballStuck = true;
 
     /** Constructor cua Ball.*/
-    public Ball(double speed, int x, int y, int radius ) {
+    public Ball(double speed,  int x, int y, double dx, double dy, int radius ) {
         super(x, y, radius * 2, radius * 2);
         this.speed = speed;
         this.radius = radius;
@@ -35,6 +35,10 @@ public class Ball extends MovableObject {
 
     public int getRadius() {
         return this.radius;
+    }
+
+    public double getSpeed() {
+        return this.speed;
     }
 
     /**
@@ -79,12 +83,12 @@ public class Ball extends MovableObject {
     }
 
     public void updateBall(GameManager gm) {
-        int ballY = this.getY();
-        int ballX = this.getX();
-        ballY -= this.getDy();
+        double ballY = this.getY();
+        double ballX = this.getX();
+        ballY += this.getDy();
         ballX += this.getDx();
-        this.setY(ballY);
-        this.setX(ballX);
+        this.setY((int)ballY);
+        this.setX((int)ballX);
 
         if (ballY <= 0) {
             this.setY(0);
@@ -106,7 +110,7 @@ public class Ball extends MovableObject {
         }
     }
 
-    public void bounceOff(double Dx, double Dy) {
+   /* public void bounceOff(double Dx, double Dy) {
         double minAngle = 0.4;
         double maxAngle = Math.PI / 2 - minAngle;
         double angle = minAngle + Math.random() * (maxAngle - minAngle);
@@ -118,5 +122,5 @@ public class Ball extends MovableObject {
 
         this.setDx(newDx);
         this.setDy(newDy);
-    }
+    }*/
 }

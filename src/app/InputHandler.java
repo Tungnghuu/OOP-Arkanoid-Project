@@ -3,15 +3,46 @@ package app;
 // import java.awt.RenderingHints.Key;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
-public class InputHandler implements KeyListener {
+public class InputHandler implements KeyListener, MouseListener {
     public boolean leftPressed, rightPressed, spacePressed;
+    public boolean mouseClicked, mousePressed, mouseReleased;
+    public int mouseX, mouseY;
 
     @Override
     public void keyTyped(KeyEvent e) {
     }
 
     //TODO : add method to play with Mouse
+    @Override
+    public void mouseEntered(MouseEvent e) {}
+
+    @Override
+    public void mouseExited(MouseEvent e) {}
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        mouseClicked = true;
+        mouseX = e.getX();
+        mouseY = e.getY();
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        mousePressed = true;
+        mouseX = e.getX();
+        mouseY = e.getY();
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        mousePressed = false;
+        mouseReleased = true;
+    }
+
+
     @Override
     public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode();
@@ -41,7 +72,7 @@ public class InputHandler implements KeyListener {
     public void keyReleased(KeyEvent e) {
         int code = e.getKeyCode();
 
-        if(code == KeyEvent.VK_A) {
+        if (code == KeyEvent.VK_A) {
             leftPressed = false;
         }
 

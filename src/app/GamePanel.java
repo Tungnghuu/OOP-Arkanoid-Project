@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import javax.swing.JPanel;
+import javax.swing.*;
 import java.util.List;
 import java.awt.Font;
 
@@ -21,6 +21,8 @@ public class GamePanel extends JPanel implements Runnable {
     final int screenWidth = tileSize * maxScreenCol;
     final int screenHeight = tileSize * maxScreenRow;
 
+    private boolean inMenu = true;
+    private MenuPanel menuPanel;
     InputHandler inputHandler = new InputHandler();
     GameManager gameManager = new GameManager();
     BrickManager brickManager = new BrickManager();
@@ -35,12 +37,19 @@ public class GamePanel extends JPanel implements Runnable {
         this.setBackground(Color.black);
         this.setDoubleBuffered(true);
         this.addKeyListener(inputHandler);
+        this.addMouseListener(inputHandler);
         this.setFocusable(true);
+
+        menuPanel = new MenuPanel(this);
     }
 
     public void startGameThread() {
         gameThread = new Thread(this);
         gameThread.start();
+    }
+
+    public void startGame() {
+        inMenu = false;
     }
 
     @Override
@@ -63,38 +72,47 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void update() {
-        if (inputHandler.leftPressed) {
-            paddle.moveLeft();
-        }
-        if (inputHandler.rightPressed) {
-            paddle.moveRight();
-        }
-
-        if (inputHandler.spacePressed && ball.isStuck()) {
-            ball.startBall();
-            inputHandler.spacePressed = false;
-        }
-
-        if (!ball.isStuck()) {
-            ball.updateBall(gameManager);
-            gameManager.updateIfCollision(ball, paddle, brickList);
-        }
-
-        if (ball.isStuck()) {
-            ball.BallFollowPaddle(paddle);
-        }
-
-        for (PowerUp p : powerUpList) {
-            p.updatePowerUp();
-
-            if (!p.isPowerUp() && paddle.getBounds().intersects(p.getBounds())) {
-                paddle.applyPowerUp(p);
-                p.activate();
+        if (inMenu) {
+            if (inputHandler.mouseClicked) {
+                if (menuPanel.getPlayButton().contains(inputHandler.mouseX, inputHandler.mouseY)) {
+                    startGame();
+                }
+                inputHandler.mouseClicked = false;
+            }
+        } else {
+            if (inputHandler.leftPressed) {
+                paddle.moveLeft();
+            }
+            if (inputHandler.rightPressed) {
+                paddle.moveRight();
             }
 
-            if (p.isPowerUp() && p.isExpired(5000)) {
-                paddle.endPowerUp(p);
-                p.end();
+            if (inputHandler.spacePressed && ball.isStuck()) {
+                ball.startBall();
+                inputHandler.spacePressed = false;
+            }
+
+            if (!ball.isStuck()) {
+                ball.updateBall(gameManager);
+                gameManager.updateIfCollision(ball, paddle, brickList);
+            }
+
+            if (ball.isStuck()) {
+                ball.BallFollowPaddle(paddle);
+            }
+
+            for (PowerUp p : powerUpList) {
+                p.updatePowerUp();
+
+                if (!p.isPowerUp() && paddle.getBounds().intersects(p.getBounds())) {
+                    paddle.applyPowerUp(p);
+                    p.activate();
+                }
+
+                if (p.isPowerUp() && p.isExpired(10000)) {
+                    paddle.endPowerUp(p);
+                    p.end();
+                }
             }
         }
     }
@@ -102,19 +120,25 @@ public class GamePanel extends JPanel implements Runnable {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        DrawObject drawPaddle = new DrawObject(paddle.getX(), paddle.getY(),
-                paddle.getWidth(), paddle.getHeight(), Color.blue);
-        DrawObject drawBall = new DrawObject(ball.getX(), ball.getY(), ball.getWidth(),
-                ball.getHeight(), Color.orange);
-        drawBall.drawBall(g2);
-        drawPaddle.drawRect(g2);
-        renderBrick(g2);
-        renderPowerUp(g2);
-        g2.setColor(Color.white);
-        g2.setFont(new Font("Arial", Font.PLAIN, 20));
-        g2.drawString("Score: " + gameManager.getScore(), 600, 20);
-        g2.drawString("Lives: " + gameManager.getLives(), 50, 20);
-        g2.dispose();
+        ImageIcon ballImage = LoadImage.get("/asset/ball.png", 16,16);
+        ImageIcon paddleImage = LoadImage.get("/asset/paddle.png", 120,15);
+        if (inMenu) {
+            menuPanel.draw(g);
+        } else {
+            DrawObject drawPaddle = new DrawObject(paddle.getX(), paddle.getY(),
+                    paddle.getWidth(), paddle.getHeight(), Color.blue);
+            DrawObject drawBall = new DrawObject(ball.getX(), ball.getY(), ball.getWidth(),
+                    ball.getHeight(), Color.orange);
+            drawBall.drawBall(g2, ballImage);
+            drawPaddle.drawRect(g2,paddleImage);
+            renderBrick(g2);
+            renderPowerUp(g2);
+            g2.setColor(Color.white);
+            g2.setFont(new Font("Arial", Font.PLAIN, 20));
+            g2.drawString("Score: " + gameManager.getScore(), 600, 20);
+            g2.drawString("Lives: " + gameManager.getLives(), 50, 20);
+            g2.dispose();
+        }
     }
 
     public void renderBrick(Graphics g) {

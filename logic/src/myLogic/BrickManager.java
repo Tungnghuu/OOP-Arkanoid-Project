@@ -29,11 +29,14 @@ public class BrickManager {
 
                 // Sinh loại ngẫu nhiên:
                 Brick brick;
-                switch (new Random().nextInt(5)) {
-                    case 0 -> brick = new NormalBrick(x, y);
-                    case 1 -> brick = new StrongBrick(x, y);
-                    case 2 -> brick = new ExplosiveBrick(x, y);
-                    default -> brick = new NormalBrick(x, y);
+                if (i == 7) {
+                    brick = new StrongBrick(x, y);
+                } else {
+                    switch (new Random().nextInt(5)) {
+                        case 0 -> brick = new NormalBrick(x, y);
+                        case 1-> brick = new ExplosiveBrick(x, y);
+                        default -> brick = new NormalBrick(x, y);
+                    }
                 }
                 row.add(brick);
             }

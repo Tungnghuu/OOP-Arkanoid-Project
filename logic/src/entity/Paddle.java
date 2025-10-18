@@ -63,7 +63,7 @@ public class Paddle extends MovableObject {
     }
 
     public void endPowerUp(PowerUp powerUp) {
-        this.setWidth(120);
+        this.setWidth(100);
         System.out.println("Do dai paddle: " + this.getWidth());
     }
 
