@@ -215,6 +215,20 @@ public class GameManager {
         }
     }
 
+    // Reset game
+    public void resetGame(boolean resetScore) {
+        this.lives = 3;
+        if (resetScore) this.score = 0;
+        this.powerUpList.clear();
+    }
+
+    // Khởi tạo lại thanh đỡ và bóng
+    public Paddle newDefaultPaddle() {
+        return new Paddle(1, 0, 5, 324, 526, 15, 100);
+    }
+    public Ball newDefaultBall() {
+        return new Ball(4, 374, 506, 1, 1, 8);
+    }
 }
 
 

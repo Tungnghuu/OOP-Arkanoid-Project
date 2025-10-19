@@ -7,7 +7,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 public class InputHandler implements KeyListener, MouseListener {
-    public boolean leftPressed, rightPressed, spacePressed;
+    public boolean leftPressed, rightPressed, spacePressed, resetPressed;
     public boolean mouseClicked, mousePressed, mouseReleased;
     public int mouseX, mouseY;
 
@@ -66,6 +66,10 @@ public class InputHandler implements KeyListener, MouseListener {
         if (code == KeyEvent.VK_RIGHT) {
             rightPressed = true;
         }
+
+        if (code == KeyEvent.VK_R) {
+            resetPressed = true;
+        }
     }
 
     @Override
@@ -90,6 +94,10 @@ public class InputHandler implements KeyListener, MouseListener {
 
         if (code == KeyEvent.VK_RIGHT) {
             rightPressed = false;
+        }
+
+        if (code == KeyEvent.VK_R) {
+            resetPressed = false;
         }
     }
 }

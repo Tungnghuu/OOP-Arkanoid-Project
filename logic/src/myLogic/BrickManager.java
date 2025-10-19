@@ -44,4 +44,17 @@ public class BrickManager {
         }
     }
 
+    // Kiểm tra đã phá hết gạch chưa
+    public boolean isAllCleared() {
+        for (List<Brick> row : brickList) {
+            if (!row.isEmpty()) return false;
+        }
+        return true;
+    }
+
+    // Reset lại;
+    public void reset() {
+        brickList.clear();
+        initBricks();
+    }
 }
