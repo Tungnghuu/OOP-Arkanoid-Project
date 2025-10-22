@@ -2,7 +2,6 @@ package myInterface;
 
 import java.awt.Graphics2D;
 import java.awt.Color;
-// import java.awt.Rectangle;
 import javax.swing.*;
 
 public class DrawObject extends JPanel {

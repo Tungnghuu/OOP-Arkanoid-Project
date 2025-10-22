@@ -26,7 +26,6 @@ public class PowerUp extends GameObject {
         return isPowerUp;
     }
 
-
     public long getDuration() {
         return this.duration;
     }
@@ -36,7 +35,6 @@ public class PowerUp extends GameObject {
         powerUpY += 5;
         this.setY(powerUpY);
     }
-
 
     public void activate() {
         startTime = System.currentTimeMillis();
@@ -50,5 +48,4 @@ public class PowerUp extends GameObject {
     public void end() {
         isPowerUp = false;
     }
-
 }

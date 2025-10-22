@@ -1,12 +1,8 @@
 package app;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import java.awt.*;
 import javax.swing.*;
 import java.util.List;
-import java.awt.Font;
 
 import myInterface.*;
 import entity.*;
@@ -26,18 +22,18 @@ public class GamePanel extends JPanel implements Runnable {
     private boolean gameOver = false;
     private boolean gameCleared = false;
     private MenuPanel menuPanel;
-    InputHandler inputHandler = new InputHandler();
-    GameManager gameManager = new GameManager();
-    BrickManager brickManager = new BrickManager();
-    List<PowerUp> powerUpList = gameManager.getPowerUpList();
-    Paddle paddle = gameManager.getPaddle();
-    Ball ball = gameManager.getBall();
-    DrawObject drawPaddle = new DrawObject(paddle.getX(), paddle.getY(),
+    private InputHandler inputHandler = new InputHandler();
+    private GameManager gameManager = new GameManager();
+    private BrickManager brickManager = new BrickManager();
+    private List<PowerUp> powerUpList = gameManager.getPowerUpList();
+    private Paddle paddle = gameManager.getPaddle();
+    private Ball ball = gameManager.getBall();
+    private DrawObject drawPaddle = new DrawObject(paddle.getX(), paddle.getY(),
                                             paddle.getWidth(), paddle.getHeight(), Color.blue);
-    DrawObject drawBall = new DrawObject(ball.getX(), ball.getY(),
+    private DrawObject drawBall = new DrawObject(ball.getX(), ball.getY(),
                                             ball.getWidth(), ball.getHeight(), Color.orange);
-    List<List<Brick>> brickList = brickManager.getBricks();
-    Thread gameThread;
+    private List<List<Brick>> brickList = brickManager.getBricks();
+    private Thread gameThread;
 
     private ImageIcon ballImage;
     private ImageIcon paddleImage;

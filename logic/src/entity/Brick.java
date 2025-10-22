@@ -3,8 +3,7 @@ package entity;
 import myLogic.BrickType;
 
 /** Class dai dien cho 1 vien gach. */
-public class Brick  extends GameObject {
-
+public abstract class Brick  extends GameObject {
     /** Cac thuoc tinh cua Brick.
      * hitPoints la so lan de gach bi pha khi bong dap trung
      * type la loai gach
@@ -19,7 +18,6 @@ public class Brick  extends GameObject {
         super(x, y, HEIGHT, WIDTH);
         this.hitPoints = hitPoints;
         this.type = type;
-
     }
 
     /** getter va setter cua thuoc tinh private.*/
@@ -30,7 +28,6 @@ public class Brick  extends GameObject {
     public BrickType getType() {
         return this.type;
     }
-
 
     /**Phuong thuc giam so hitPoints khi bong va cham.
      * Neu hitPoins <= 0 ,gach bi pha

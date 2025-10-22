@@ -4,7 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 
 public class MenuPanel {
-
     private Rectangle playButton = new Rectangle(300, 260, 180, 120);
     private Rectangle guideButton = new Rectangle(320, 360, 160, 40);
     private Rectangle scoreButton = new Rectangle(320, 420, 160, 40);

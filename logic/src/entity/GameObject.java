@@ -57,7 +57,4 @@ public  abstract class GameObject {
     public Rectangle getBounds() {
         return new Rectangle(this.getX(), this.getY(), this.getWidth(), this.getHeight());
     }
-    /** Phuong thu cap nhat doi tuong. */
-    //public abstract void update();
-
 }

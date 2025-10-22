@@ -1,17 +1,14 @@
 package app;
-// import java.awt.*;
+
 // import java.awt.*;
 import java.util.ArrayList;
-// import java.util.List;
+import java.util.List; 
+import java.util.Random;
+
 import entity.*;
 import myLogic.BrickType;
 import myLogic.PowerUp;
 import myLogic.PowerUpType;
-
-// import java.awt.*;
-
-import java.util.List;
-import java.util.Random;
 
 /** Lop quan ly game. */
 public class GameManager {
@@ -61,7 +58,6 @@ public class GameManager {
         return powerUpList;
     }
 
-
     /** abcxyz
      * Thuat toan tham khao tu:
      * https://www.iostream.co/article/collision-detection-xet-va-cham-giua-hinh-tron-voi-hinh-chu-nhat-Diru1.
@@ -105,7 +101,6 @@ public class GameManager {
     }
 
     public void updateIfCollision(Ball ball, Paddle paddle, List<List<Brick>> brickList) {
-
         if (checkCollision(paddle, ball)) {
             handlePaddleCollision(ball, paddle);
         }
@@ -142,7 +137,7 @@ public class GameManager {
     public void createPowerUp(Brick brick) {
         if (brick.getType() == BrickType.EXPLOSIVE) {
             PowerUp powerUp;
-            if (Math.random() < this. dropChance) {
+            if (Math.random() < this.dropChance) {
                 switch (new Random().nextInt(2)) {
                     case 0 -> powerUp = new PowerUp(brick.getX(), brick.getY(), 15, 15, PowerUpType.EXPAND_PADDLE);
                     case 1 -> powerUp = new PowerUp(brick.getX(), brick.getY(), 15, 15, PowerUpType.SHRINK_PADDLE);
@@ -171,7 +166,6 @@ public class GameManager {
                 //TODO: Handle UNBREAKABLE brick type if needed
                 break;
         }
-        //System.out.println("Score: " + this.score);
     }
 
     /** Xu li va cham paddle va ball.*/

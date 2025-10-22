@@ -1,9 +1,5 @@
-// import java.awt.Color;
 import javax.swing.JFrame;
-
 import app.*;
-// import myInterface.*;
-// import myLogic.*;
 
 public class  Main {
     public static void main(String[] args) {

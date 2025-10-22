@@ -1,16 +1,16 @@
 package brickLayout;
 
 import java.util.ArrayList;
-
 import entity.Brick;
 
 public class BrickLayout {
+    protected static int startX = 184;
+    protected static int startY = 50;
+    protected static int w = Brick.WIDTH;
+    protected static int h = Brick.HEIGHT;
+
     public static ArrayList<ArrayList<int[]>> level1() {
         ArrayList<ArrayList<int[]>> layout = new ArrayList<>();
-
-        int startX = 184;
-        int startY = 50;
-        int w = Brick.WIDTH, h = Brick.HEIGHT;
 
         for (int i = 0; i < 8; i++) {
             ArrayList<int[]> row = new ArrayList<>();
@@ -33,9 +33,6 @@ public class BrickLayout {
 
     public static ArrayList<ArrayList<int[]>> level2() {
         ArrayList<ArrayList<int[]>> layout = new ArrayList<>();
-        int startX = 184;
-        int startY = 50;
-        int w = 40, h = 20;
 
         for (int i = 0; i < 8; i++) {
             ArrayList<int[]> row = new ArrayList<>();

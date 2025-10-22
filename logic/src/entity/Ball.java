@@ -105,7 +105,6 @@ public class Ball extends MovableObject {
             int lives = gm.getLives();
             lives -= 1;
             gm.setLives(lives);
-        //    System.out.println("Lives: " + lives);
             resetBall();
         }
     }

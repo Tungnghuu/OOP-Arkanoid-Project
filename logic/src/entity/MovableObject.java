@@ -1,7 +1,5 @@
 package entity;
 
-// import java.awt.*;
-
 /** Lop dai dien cho cac doi tuong di chuyen duoc. */
 public abstract  class MovableObject extends GameObject {
     /** cac thuoc tinh cua MovableObject. */

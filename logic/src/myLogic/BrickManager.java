@@ -13,13 +13,13 @@ public class BrickManager {
         this.brickList = new ArrayList<>() ;
         initBricks();
     }
+
     public List<List<Brick>> getBricks() {
         return brickList;
     }
 
     private void initBricks() {
         brickList.clear();
-
         ArrayList<ArrayList<int[]>> layout = BrickLayout.level1();
 
         for (ArrayList<int[]> rowData : layout) {

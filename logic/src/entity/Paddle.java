@@ -5,7 +5,6 @@ import myLogic.PowerUpType;
 
 /** Lop dai dien cho thanh truot. */
 public class Paddle extends MovableObject {
-
     /** Cac thuoc tinh gom.
      * speed : toc do di chuyen
      * currentPower: hieu ung hien tai hien tai
