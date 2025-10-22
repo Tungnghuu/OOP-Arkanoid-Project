@@ -1,6 +1,6 @@
 package app;
 // import java.awt.*;
-import java.awt.*;
+// import java.awt.*;
 import java.util.ArrayList;
 // import java.util.List;
 import entity.*;
@@ -113,7 +113,7 @@ public class GameManager {
         for (int i = 0; i < brickList.size(); i++) {
             List<Brick> row = brickList.get(i);
             for (int j = 0; j < brickList.get(i).size(); j++) {
-                Brick brick = brickList.get(i).get(j);
+                Brick brick = row.get(j);
                 if (checkCollision(brick, ball)) {
                     hitBricks.add(brick);
                     handleBrickCollision(ball, brick);

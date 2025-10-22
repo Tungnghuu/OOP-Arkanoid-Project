@@ -14,7 +14,7 @@ public class PowerUp extends GameObject {
     public PowerUp(int x, int y, int width, int height, PowerUpType type) {
         super(x, y, height, width);
         this.type = type;
-        this.duration = duration;
+        // this.duration = duration;
         this.isPowerUp = false;
     }
 

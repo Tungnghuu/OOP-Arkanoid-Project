@@ -4,7 +4,6 @@ import java.awt.Graphics2D;
 import java.awt.Color;
 // import java.awt.Rectangle;
 import javax.swing.*;
-import app.*;
 
 public class DrawObject extends JPanel {
     private int x;
