@@ -22,8 +22,8 @@ public class GamePanel extends JPanel implements Runnable {
     final int screenHeight = tileSize * maxScreenRow;
 
     private boolean inMenu = true;
-    private boolean gameOver = false;     // thêm
-    private boolean gameCleared = false;  // thêm
+    private boolean gameOver = false;
+    private boolean gameCleared = false;
     private MenuPanel menuPanel;
     InputHandler inputHandler = new InputHandler();
     GameManager gameManager = new GameManager();
@@ -31,8 +31,17 @@ public class GamePanel extends JPanel implements Runnable {
     List<PowerUp> powerUpList = gameManager.getPowerUpList();
     Paddle paddle = gameManager.getPaddle();
     Ball ball = gameManager.getBall();
+    DrawObject drawPaddle = new DrawObject(paddle.getX(), paddle.getY(),
+                paddle.getWidth(), paddle.getHeight(), Color.blue);
+        DrawObject drawBall = new DrawObject(ball.getX(), ball.getY(), ball.getWidth(),
+                ball.getHeight(), Color.orange);
     List<List<Brick>> brickList = brickManager.getBricks();
     Thread gameThread;
+    private ImageIcon ballImage;
+    private ImageIcon paddleImage;
+
+    private final Font hudFont = new Font("Arial", Font.PLAIN, 20);
+    private final Color hudColor = Color.WHITE;
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -43,6 +52,9 @@ public class GamePanel extends JPanel implements Runnable {
         this.setFocusable(true);
 
         menuPanel = new MenuPanel(this);
+
+        ballImage = LoadImage.get("/asset/ball.png", 16,16);
+        paddleImage = LoadImage.get("/asset/paddle.png", 120,15);
     }
 
     public void startGameThread() {
@@ -56,12 +68,21 @@ public class GamePanel extends JPanel implements Runnable {
 
     @Override
     public void run() {
+        double drawInterval = 1000000000.0 / 60; // 60 FPS
+        double delta = 0;
+        long lastTime = System.nanoTime();
+        long currentTime;
+
         while (gameThread != null) {
-            update();
-            repaint();
-            try {
-                Thread.sleep(16);
-            } catch (InterruptedException e) {}
+            currentTime = System.nanoTime();
+            delta += (currentTime - lastTime) / drawInterval;
+            lastTime = currentTime;
+
+            if (delta >= 1) {
+                update();
+                repaint();
+                delta--;
+            }
         }
     }
 
@@ -133,23 +154,19 @@ public class GamePanel extends JPanel implements Runnable {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
 
-        ImageIcon ballImage = LoadImage.get("/asset/ball.png", 16,16);
-        ImageIcon paddleImage = LoadImage.get("/asset/paddle.png", 120,15);
         if (inMenu) {
             menuPanel.draw(g);
             return;
         }
         
-        DrawObject drawPaddle = new DrawObject(paddle.getX(), paddle.getY(),
-                paddle.getWidth(), paddle.getHeight(), Color.blue);
-        DrawObject drawBall = new DrawObject(ball.getX(), ball.getY(), ball.getWidth(),
-                ball.getHeight(), Color.orange);
+        drawBall.setPosition(ball.getX(), ball.getY());
+        drawPaddle.setPosition(paddle.getX(), paddle.getY());
         drawBall.drawBall(g2, ballImage);
         drawPaddle.drawRect(g2,paddleImage);
         renderBrick(g2);
         renderPowerUp(g2);
-        g2.setColor(Color.white);
-        g2.setFont(new Font("Arial", Font.PLAIN, 20));
+        g2.setColor(hudColor);
+        g2.setFont(hudFont);
         g2.drawString("Score: " + gameManager.getScore(), 600, 20);
         g2.drawString("Lives: " + gameManager.getLives(), 50, 20);
 
@@ -163,6 +180,7 @@ public class GamePanel extends JPanel implements Runnable {
             g2.setFont(new Font("Arial", Font.PLAIN, 22));
             g2.drawString("Press R to Reset", getWidth()/2 - 110, getHeight()/2 + 30);
         }
+        this.setDoubleBuffered(true);
     }
 
     public void renderBrick(Graphics g) {

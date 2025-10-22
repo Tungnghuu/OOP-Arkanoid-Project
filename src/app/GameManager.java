@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Random;
 
 /** Lop quan ly game. */
-
 public class GameManager {
     /**
      * cac thuoc tinh.
@@ -92,13 +91,15 @@ public class GameManager {
         double dy = centerBallY - closestY;
         double radius = ball.getRadius();
 
-        /*if ((dx * dx + dy * dy) <= radius * radius) {
+        /*
+        if ((dx * dx + dy * dy) <= radius * radius) {
             if (Math.abs(dx) > Math.abs(dy)) {
                 ball.bounceOff(-ball.getDx(), ball.getDy()); // hit left or right
             } else {
                 ball.bounceOff(ball.getDx(), -ball.getDy()); // hit top or bottom
             }
-        }*/
+        }
+        */
 
         return (dx * dx + dy * dy) <= radius * radius;
     }

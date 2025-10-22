@@ -23,12 +23,11 @@ public class MenuPanel {
     public void draw(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
 
-        g2.drawImage(bgImage.getImage(), 0, 0, 768
-                , 576, null);
+        g2.drawImage(bgImage.getImage(), 0, 0, 768,
+                576, null);
 
-        g2.drawImage(playImage.getImage(), playButton.x, playButton.y, 120
-                , 60, null);
-
+        g2.drawImage(playImage.getImage(), playButton.x, playButton.y, 120,
+                60, null);
 
         // Nút bấm
         g.setFont(new Font("Arial", Font.PLAIN, 25));
