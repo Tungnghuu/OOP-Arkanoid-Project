@@ -22,6 +22,8 @@ public class GamePanel extends JPanel implements Runnable {
     final int screenHeight = tileSize * maxScreenRow;
 
     private boolean inMenu = true;
+    private boolean gameOver = false;     // thêm
+    private boolean gameCleared = false;  // thêm
     private MenuPanel menuPanel;
     InputHandler inputHandler = new InputHandler();
     GameManager gameManager = new GameManager();
@@ -57,18 +59,19 @@ public class GamePanel extends JPanel implements Runnable {
         while (gameThread != null) {
             update();
             repaint();
-            int lives = gameManager.getLives();
-            //TODO: resolve ways for user to replay after GameOver
-            if (lives <= 0) {
-                gameThread = null;
-                break;
-            }
-            // limits CPU's usage reduced to 60 fps
-            try {
-                Thread.sleep(16);
-            } catch (InterruptedException e) {
-            }
+            try { Thread.sleep(16); } catch (InterruptedException e) {}
         }
+    }
+
+    private void doReset(boolean resetScore) {
+        gameManager.resetGame(resetScore);
+        brickManager.reset();
+        paddle = gameManager.newDefaultPaddle();
+        ball = gameManager.newDefaultBall();
+        powerUpList = gameManager.getPowerUpList();
+        gameOver = false;
+        gameCleared = false;
+        inputHandler.resetPressed = false;
     }
 
     public void update() {
@@ -79,65 +82,84 @@ public class GamePanel extends JPanel implements Runnable {
                 }
                 inputHandler.mouseClicked = false;
             }
+            return;
+        }
+
+        // Khi Game Over hoặc Clear chờ người chơi nhấn R để reset
+        if (gameOver || gameCleared) {
+            if (inputHandler.resetPressed) doReset(true);
+            return;
+        }
+
+        if (inputHandler.leftPressed) paddle.moveLeft();
+        if (inputHandler.rightPressed) paddle.moveRight();
+
+        if (inputHandler.spacePressed && ball.isStuck()) {
+            ball.startBall();
+            inputHandler.spacePressed = false;
+        }
+
+        if (!ball.isStuck()) {
+            ball.updateBall(gameManager);
+            gameManager.updateIfCollision(ball, paddle, brickList);
         } else {
-            if (inputHandler.leftPressed) {
-                paddle.moveLeft();
-            }
-            if (inputHandler.rightPressed) {
-                paddle.moveRight();
-            }
+            ball.BallFollowPaddle(paddle);
+        }
 
-            if (inputHandler.spacePressed && ball.isStuck()) {
-                ball.startBall();
-                inputHandler.spacePressed = false;
+        // PowerUp
+        for (PowerUp p : powerUpList) {
+            p.updatePowerUp();
+            if (!p.isPowerUp() && paddle.getBounds().intersects(p.getBounds())) {
+                paddle.applyPowerUp(p);
+                p.activate();
             }
-
-            if (!ball.isStuck()) {
-                ball.updateBall(gameManager);
-                gameManager.updateIfCollision(ball, paddle, brickList);
+            if (p.isPowerUp() && p.isExpired(10000)) {
+                paddle.endPowerUp(p);
+                p.end();
             }
+        }
 
-            if (ball.isStuck()) {
-                ball.BallFollowPaddle(paddle);
-            }
-
-            for (PowerUp p : powerUpList) {
-                p.updatePowerUp();
-
-                if (!p.isPowerUp() && paddle.getBounds().intersects(p.getBounds())) {
-                    paddle.applyPowerUp(p);
-                    p.activate();
-                }
-
-                if (p.isPowerUp() && p.isExpired(10000)) {
-                    paddle.endPowerUp(p);
-                    p.end();
-                }
-            }
+        // Điều kiện để reset hoặc kết thúc game
+        if (gameManager.getLives() <= 0) {
+            gameOver = true;
+        } else if (brickManager.isAllCleared()) {
+            gameCleared = true;
         }
     }
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
+
         ImageIcon ballImage = LoadImage.get("/asset/ball.png", 16,16);
         ImageIcon paddleImage = LoadImage.get("/asset/paddle.png", 120,15);
         if (inMenu) {
             menuPanel.draw(g);
-        } else {
-            DrawObject drawPaddle = new DrawObject(paddle.getX(), paddle.getY(),
-                    paddle.getWidth(), paddle.getHeight(), Color.blue);
-            DrawObject drawBall = new DrawObject(ball.getX(), ball.getY(), ball.getWidth(),
-                    ball.getHeight(), Color.orange);
-            drawBall.drawBall(g2, ballImage);
-            drawPaddle.drawRect(g2,paddleImage);
-            renderBrick(g2);
-            renderPowerUp(g2);
-            g2.setColor(Color.white);
-            g2.setFont(new Font("Arial", Font.PLAIN, 20));
-            g2.drawString("Score: " + gameManager.getScore(), 600, 20);
-            g2.drawString("Lives: " + gameManager.getLives(), 50, 20);
-            g2.dispose();
+            return;
+        }
+        
+        DrawObject drawPaddle = new DrawObject(paddle.getX(), paddle.getY(),
+                paddle.getWidth(), paddle.getHeight(), Color.blue);
+        DrawObject drawBall = new DrawObject(ball.getX(), ball.getY(), ball.getWidth(),
+                ball.getHeight(), Color.orange);
+        drawBall.drawBall(g2, ballImage);
+        drawPaddle.drawRect(g2,paddleImage);
+        renderBrick(g2);
+        renderPowerUp(g2);
+        g2.setColor(Color.white);
+        g2.setFont(new Font("Arial", Font.PLAIN, 20));
+        g2.drawString("Score: " + gameManager.getScore(), 600, 20);
+        g2.drawString("Lives: " + gameManager.getLives(), 50, 20);
+
+        if (gameOver || gameCleared) {
+            g2.setColor(new Color(0,0,0,160));
+            g2.fillRect(0,0,getWidth(),getHeight());
+            g2.setColor(Color.WHITE);
+            g2.setFont(new Font("Arial", Font.BOLD, 28));
+            String msg = gameOver ? "Game Over" : "All Bricks Cleared!";
+            g2.drawString(msg, getWidth()/2 - 120, getHeight()/2 - 10);
+            g2.setFont(new Font("Arial", Font.PLAIN, 22));
+            g2.drawString("Press R to Reset", getWidth()/2 - 110, getHeight()/2 + 30);
         }
     }
 
