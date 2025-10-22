@@ -13,14 +13,15 @@ import entity.*;
 import myLogic.*;
 
 public class GamePanel extends JPanel implements Runnable {
-    final int originalTileSize = 16;
-    final int scale = 3;
-    final int tileSize = originalTileSize * scale;
-    int maxScreenCol = 16;
-    int maxScreenRow = 12;
-    final int screenWidth = tileSize * maxScreenCol;
-    final int screenHeight = tileSize * maxScreenRow;
+    private final int originalTileSize = 16;
+    private final int scale = 3;
+    private final int tileSize = originalTileSize * scale;
+    private int maxScreenCol = 16;
+    private int maxScreenRow = 12;
+    private final int screenWidth = tileSize * maxScreenCol;
+    private final int screenHeight = tileSize * maxScreenRow;
 
+    private boolean inSetting = false;
     private boolean inMenu = true;
     private boolean gameOver = false;
     private boolean gameCleared = false;
@@ -32,11 +33,12 @@ public class GamePanel extends JPanel implements Runnable {
     Paddle paddle = gameManager.getPaddle();
     Ball ball = gameManager.getBall();
     DrawObject drawPaddle = new DrawObject(paddle.getX(), paddle.getY(),
-                paddle.getWidth(), paddle.getHeight(), Color.blue);
-        DrawObject drawBall = new DrawObject(ball.getX(), ball.getY(), ball.getWidth(),
-                ball.getHeight(), Color.orange);
+                                            paddle.getWidth(), paddle.getHeight(), Color.blue);
+    DrawObject drawBall = new DrawObject(ball.getX(), ball.getY(),
+                                            ball.getWidth(), ball.getHeight(), Color.orange);
     List<List<Brick>> brickList = brickManager.getBricks();
     Thread gameThread;
+
     private ImageIcon ballImage;
     private ImageIcon paddleImage;
 
@@ -51,7 +53,7 @@ public class GamePanel extends JPanel implements Runnable {
         this.addMouseListener(inputHandler);
         this.setFocusable(true);
 
-        menuPanel = new MenuPanel(this);
+        menuPanel = new MenuPanel();
 
         ballImage = LoadImage.get("/asset/ball.png", 16,16);
         paddleImage = LoadImage.get("/asset/paddle.png", 120,15);
@@ -68,7 +70,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     @Override
     public void run() {
-        double drawInterval = 1000000000.0 / 60; // 60 FPS
+        double drawInterval = 1000000000.0 / 120; // 120 FPS
         double delta = 0;
         long lastTime = System.nanoTime();
         long currentTime;
@@ -157,6 +159,10 @@ public class GamePanel extends JPanel implements Runnable {
         if (inMenu) {
             menuPanel.draw(g);
             return;
+        }
+
+        if (inSetting) {
+            
         }
         
         drawBall.setPosition(ball.getX(), ball.getY());
