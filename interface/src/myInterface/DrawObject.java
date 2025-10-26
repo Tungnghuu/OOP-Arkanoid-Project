@@ -59,8 +59,10 @@ public class DrawObject extends JPanel {
         g2.drawImage(ballImage.getImage(), this.x, this.y, this.width, this.height, null);
     }
 
-    public void setPosition(int x, int y) {
+    public void setPosition(int x, int y, int width, int height) {
         this.x = x;
         this.y = y;
+        this.width = width;
+        this.height = height;
     }
 }

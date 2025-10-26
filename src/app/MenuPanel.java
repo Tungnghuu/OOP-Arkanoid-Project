@@ -4,14 +4,18 @@ import javax.swing.*;
 import java.awt.*;
 
 public class MenuPanel {
-    private Rectangle playButton = new Rectangle(300, 260, 180, 120);
-    private Rectangle guideButton = new Rectangle(320, 360, 160, 40);
-    private Rectangle scoreButton = new Rectangle(320, 420, 160, 40);
+    private Rectangle playButton = new Rectangle(300, 260, 120, 60);
+    private Rectangle guideButton = new Rectangle(300, 360, 120, 60);
+    private Rectangle scoreButton = new Rectangle(300, 420, 120, 60);
     private ImageIcon playImage = LoadImage.get("/asset/playGame.png", 120, 60);
     private ImageIcon bgImage = LoadImage.get("/asset/background.jpg", 768, 576);
+    private ImageIcon highScoreImg = LoadImage.get("/asset/score.jpg", 120, 60);
 
     public Rectangle getPlayButton() {
         return playButton;
+    }
+    public Rectangle getScoreButton() {
+        return scoreButton;
     }
 
     public void draw(Graphics g) {
@@ -19,17 +23,12 @@ public class MenuPanel {
 
         g2.drawImage(bgImage.getImage(), 0, 0, 768, 576, null);
         g2.drawImage(playImage.getImage(), playButton.x, playButton.y, 120, 60, null);
-
+        g2.drawImage(highScoreImg.getImage(), scoreButton.x, scoreButton.y, 120, 60, null);
         // Nút bấm
         g.setFont(new Font("Arial", Font.PLAIN, 25));
         g.setColor(Color.LIGHT_GRAY);
-        g.drawString("Hướng dẫn", guideButton.x + 15, guideButton.y + 28);
-        g.drawString("Điểm cao", scoreButton.x + 25, scoreButton.y + 28);
+        g.drawString("Hướng dẫn", guideButton.x, guideButton.y);
 
-        // Viền nút
-        g.setColor(Color.GRAY);
-        g.drawRect(guideButton.x, guideButton.y, guideButton.width, guideButton.height);
-        g.drawRect(scoreButton.x, scoreButton.y, scoreButton.width, scoreButton.height);
     }
 }
 

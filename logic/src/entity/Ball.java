@@ -5,15 +5,13 @@ import app.GameManager;
 /** Lop dai dien cho bong. */
 public class Ball extends MovableObject {
     /** Cac thuoc tinh. */
-    private double speed;
     private int radius;
     public double angleOfAttack;
     private static boolean ballStuck = true;
 
     /** Constructor cua Ball.*/
-    public Ball(double speed,  int x, int y, double dx, double dy, int radius ) {
-        super(x, y, radius * 2, radius * 2);
-        this.speed = speed;
+    public Ball(int x, int y, double dx, double dy, int radius, double speed) {
+        super(x, y, dx, dy, radius * 2, radius * 2, speed);
         this.radius = radius;
 
         int rand = (int) Math.random() * 2; // rand is either 0 or 1
@@ -27,9 +25,8 @@ public class Ball extends MovableObject {
 
     /** copy Constructor cua Ball.*/
     public Ball(Ball other) {
-        super(other.getDx(), other.getDy(), other.getX(), other.getY(),
-                 other.radius * 2, other.radius * 2);
-        this.speed = other.speed;
+        super(other.getX(), other.getY(), other.getDx(), other.getDy(),
+                other.radius * 2, other.radius * 2, other.getSpeed());
         this.radius = other.radius;
     }
 
@@ -37,9 +34,6 @@ public class Ball extends MovableObject {
         return this.radius;
     }
 
-    public double getSpeed() {
-        return this.speed;
-    }
 
     /**
      * cho bong di chuyen theo paddle khi chua bat dau.
@@ -70,7 +64,7 @@ public class Ball extends MovableObject {
         ballStuck = true;
         this.setX(374);
         this.setY(506);
-        this.speed = 4;
+        this.setSpeed(4);
         this.radius = 8;
 
         int rand = (int) Math.random() * 2; // rand is either 0 or 1
@@ -79,7 +73,7 @@ public class Ball extends MovableObject {
         } else {
             this.setDx(-0.1);
         }
-        this.setDy(speed);
+        this.setDy(this.getSpeed());
     }
 
     public void updateBall(GameManager gm) {

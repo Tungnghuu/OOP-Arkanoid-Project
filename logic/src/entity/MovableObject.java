@@ -5,16 +5,18 @@ public abstract  class MovableObject extends GameObject {
     /** cac thuoc tinh cua MovableObject. */
     private double dx;
     private double dy;
+    private double speed;
 
     /** Constructor cua MovableObject. */
-    public MovableObject(double dx, double dy, int x, int y, int height, int length) {
-        super(x,y,height, length);
+    public MovableObject(int x, int y, double dx, double dy, int width, int height, double speed) {
+        super(x, y, width, height);
         this.dx = dx;
         this.dy = dy;
+        this.speed = speed;
     }
 
-    public MovableObject(int x, int y, int height, int length) {
-        super(x, y, height, length);
+    public MovableObject(int x, int y, int width, int height) {
+        super(x, y, width, height);
     }
 
     public double getDx() {
@@ -33,4 +35,11 @@ public abstract  class MovableObject extends GameObject {
         this.dy = dy;
     }
 
+    public double getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(double speed) {
+        this.speed = speed;
+    }
 }

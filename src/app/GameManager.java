@@ -1,8 +1,12 @@
 package app;
 
 // import java.awt.*;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.List; 
+import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 
 import entity.*;
@@ -20,17 +24,17 @@ public class GameManager {
     private Ball ball;
     private int score;
     private int lives;
-    private double dropChance;
+   // private double dropChance;
 
     /**
      * Constructor cua GameManager.
      */
     public GameManager() {
-        paddle = new Paddle(1, 0, 5, 324, 526, 15, 100);
-        ball = new Ball(4, 374, 506, 1, 1, 8);
+        paddle = new Paddle(324, 526, 1, 0, 80, 15, 5);
+        ball = new Ball(374, 506, 1, 1, 8, 5);
         this.score = 0;
         this.lives = 3;
-        this.dropChance = 0.4;
+      //  this.dropChance = 0.4;
     }
 
     /** geter cua cac thuoc tinh.*/
@@ -58,10 +62,7 @@ public class GameManager {
         return powerUpList;
     }
 
-    /** abcxyz
-     * Thuat toan tham khao tu:
-     * https://www.iostream.co/article/collision-detection-xet-va-cham-giua-hinh-tron-voi-hinh-chu-nhat-Diru1.
-    */
+    // kiem tra va cham.
     public boolean checkCollision(GameObject gameObject, Ball ball) {
         double centerBallX = ball.getX() + ball.getRadius();
         double centerBallY = ball.getY() + ball.getRadius();
@@ -104,49 +105,66 @@ public class GameManager {
         if (checkCollision(paddle, ball)) {
             handlePaddleCollision(ball, paddle);
         }
+
         List<Brick> hitBricks = new ArrayList<>();
-        outer:
-        for (int i = 0; i < brickList.size(); i++) {
-            List<Brick> row = brickList.get(i);
-            for (int j = 0; j < brickList.get(i).size(); j++) {
-                Brick brick = row.get(j);
+        boolean collided = false;
+        // tim gach va cham
+        for (List<Brick> row : brickList) {
+            Iterator<Brick> it = row.iterator();
+            while(it.hasNext()) {
+                Brick brick = it.next();
+
                 if (checkCollision(brick, ball)) {
-                    hitBricks.add(brick);
                     handleBrickCollision(ball, brick);
-                    brick.takeHits();
-                    break outer; // Thoát vòng lặp
+                    hitBricks.add(brick);
+                    collided = true;
+                    break;
                 }
+            }
+            if (collided) break;
+        }
+
+        // tao powerUp va tang diem
+        for (Brick b : hitBricks) {
+            b.takeHits();
+            if (b.isDestroy()) {
+                createPowerUp(b);
+                addScore(b);
             }
         }
 
-        if (!hitBricks.isEmpty()) {
-            for (Brick b : hitBricks) {
-                b.takeHits();
+        // xoa gach
+        for (List<Brick> row : brickList) {
+            Iterator<Brick> it = row.iterator();
+            while (it.hasNext()) {
+                Brick b = it.next();
                 if (b.isDestroy()) {
-                    createPowerUp(b);
-                    addScore(b);
+                    it.remove();
                 }
             }
+        }
+      //  hitBricks.clear();
 
-            for (List <Brick> row : brickList) {
-                row.removeIf(Brick :: isDestroy);
+        for (PowerUp p : powerUpList) {
+            if (p.getBounds().intersects(paddle.getBounds())) {
+                p.setRenderPowerUp(false);
             }
         }
     }
 
     public void createPowerUp(Brick brick) {
-        if (brick.getType() == BrickType.EXPLOSIVE) {
+        if (brick.getType() == BrickType.BONUS) {
             PowerUp powerUp;
-            if (Math.random() < this.dropChance) {
-                switch (new Random().nextInt(2)) {
-                    case 0 -> powerUp = new PowerUp(brick.getX(), brick.getY(), 15, 15, PowerUpType.EXPAND_PADDLE);
-                    case 1 -> powerUp = new PowerUp(brick.getX(), brick.getY(), 15, 15, PowerUpType.SHRINK_PADDLE);
-                    default -> powerUp = new PowerUp(brick.getX(), brick.getY(), 15, 15, PowerUpType.EXPAND_PADDLE);
-                }
+            switch (new Random().nextInt(3)) {
+                case 0 -> powerUp = new PowerUp(brick.getX(), brick.getY(), 15, 15, PowerUpType.EXPAND_PADDLE);
+                case 1 -> powerUp = new PowerUp(brick.getX(), brick.getY(), 15, 15, PowerUpType.SHRINK_PADDLE);
+                case 2 -> powerUp = new PowerUp(brick.getX(), brick.getY(), 15, 15, PowerUpType.FAST_BALL);
+                default -> powerUp = new PowerUp(brick.getX(), brick.getY(), 15, 15, PowerUpType.EXPAND_PADDLE);
+            }
                 powerUpList.add(powerUp);
+                powerUp.setRenderPowerUp(true);
             }
         }
-    }
 
     public void addScore(Brick brick) {
         switch (brick.getType()) {
@@ -203,9 +221,19 @@ public class GameManager {
 
         if (overlapX < overlapY) {
             // Va cham trai hoac phai
+            if (dx < 0) {
+                ball.setX(brick.getX() - ball.getWidth());
+            } else {
+                ball.setX(brick.getX() + brick.getWidth());
+            }
             ball.setDx(-ball.getDx());
         } else {
             // Va cham tren hoac duoi
+            if (dy < 0) {
+                ball.setY(brick.getY() - ball.getHeight());
+            } else {
+                ball.setY(brick.getY() + brick.getHeight());
+            }
             ball.setDy(-ball.getDy());
         }
     }
@@ -219,10 +247,19 @@ public class GameManager {
 
     // Khởi tạo lại thanh đỡ và bóng
     public Paddle newDefaultPaddle() {
-        return new Paddle(1, 0, 5, 324, 526, 15, 100);
+        return new Paddle(324, 526, 1, 0, 80, 15, 5);
     }
     public Ball newDefaultBall() {
-        return new Ball(4, 374, 506, 1, 1, 8);
+        return new Ball(374, 506, 1, 1, 8, 5);
+    }
+
+    private void saveScore() {
+        Score recordScore = new Score(this.score, Timestamp.valueOf(LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"))));
+        RecordScore.insertScore(recordScore);
+    }
+
+    public void gameOver() {
+        saveScore();
     }
 }
 

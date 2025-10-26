@@ -20,7 +20,7 @@ public class BrickManager {
 
     private void initBricks() {
         brickList.clear();
-        ArrayList<ArrayList<int[]>> layout = BrickLayout.level1();
+        ArrayList<ArrayList<int[]>> layout = BrickLayout.level3();
 
         for (ArrayList<int[]> rowData : layout) {
             List<Brick> row = new ArrayList<>();
@@ -34,6 +34,8 @@ public class BrickManager {
                 switch (type) {
                     case 1 -> brick = new ExplosiveBrick(x, y);
                     case 2 -> brick = new StrongBrick(x, y);
+                    case 3 -> brick = new NormalBrick(x, y);
+                    case 4 -> brick = new BonusBrick(x, y);
                     default -> brick = new NormalBrick(x, y);
                 }
 

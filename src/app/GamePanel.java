@@ -8,6 +8,9 @@ import myInterface.*;
 import entity.*;
 import myLogic.*;
 
+import static app.RenderObject.renderBrick;
+import static app.RenderObject.renderPowerUp;
+
 public class GamePanel extends JPanel implements Runnable {
     private final int originalTileSize = 16;
     private final int scale = 3;
@@ -23,16 +26,17 @@ public class GamePanel extends JPanel implements Runnable {
     private boolean gameCleared = false;
     private MenuPanel menuPanel;
     private InputHandler inputHandler = new InputHandler();
-    private GameManager gameManager = new GameManager();
-    private BrickManager brickManager = new BrickManager();
-    private List<PowerUp> powerUpList = gameManager.getPowerUpList();
+    static GameManager gameManager = new GameManager();
+    static BrickManager brickManager = new BrickManager();
+    static List<PowerUp> powerUpList = gameManager.getPowerUpList();
     private Paddle paddle = gameManager.getPaddle();
     private Ball ball = gameManager.getBall();
     private DrawObject drawPaddle = new DrawObject(paddle.getX(), paddle.getY(),
                                             paddle.getWidth(), paddle.getHeight(), Color.blue);
     private DrawObject drawBall = new DrawObject(ball.getX(), ball.getY(),
                                             ball.getWidth(), ball.getHeight(), Color.orange);
-    private List<List<Brick>> brickList = brickManager.getBricks();
+    static List<List<Brick>> brickList = brickManager.getBricks();
+    private boolean scoreSaved = false;
     private Thread gameThread;
 
     private ImageIcon ballImage;
@@ -66,7 +70,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     @Override
     public void run() {
-        double drawInterval = 1000000000.0 / 120; // 120 FPS
+        double drawInterval = 1000000000.0 / 60; // 120 FPS
         double delta = 0;
         long lastTime = System.nanoTime();
         long currentTime;
@@ -81,6 +85,7 @@ public class GamePanel extends JPanel implements Runnable {
                 repaint();
                 delta--;
             }
+
         }
     }
 
@@ -92,6 +97,7 @@ public class GamePanel extends JPanel implements Runnable {
         powerUpList = gameManager.getPowerUpList();
         gameOver = false;
         gameCleared = false;
+        scoreSaved = false;
         inputHandler.resetPressed = false;
     }
 
@@ -100,14 +106,21 @@ public class GamePanel extends JPanel implements Runnable {
             if (inputHandler.mouseClicked) {
                 if (menuPanel.getPlayButton().contains(inputHandler.mouseX, inputHandler.mouseY)) {
                     startGame();
+                } else if (menuPanel.getScoreButton().contains(inputHandler.mouseX, inputHandler.mouseY)) {
+                    SwingUtilities.invokeLater(() -> new GameHistoryTable(GetHistory.getHistory()).setVisible(true));
                 }
                 inputHandler.mouseClicked = false;
             }
             return;
         }
 
+
         // Khi Game Over hoặc Clear chờ người chơi nhấn R để reset
         if (gameOver || gameCleared) {
+            if (!scoreSaved) {
+                gameManager.gameOver();
+                scoreSaved = true;
+            }
             if (inputHandler.resetPressed) doReset(true);
             return;
         }
@@ -131,11 +144,13 @@ public class GamePanel extends JPanel implements Runnable {
         for (PowerUp p : powerUpList) {
             p.updatePowerUp();
             if (!p.isPowerUp() && paddle.getBounds().intersects(p.getBounds())) {
-                paddle.applyPowerUp(p);
+                p.applyPowerUp(paddle);
+                p.applyPowerUp(ball);
                 p.activate();
             }
             if (p.isPowerUp() && p.isExpired(10000)) {
-                paddle.endPowerUp(p);
+                p.endPowerUp(paddle);
+                p.endPowerUp(ball);
                 p.end();
             }
         }
@@ -146,6 +161,7 @@ public class GamePanel extends JPanel implements Runnable {
         } else if (brickManager.isAllCleared()) {
             gameCleared = true;
         }
+
     }
 
     public void paintComponent(Graphics g) {
@@ -161,8 +177,8 @@ public class GamePanel extends JPanel implements Runnable {
             
         }
         
-        drawBall.setPosition(ball.getX(), ball.getY());
-        drawPaddle.setPosition(paddle.getX(), paddle.getY());
+        drawBall.setPosition(ball.getX(), ball.getY(), ball.getWidth(), ball.getHeight());
+        drawPaddle.setPosition(paddle.getX(), paddle.getY(), paddle.getWidth(), paddle.getHeight());
         drawBall.drawBall(g2, ballImage);
         drawPaddle.drawRect(g2,paddleImage);
         renderBrick(g2);
@@ -185,66 +201,4 @@ public class GamePanel extends JPanel implements Runnable {
         this.setDoubleBuffered(true);
     }
 
-    public void renderBrick(Graphics g) {
-        Graphics2D g2 = (Graphics2D) g;
-        for (int i = 0; i < brickList.size(); i++) {
-            for (int j = 0; j < brickList.get(i).size(); j++) {
-                Brick b = brickList.get(i).get(j);
-                Color brickColor;
-
-                switch (b.getType()) {
-                    case NORMAL:
-                        brickColor = Color.GREEN;
-                        break;
-                    case STRONG:
-                        brickColor = Color.GRAY;
-                        break;
-                    case UNBREAKABLE:
-                        brickColor = Color.RED;
-                        break;
-                    case EXPLOSIVE:
-                        brickColor = Color.ORANGE;
-                        break;
-                    default:
-                        brickColor = Color.WHITE;
-                }
-
-                DrawObject drawBrick = new DrawObject(
-                        b.getX(),
-                        b.getY(),
-                        b.getWidth(),
-                        b.getHeight(),
-                        brickColor
-                );
-                drawBrick.drawRect(g2);
-                g2.setColor(Color.BLACK);
-                g2.drawRect(b.getX(), b.getY(), b.getWidth(), b.getHeight());
-            }
-        }
-    }
-
-    public void renderPowerUp(Graphics g) {
-        Graphics2D g2 = (Graphics2D) g;
-        for (PowerUp p : powerUpList) {
-            Color powerUpColor;
-            switch (p.getType()) {
-                case EXPAND_PADDLE:
-                    powerUpColor = Color.YELLOW;
-                    break;
-                case SHRINK_PADDLE:
-                    powerUpColor = Color.RED;
-                    break;
-                default:
-                    powerUpColor = Color.WHITE;
-            }
-            DrawObject drawPowerUp = new DrawObject(
-                    p.getX(),
-                    p.getY(),
-                    p.getWidth(),
-                    p.getHeight(),
-                    powerUpColor
-            );
-            drawPowerUp.drawRect(g2);
-        }
-    }
 }

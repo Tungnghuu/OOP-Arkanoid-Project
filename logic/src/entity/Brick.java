@@ -15,7 +15,7 @@ public abstract class Brick  extends GameObject {
 
     /** Constructor cua Brick. */
     public Brick(int hitPoints, BrickType type, int x, int y) {
-        super(x, y, HEIGHT, WIDTH);
+        super(x, y, WIDTH, HEIGHT);
         this.hitPoints = hitPoints;
         this.type = type;
     }
