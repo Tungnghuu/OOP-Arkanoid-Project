@@ -52,4 +52,4 @@ This project was developed for **learning and practicing OOP concepts** includin
 ### References
 - Inspired by the classic **Arkanoid** game  
 - Developed using Java and OOP principles  
-- Helped of ChatGPT (generated pictures and help us understand concept of OOP)
+- Help of ChatGPT (generated pictures and help us understand concept of OOP)
