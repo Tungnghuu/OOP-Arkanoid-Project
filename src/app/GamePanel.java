@@ -12,13 +12,13 @@ import static app.RenderObject.renderBrick;
 import static app.RenderObject.renderPowerUp;
 
 public class GamePanel extends JPanel implements Runnable {
-    private final int originalTileSize = 16;
-    private final int scale = 3;
-    private final int tileSize = originalTileSize * scale;
-    private int maxScreenCol = 16;
-    private int maxScreenRow = 12;
-    private final int screenWidth = tileSize * maxScreenCol;
-    private final int screenHeight = tileSize * maxScreenRow;
+    public static final int originalTileSize = 16;
+    public static final int scale = 3;
+    public static final int tileSize = originalTileSize * scale;
+    public static int maxScreenCol = 16;
+    public static int maxScreenRow = 12;
+    public static final int screenWidth = tileSize * maxScreenCol;
+    public static final int screenHeight = tileSize * maxScreenRow;
 
     private boolean inSetting = false;
     private boolean inMenu = true;
@@ -41,6 +41,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     private ImageIcon ballImage;
     private ImageIcon paddleImage;
+    private ImageIcon level1To5Bg;
 
     private final Font hudFont = new Font("Arial", Font.PLAIN, 20);
     private final Color hudColor = Color.WHITE;
@@ -55,6 +56,7 @@ public class GamePanel extends JPanel implements Runnable {
 
         menuPanel = new MenuPanel();
 
+        level1To5Bg = LoadImage.get("/asset/level1To5.png", screenWidth, screenHeight);
         ballImage = LoadImage.get("/asset/ball.png", 16,16);
         paddleImage = LoadImage.get("/asset/paddle.png", 120,15);
     }
@@ -167,6 +169,10 @@ public class GamePanel extends JPanel implements Runnable {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
+
+        if (brickManager.getLevel() <= 5) {
+            g2.drawImage(level1To5Bg.getImage(), 0, 0, null);
+        }
 
         if (inMenu) {
             menuPanel.draw(g);

@@ -8,6 +8,11 @@ import entity.Brick;
 
 public class BrickManager {
     private List<List<Brick>> brickList;
+    private int level;
+
+    public int getLevel() {
+        return this.level;
+    }
 
     public BrickManager() {
         this.brickList = new ArrayList<>() ;
@@ -44,6 +49,10 @@ public class BrickManager {
 
             brickList.add(row);
         }
+
+        this.level = 3;
+
+        //TODO: fix this
     }
 
     // Kiểm tra đã phá hết gạch chưa

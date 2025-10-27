@@ -10,8 +10,15 @@ public class BrickLayout {
     protected static int startY = 50;
     protected static int w = Brick.WIDTH;
     protected static int h = Brick.HEIGHT;
+    protected static int level;
+
+    public static int getLevel() {
+        return level;
+    }
+    //TODO: fix this
 
     public static ArrayList<ArrayList<int[]>> level1() {
+        level = 1;
         ArrayList<ArrayList<int[]>> layout = new ArrayList<>();
 
         for (int i = 0; i < 8; i++) {
@@ -34,8 +41,8 @@ public class BrickLayout {
     }
 
     public static ArrayList<ArrayList<int[]>> level2() {
+        level = 2;
         ArrayList<ArrayList<int[]>> layout = new ArrayList<>();
-
         for (int i = 0; i < 8; i++) {
             ArrayList<int[]> row = new ArrayList<>();
             for (int j = 0; j < 8; j++) {
@@ -52,6 +59,7 @@ public class BrickLayout {
     }
 
     public static ArrayList<ArrayList<int[]>> level3() {
+        level = 3;
         ArrayList<ArrayList<int[]>> layout = new ArrayList<>();
         Random rand = new Random();
 
