@@ -5,3 +5,7 @@
 /.target
 out/production/
 *.iml
+/bin
+/.vscode
+/Arkabit.jar
+/build.bat

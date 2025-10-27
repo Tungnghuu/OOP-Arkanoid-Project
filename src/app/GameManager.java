@@ -9,10 +9,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-import entity.*;
-import myLogic.BrickType;
-import myLogic.PowerUp;
-import myLogic.PowerUpType;
+import logic.entity.*;
+import logic.myLogic.*;
 
 /** Lop quan ly game. */
 public class GameManager {

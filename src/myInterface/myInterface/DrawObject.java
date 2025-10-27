@@ -1,4 +1,4 @@
-package myInterface;
+package myInterface.myInterface;
 
 import java.awt.Graphics2D;
 import java.awt.Color;

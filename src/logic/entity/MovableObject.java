@@ -1,4 +1,4 @@
-package entity;
+package logic.entity;
 
 /** Lop dai dien cho cac doi tuong di chuyen duoc. */
 public abstract  class MovableObject extends GameObject {

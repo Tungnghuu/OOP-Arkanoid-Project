@@ -1,10 +1,10 @@
 package app;
 
-import entity.Brick;
-import myInterface.DrawObject;
-import myLogic.PowerUp;
+import myInterface.myInterface.*;
 
 import java.awt.*;
+import logic.entity.*;
+import logic.myLogic.*;
 
 import static app.GamePanel.brickList;
 import static app.GamePanel.powerUpList;

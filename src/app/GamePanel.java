@@ -2,11 +2,12 @@ package app;
 
 import java.awt.*;
 import javax.swing.*;
-import java.util.List;
 
-import myInterface.*;
-import entity.*;
-import myLogic.*;
+import logic.entity.*;
+import logic.myLogic.*;
+import myInterface.myInterface.*;
+
+import java.util.List;
 
 import static app.RenderObject.renderBrick;
 import static app.RenderObject.renderPowerUp;

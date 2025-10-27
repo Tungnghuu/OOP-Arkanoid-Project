@@ -1,7 +1,7 @@
-package entity;
+package logic.entity;
 
-import myLogic.PowerUp;
-import myLogic.PowerUpType;
+import logic.myLogic.PowerUp;
+import logic.myLogic.PowerUpType;
 
 /** Lop dai dien cho thanh truot. */
 public class Paddle extends MovableObject {

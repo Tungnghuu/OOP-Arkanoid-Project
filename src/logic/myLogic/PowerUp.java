@@ -1,10 +1,6 @@
-package myLogic;
+package logic.myLogic;
 
-import entity.Ball;
-import entity.GameObject;
-import entity.MovableObject;
-import entity.Paddle;
-// import entity.Paddle;
+import logic.entity.*;
 
 public class PowerUp extends GameObject {
     /** Thuoc tinh .*/

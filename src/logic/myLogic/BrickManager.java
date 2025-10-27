@@ -1,10 +1,10 @@
-package myLogic;
+package logic.myLogic;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import brickLayout.BrickLayout;
-import entity.Brick;
+import logic.brickLayout.BrickLayout;
+import logic.entity.Brick;
 
 public class BrickManager {
     private List<List<Brick>> brickList;

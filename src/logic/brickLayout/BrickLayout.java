@@ -1,9 +1,9 @@
-package brickLayout;
+package logic.brickLayout;
+
+import logic.entity.Brick;
 
 import java.util.ArrayList;
 import java.util.Random;
-
-import entity.Brick;
 
 public class BrickLayout {
     protected static int startX = 184;

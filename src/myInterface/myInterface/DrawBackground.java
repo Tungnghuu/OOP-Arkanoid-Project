@@ -1,4 +1,4 @@
-package myInterface;
+package myInterface.myInterface;
 
 import java.awt.*;
 

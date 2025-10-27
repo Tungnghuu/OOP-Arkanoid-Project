@@ -1,6 +1,6 @@
 package app;
 
-import myInterface.*;
+import myInterface.myInterface.*;
 import javax.swing.*;
 import java.awt.*;
 

@@ -1,4 +1,4 @@
-package myLogic;
+package logic.myLogic;
 
 public enum PowerUpType {
     EXPAND_PADDLE,

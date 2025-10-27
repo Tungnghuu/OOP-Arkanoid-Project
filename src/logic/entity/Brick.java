@@ -1,6 +1,6 @@
-package entity;
+package logic.entity;
 
-import myLogic.BrickType;
+import logic.myLogic.BrickType;
 
 /** Class dai dien cho 1 vien gach. */
 public abstract class Brick  extends GameObject {
