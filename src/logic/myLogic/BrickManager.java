@@ -15,17 +15,26 @@ public class BrickManager {
     }
 
     public BrickManager() {
-        this.brickList = new ArrayList<>() ;
-        initBricks();
+        this.brickList = new ArrayList<>();
+        this.level = 1;
+        initBricks(1);
     }
 
     public List<List<Brick>> getBricks() {
         return brickList;
     }
 
-    private void initBricks() {
+    private void initBricks(int level) {
         brickList.clear();
-        ArrayList<ArrayList<int[]>> layout = BrickLayout.level3();
+        ArrayList<ArrayList<int[]>> layout;
+        
+        // Lấy layout dựa trên level
+        switch (level) {
+            case 1 -> layout = BrickLayout.level1();
+            case 2 -> layout = BrickLayout.level2();
+            case 3 -> layout = BrickLayout.level3();
+            default -> layout = BrickLayout.level1();
+        }
 
         for (ArrayList<int[]> rowData : layout) {
             List<Brick> row = new ArrayList<>();
@@ -50,9 +59,12 @@ public class BrickManager {
             brickList.add(row);
         }
 
-        this.level = 3;
+        this.level = level;
+    }
 
-        //TODO: fix this
+    // Tải level
+    public void loadLevel(int level) {
+        initBricks(level);
     }
 
     // Kiểm tra đã phá hết gạch chưa
@@ -63,9 +75,9 @@ public class BrickManager {
         return true;
     }
 
-    // Reset lại;
+    // Reset lại
     public void reset() {
         brickList.clear();
-        initBricks();
+        initBricks(this.level);
     }
 }
