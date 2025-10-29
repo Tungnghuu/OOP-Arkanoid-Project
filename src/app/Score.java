@@ -18,4 +18,8 @@ public class Score {
     public Timestamp getRecordTime() {
         return recordTime;
     }
+
+    public String toString() {
+        return (score + " " + recordTime + '\n');
+    }
 }
