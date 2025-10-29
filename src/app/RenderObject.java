@@ -13,10 +13,10 @@ import static app.GamePanel.powerUpList;
 
 public class RenderObject {
     static boolean isRenderPowerUp = true;
-    private static ImageIcon strongBrick = LoadImage.get("/asset/strongBrick.png", Brick.WIDTH, Brick.HEIGHT);
-    private static ImageIcon bonusBrick = LoadImage.get("/asset/bonusBrick.png", Brick.WIDTH, Brick.HEIGHT);
-    private static ImageIcon explosiveBrick = LoadImage.get("/asset/explosiveBrick.png", Brick.WIDTH, Brick.HEIGHT);
-    private static ImageIcon normalBrick = LoadImage.get("/asset/normalBrick.png", Brick.WIDTH, Brick.HEIGHT);
+    private static ImageIcon strongBrick = LoadImage.get("/assets/Images/strongBrick.png", Brick.WIDTH, Brick.HEIGHT);
+    private static ImageIcon bonusBrick = LoadImage.get("/assets/Images/bonusBrick.png", Brick.WIDTH, Brick.HEIGHT);
+    private static ImageIcon explosiveBrick = LoadImage.get("/assets/Images/explosiveBrick.png", Brick.WIDTH, Brick.HEIGHT);
+    private static ImageIcon normalBrick = LoadImage.get("/assets/Images/normalBrick.png", Brick.WIDTH, Brick.HEIGHT);
 
     public static void renderBrick(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
