@@ -12,9 +12,9 @@ public class MenuPanel implements DrawBackground {
     private Rectangle guideButton = new Rectangle(centerX, 340, buttonWidth, buttonHeight);
     private Rectangle scoreButton = new Rectangle(centerX, 420, buttonWidth, buttonHeight);
 
-    private ImageIcon playImage = LoadImage.get("/asset/playGame.png", buttonWidth, buttonHeight);
-    private ImageIcon bgImage   = LoadImage.get("/asset/background.png", GamePanel.screenWidth, GamePanel.screenHeight);
-    private ImageIcon highScoreImg = LoadImage.get("/asset/score.jpg", buttonWidth, buttonHeight);
+    private ImageIcon playImage = LoadImage.get("/asset/Images/playGame.png", buttonWidth, buttonHeight);
+    private ImageIcon bgImage   = LoadImage.get("/asset/Images/background.png", GamePanel.screenWidth, GamePanel.screenHeight);
+    private ImageIcon highScoreImg = LoadImage.get("/asset/Images/score.jpg", buttonWidth, buttonHeight);
 
     public Rectangle getPlayButton() {
         return playButton;
