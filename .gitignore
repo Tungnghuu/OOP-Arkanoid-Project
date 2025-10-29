@@ -9,3 +9,5 @@ out/production/
 /.vscode
 /Arkabit.jar
 /build.bat
+/build
+/lib

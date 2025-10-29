@@ -2,24 +2,21 @@ package app;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
 
 public class ConnectToDB {
+
+    private static final String URL = "jdbc:mysql://switchback.proxy.rlwy.net:31181/railway?useSSL=false&serverTimezone=UTC";
+    private static final String USER = "root";
+    private static final String PASSWORD = "HPUlBDpZgDXslMwJRTANlSHkLkozugaa";
+
     public static Connection connect() {
-
-        String url = "jdbc:mysql://switchback.proxy.rlwy.net:31181/railway?useSSL=false&serverTimezone=UTC";
-        String user = "root";
-        String password = "HPUlBDpZgDXslMwJRTANlSHkLkozugaa";
-
-        Connection conn = null;
         try {
-            conn = DriverManager.getConnection(url, user, password);
-            System.out.println("Kết nối DB thành công");
-
-        } catch (SQLException e) {
-            System.out.println("Kết nối DB thất bại");
+            return DriverManager.getConnection(URL, USER, PASSWORD);
+        } catch (Exception e) {
+            System.out.println("Failed to connect");
             e.printStackTrace();
+            return null;
         }
-        return conn;
     }
 }
+

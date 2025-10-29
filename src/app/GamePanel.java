@@ -59,9 +59,9 @@ public class GamePanel extends JPanel implements Runnable {
 
         menuPanel = new MenuPanel();
 
-        level1To5Bg = LoadImage.get("/asset/Images/level1To5.png", screenWidth, screenHeight);
-        ballImage = LoadImage.get("/asset/Images/ball.png", 16,16);
-        paddleImage = LoadImage.get("/asset/Images/paddle.png", 120,15);
+        level1To5Bg = LoadImage.get("/assets/Images/level1To5.png", screenWidth, screenHeight);
+        ballImage = LoadImage.get("/assets/Images/ball.png", 16,16);
+        paddleImage = LoadImage.get("/assets/Images/paddle.png", 120,15);
     }
 
     public static GamePanel getInstance() {

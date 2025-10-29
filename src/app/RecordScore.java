@@ -7,7 +7,7 @@ import java.sql.SQLException;
 public class RecordScore {
 
     public static  void insertScore(Score score) {
-        String sql = "INSERT INTO HighScore(recordTime, score) VALUES(?,?)";
+        String sql = "INSERT INTO highScore(recordTime, score) VALUES(?,?)";
 
         try ( Connection conn = ConnectToDB.connect();
         PreparedStatement preparedStatement = conn.prepareStatement(sql)){
@@ -18,7 +18,7 @@ public class RecordScore {
             preparedStatement.execute();
             System.out.println("Ket noi va ghi diem thanh cong");
         } catch (SQLException e) {
-            System.out.println("Ket noi that bai");
+            System.out.println("Failed to Connect.");
         }
     }
 }

@@ -1,7 +1,6 @@
 package app;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
 public class Score {
     private int score;
