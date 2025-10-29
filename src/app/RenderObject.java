@@ -6,47 +6,49 @@ import java.awt.*;
 import logic.entity.*;
 import logic.myLogic.*;
 
+import javax.swing.*;
+
 import static app.GamePanel.brickList;
 import static app.GamePanel.powerUpList;
 
 public class RenderObject {
     static boolean isRenderPowerUp = true;
+    private static ImageIcon strongBrick = LoadImage.get("/asset/strongBrick.png", Brick.WIDTH, Brick.HEIGHT);
+    private static ImageIcon bonusBrick = LoadImage.get("/asset/bonusBrick.png", Brick.WIDTH, Brick.HEIGHT);
+    private static ImageIcon explosiveBrick = LoadImage.get("/asset/explosiveBrick.png", Brick.WIDTH, Brick.HEIGHT);
+    private static ImageIcon normalBrick = LoadImage.get("/asset/normalBrick.png", Brick.WIDTH, Brick.HEIGHT);
+
     public static void renderBrick(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
         for (int i = 0; i < brickList.size(); i++) {
             for (int j = 0; j < brickList.get(i).size(); j++) {
                 Brick b = brickList.get(i).get(j);
-                Color brickColor;
+                ImageIcon img;
 
                 switch (b.getType()) {
                     case NORMAL:
-                        brickColor = Color.GREEN;
+                        img = normalBrick;
                         break;
                     case STRONG:
-                        brickColor = Color.GRAY;
-                        break;
-                    case UNBREAKABLE:
-                        brickColor = Color.RED;
+                        img = strongBrick;
                         break;
                     case EXPLOSIVE:
-                        brickColor = Color.ORANGE;
+                        img = explosiveBrick;
                         break;
                     case BONUS:
-                        brickColor = Color.BLUE;
+                        img = bonusBrick;
                         break;
                     default:
-                        brickColor = Color.WHITE;
-                }
+                        img = normalBrick;                }
 
                 DrawObject drawBrick = new DrawObject(
                         b.getX(),
                         b.getY(),
                         b.getWidth(),
                         b.getHeight(),
-                        brickColor
+                        Color.orange
                 );
-                drawBrick.drawRect(g2);
-                g2.setColor(Color.BLACK);
+                drawBrick.drawRect(g2, img);
                 g2.drawRect(b.getX(), b.getY(), b.getWidth(), b.getHeight());
             }
         }

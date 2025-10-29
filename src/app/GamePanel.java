@@ -34,9 +34,9 @@ public class GamePanel extends JPanel implements Runnable {
     private Paddle paddle = gameManager.getPaddle();
     private Ball ball = gameManager.getBall();
     private DrawObject drawPaddle = new DrawObject(paddle.getX(), paddle.getY(),
-                                            paddle.getWidth(), paddle.getHeight(), Color.blue);
+                                            paddle.getWidth(), paddle.getHeight(), Color.orange);
     private DrawObject drawBall = new DrawObject(ball.getX(), ball.getY(),
-                                            ball.getWidth(), ball.getHeight(), Color.orange);
+                                            ball.getWidth(), ball.getHeight(), Color.GREEN);
     static List<List<Brick>> brickList = brickManager.getBricks();
     private boolean scoreSaved = false;
     private Thread gameThread;
@@ -175,6 +175,9 @@ public class GamePanel extends JPanel implements Runnable {
                 p.applyPowerUp(ball);
                 p.activate();
             }
+        }
+
+        for (PowerUp p: powerUpList) {
             if (p.isPowerUp() && p.isExpired(10000)) {
                 p.endPowerUp(paddle);
                 p.endPowerUp(ball);

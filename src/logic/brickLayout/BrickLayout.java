@@ -62,7 +62,7 @@ public class BrickLayout {
 
                 int type = 0;
 
-                // Tạo bậc thang nghiêng phải
+
                 if (j >= 7 - i) {
                     if (rand.nextDouble() < 0.1) {
                         type = 4;
