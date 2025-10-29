@@ -13,6 +13,8 @@ import static app.RenderObject.renderBrick;
 import static app.RenderObject.renderPowerUp;
 
 public class GamePanel extends JPanel implements Runnable {
+    private static GamePanel instance = null; //Singleton design Pattern
+
     public static final int originalTileSize = 16;
     public static final int scale = 3;
     public static final int tileSize = originalTileSize * scale;
@@ -27,7 +29,7 @@ public class GamePanel extends JPanel implements Runnable {
     private boolean gameCleared = false;
     private MenuPanel menuPanel;
     private InputHandler inputHandler = new InputHandler();
-    static GameManager gameManager = new GameManager();
+    static GameManager gameManager = GameManager.getInstance();
     static BrickManager brickManager = new BrickManager();
     static List<PowerUp> powerUpList = gameManager.getPowerUpList();
     private Paddle paddle = gameManager.getPaddle();
@@ -47,7 +49,7 @@ public class GamePanel extends JPanel implements Runnable {
     private final Font hudFont = new Font("Arial", Font.PLAIN, 20);
     private final Color hudColor = Color.WHITE;
 
-    public GamePanel() {
+    private GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setBackground(Color.black);
         this.setDoubleBuffered(true);
@@ -60,6 +62,13 @@ public class GamePanel extends JPanel implements Runnable {
         level1To5Bg = LoadImage.get("/asset/level1To5.png", screenWidth, screenHeight);
         ballImage = LoadImage.get("/asset/ball.png", 16,16);
         paddleImage = LoadImage.get("/asset/paddle.png", 120,15);
+    }
+
+    public static GamePanel getInstance() {
+        if (instance == null) {
+            instance = new GamePanel();
+        }
+        return instance;
     }
 
     public void startGameThread() {

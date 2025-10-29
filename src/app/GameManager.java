@@ -14,9 +14,8 @@ import logic.myLogic.*;
 
 /** Lop quan ly game. */
 public class GameManager {
-    /**
-     * cac thuoc tinh.
-     */
+    private static GameManager instance = null;
+
     private List<PowerUp> powerUpList = new ArrayList<>();
     private Paddle paddle;
     private Ball ball;
@@ -27,12 +26,20 @@ public class GameManager {
     /**
      * Constructor cua GameManager.
      */
-    public GameManager() {
+    private GameManager() {
         paddle = new Paddle(324, 526, 1, 0, 80, 15, 5);
         ball = new Ball(374, 506, 1, 1, 8, 5);
         this.score = 0;
         this.lives = 3;
       //  this.dropChance = 0.4;
+    }
+
+    public static GameManager getInstance() {
+        if (instance == null) {
+            instance = new GameManager();
+        }
+
+        return instance;
     }
 
     /** geter cua cac thuoc tinh.*/
