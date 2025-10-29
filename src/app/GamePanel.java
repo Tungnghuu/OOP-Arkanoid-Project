@@ -6,11 +6,9 @@ import javax.swing.*;
 import logic.entity.*;
 import logic.myLogic.*;
 import myInterface.myInterface.*;
+import static app.RenderObject.*;
 
 import java.util.List;
-
-import static app.RenderObject.renderBrick;
-import static app.RenderObject.renderPowerUp;
 
 public class GamePanel extends JPanel implements Runnable {
     private static GamePanel instance = null; //Singleton design Pattern
@@ -30,6 +28,7 @@ public class GamePanel extends JPanel implements Runnable {
     private MenuPanel menuPanel;
     private InputHandler inputHandler = new InputHandler();
     static GameManager gameManager = GameManager.getInstance();
+    private SettingPanel settingPanel = new SettingPanel();
     static BrickManager brickManager = new BrickManager();
     static List<PowerUp> powerUpList = gameManager.getPowerUpList();
     private Paddle paddle = gameManager.getPaddle();
@@ -126,6 +125,22 @@ public class GamePanel extends JPanel implements Runnable {
             return;
         }
 
+        if (inputHandler.escapePressed) {
+            inSetting = !inSetting;
+            inputHandler.escapePressed = false;
+        }   
+
+        if (inSetting) {
+             if (inputHandler.mouseClicked) {
+                settingPanel.handleClick(inputHandler.lastMouseEvent);
+                inputHandler.mouseClicked = false;
+                if (settingPanel.exit) {
+                    inSetting = false;
+                }
+            }
+            return;
+        }
+
 
         // Khi Game Over hoặc Clear chờ người chơi nhấn R để reset
         if (gameOver || gameCleared) {
@@ -185,20 +200,17 @@ public class GamePanel extends JPanel implements Runnable {
         }
 
         if (inMenu) {
-            menuPanel.draw(g);
+            menuPanel.draw(g2);
             return;
         }
 
-        if (inSetting) {
-            
-        }
-        
         drawBall.setPosition(ball.getX(), ball.getY(), ball.getWidth(), ball.getHeight());
         drawPaddle.setPosition(paddle.getX(), paddle.getY(), paddle.getWidth(), paddle.getHeight());
         drawBall.drawBall(g2, ballImage);
-        drawPaddle.drawRect(g2,paddleImage);
+        drawPaddle.drawRect(g2, paddleImage);
         renderBrick(g2);
         renderPowerUp(g2);
+
         g2.setColor(hudColor);
         g2.setFont(hudFont);
         g2.drawString("Score: " + gameManager.getScore(), 600, 20);
@@ -214,7 +226,11 @@ public class GamePanel extends JPanel implements Runnable {
             g2.setFont(new Font("Arial", Font.PLAIN, 22));
             g2.drawString("Press R to Reset", getWidth()/2 - 110, getHeight()/2 + 30);
         }
+
+        if (inSetting) {
+            settingPanel.draw(g2);
+        }
+
         this.setDoubleBuffered(true);
     }
-
 }

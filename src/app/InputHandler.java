@@ -1,18 +1,17 @@
 package app;
 
-// import java.awt.RenderingHints.Key;
 import java.awt.event.*;
 
 public class InputHandler implements KeyListener, MouseListener {
-    public boolean leftPressed, rightPressed, spacePressed, resetPressed;
+    public boolean leftPressed, rightPressed, spacePressed, resetPressed, escapePressed;
     public boolean mouseClicked, mousePressed, mouseReleased;
     public int mouseX, mouseY;
 
-    @Override
-    public void keyTyped(KeyEvent e) {
-    }
+    public MouseEvent lastMouseEvent;
 
-    //TODO : add method to play with Mouse
+    @Override
+    public void keyTyped(KeyEvent e) {}
+
     @Override
     public void mouseEntered(MouseEvent e) {}
 
@@ -24,6 +23,7 @@ public class InputHandler implements KeyListener, MouseListener {
         mouseClicked = true;
         mouseX = e.getX();
         mouseY = e.getY();
+        lastMouseEvent = e;
     }
 
     @Override
@@ -31,6 +31,7 @@ public class InputHandler implements KeyListener, MouseListener {
         mousePressed = true;
         mouseX = e.getX();
         mouseY = e.getY();
+        lastMouseEvent = e;
     }
 
     @Override
@@ -39,62 +40,25 @@ public class InputHandler implements KeyListener, MouseListener {
         mouseReleased = true;
     }
 
-
     @Override
     public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode();
 
-        if (code == KeyEvent.VK_A) {
-            leftPressed = true;
-        }
-
-        if (code == KeyEvent.VK_D) {
-            rightPressed = true;
-        }
-
-        if (code == KeyEvent.VK_SPACE) {
-            spacePressed = true;
-        }
-
-        if (code == KeyEvent.VK_LEFT) {
-            leftPressed = true;
-        }
-
-        if (code == KeyEvent.VK_RIGHT) {
-            rightPressed = true;
-        }
-
-        if (code == KeyEvent.VK_R) {
-            resetPressed = true;
-        }
+        if (code == KeyEvent.VK_ESCAPE) escapePressed = true;
+        if (code == KeyEvent.VK_A || code == KeyEvent.VK_LEFT) leftPressed = true;
+        if (code == KeyEvent.VK_D || code == KeyEvent.VK_RIGHT) rightPressed = true;
+        if (code == KeyEvent.VK_SPACE) spacePressed = true;
+        if (code == KeyEvent.VK_R) resetPressed = true;
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
         int code = e.getKeyCode();
 
-        if (code == KeyEvent.VK_A) {
-            leftPressed = false;
-        }
-
-        if (code == KeyEvent.VK_D) {
-            rightPressed = false;
-        }
-
-        if (code == KeyEvent.VK_SPACE) {
-            spacePressed = false;
-        }
-
-        if (code == KeyEvent.VK_LEFT) {
-            leftPressed = false;
-        }
-
-        if (code == KeyEvent.VK_RIGHT) {
-            rightPressed = false;
-        }
-
-        if (code == KeyEvent.VK_R) {
-            resetPressed = false;
-        }
+        if (code == KeyEvent.VK_ESCAPE) escapePressed = false;
+        if (code == KeyEvent.VK_A || code == KeyEvent.VK_LEFT) leftPressed = false;
+        if (code == KeyEvent.VK_D || code == KeyEvent.VK_RIGHT) rightPressed = false;
+        if (code == KeyEvent.VK_SPACE) spacePressed = false;
+        if (code == KeyEvent.VK_R) resetPressed = false;
     }
 }
