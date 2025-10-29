@@ -11,3 +11,4 @@ out/production/
 /build.bat
 /build
 /lib
+/src/log
