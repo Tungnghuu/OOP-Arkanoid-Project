@@ -5,8 +5,8 @@ import javax.swing.*;
 import java.awt.*;
 
 public class MenuPanel implements DrawBackground {
-    private final int buttonWidth = 120;
-    private final int buttonHeight = 60;
+    private final int buttonWidth = 175;
+    private final int buttonHeight = 50;
     private int centerX = GamePanel.screenWidth / 2 - buttonWidth / 2;
     private Rectangle playButton = new Rectangle(centerX, 260, buttonWidth, buttonHeight);
     private Rectangle guideButton = new Rectangle(centerX, 340, buttonWidth, buttonHeight);
@@ -14,7 +14,7 @@ public class MenuPanel implements DrawBackground {
 
     private ImageIcon playImage = LoadImage.get("/assets/Images/playGame.png", buttonWidth, buttonHeight);
     private ImageIcon bgImage   = LoadImage.get("/assets/Images/background.png", GamePanel.screenWidth, GamePanel.screenHeight);
-    private ImageIcon highScoreImg = LoadImage.get("/assets/Images/score.jpg", buttonWidth, buttonHeight);
+    private ImageIcon highScoreImg = LoadImage.get("/assets/Images/leaderBoard.png", buttonWidth, buttonHeight);
 
     public Rectangle getPlayButton() {
         return playButton;

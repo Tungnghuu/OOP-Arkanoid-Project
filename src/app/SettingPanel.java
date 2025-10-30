@@ -90,6 +90,7 @@ public class SettingPanel {
 
         if (volumeBar.contains(mx, my)) {
             volume = Math.max(0, Math.min(100, (mx - volX) * 100 / volW));
+            exit = false;
         }
 
         if (saveButton.contains(mx, my)) {
