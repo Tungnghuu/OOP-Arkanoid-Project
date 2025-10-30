@@ -18,7 +18,7 @@ public class GameHistoryTable extends JFrame {
         setLayout(new BorderLayout());
 
         // Cac cot
-        String[] columnNames = {"Number", "Time", "Score"};
+        String[] columnNames = {"Number","playerId", "Time", "Score"};
         DefaultTableModel model = new DefaultTableModel(columnNames, 0);
 
         for (Object[] data : records) {
@@ -59,7 +59,7 @@ public class GameHistoryTable extends JFrame {
                     } else {
                         c.setBackground(new Color(45, 45, 70));
                     }
-                    c.setForeground(new Color(0, 255, 180)); // xanh neon
+                    c.setForeground(new Color(0, 255, 180));
                 } else {
                     c.setBackground(new Color(0, 200, 255));
                     c.setForeground(Color.BLACK);

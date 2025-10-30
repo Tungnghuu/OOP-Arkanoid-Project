@@ -3,12 +3,13 @@ package logic.myLogic;
 import java.util.ArrayList;
 import java.util.List;
 
+import app.GameManager;
 import logic.brickLayout.BrickLayout;
 import logic.entity.Brick;
 
 public class BrickManager {
     private List<List<Brick>> brickList;
-    private int level;
+    private int level = GameManager.level;
 
     public int getLevel() {
         return this.level;
@@ -16,8 +17,7 @@ public class BrickManager {
 
     public BrickManager() {
         this.brickList = new ArrayList<>();
-        this.level = 1;
-        initBricks(1);
+        initBricks(level);
     }
 
     public List<List<Brick>> getBricks() {
@@ -33,6 +33,8 @@ public class BrickManager {
             case 1 -> layout = BrickLayout.level1();
             case 2 -> layout = BrickLayout.level2();
             case 3 -> layout = BrickLayout.level3();
+            case 4 -> layout  = BrickLayout .level4();
+            case 5 -> layout  = BrickLayout .level5();
             default -> layout = BrickLayout.level1();
         }
 
@@ -59,13 +61,12 @@ public class BrickManager {
             brickList.add(row);
         }
 
-        this.level = level;
     }
 
     // Tải level
-    public void loadLevel(int level) {
+   /* public void loadLevel(int level) {
         initBricks(level);
-    }
+    }*/
 
     // Kiểm tra đã phá hết gạch chưa
     public boolean isAllCleared() {
@@ -78,6 +79,7 @@ public class BrickManager {
     // Reset lại
     public void reset() {
         brickList.clear();
+        this.level = GameManager.level;
         initBricks(this.level);
     }
 }

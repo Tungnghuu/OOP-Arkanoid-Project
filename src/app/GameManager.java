@@ -21,6 +21,7 @@ public class GameManager {
     private Ball ball;
     private int score;
     private int lives;
+    public static int level = 1;
    // private double dropChance;
 
     /**
@@ -260,7 +261,7 @@ public class GameManager {
 
     private void saveScore() {
         Score recordScore = new Score(this.score, Timestamp.valueOf(LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"))));
-        RecordScore.insertScore(recordScore);
+        RecordScore.updateScore(recordScore);
     }
 
     public void gameOver() {

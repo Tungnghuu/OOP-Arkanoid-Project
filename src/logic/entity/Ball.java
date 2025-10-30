@@ -7,7 +7,7 @@ public class Ball extends MovableObject {
     /** Cac thuoc tinh. */
     private int radius;
     public double angleOfAttack;
-    private static boolean ballStuck = true;
+    private boolean ballStuck = true;
 
     /** Constructor cua Ball.*/
     public Ball(int x, int y, double dx, double dy, int radius, double speed) {
@@ -51,6 +51,9 @@ public class Ball extends MovableObject {
 
     public boolean isStuck() {
         return ballStuck;
+    }
+    public void setBallStuck (boolean isStuck) {
+        this.ballStuck = isStuck;
     }
 
     /**
