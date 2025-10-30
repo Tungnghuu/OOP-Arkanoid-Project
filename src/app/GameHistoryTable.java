@@ -8,7 +8,6 @@ import java.awt.*;
 import java.util.List;
 
 public class GameHistoryTable extends JFrame {
-
     public GameHistoryTable(List<Object[]> records) {
         setSize(600, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -19,7 +18,7 @@ public class GameHistoryTable extends JFrame {
         setLayout(new BorderLayout());
 
         // Cac cot
-        String[] columnNames = {"STT", "Thời gian", "Điểm"};
+        String[] columnNames = {"Number", "Time", "Score"};
         DefaultTableModel model = new DefaultTableModel(columnNames, 0);
 
         for (Object[] data : records) {
@@ -79,7 +78,7 @@ public class GameHistoryTable extends JFrame {
         scrollPane.setBackground(new Color(20, 20, 30));
 
         //  Tieu de
-        JLabel title = new JLabel(" LỊCH SỬ CHƠI", SwingConstants.CENTER);
+        JLabel title = new JLabel("Leaderboard", SwingConstants.CENTER);
         title.setFont(new Font("Consolas", Font.BOLD, 26));
         title.setForeground(new Color(0, 255, 180));
         title.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));

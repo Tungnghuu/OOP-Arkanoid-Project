@@ -3,9 +3,10 @@ package app;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-
+import java.util.List;
 import java.io.IOException;
 import java.nio.file.*;
+// import java.security.Timestamp;
 
 public class RecordScore {
     public static void insert_to_log(Score score) {
@@ -33,13 +34,30 @@ public class RecordScore {
 
         String sql = "INSERT INTO highScore(recordTime, score) VALUES(?,?)";
 
+        Path path = Paths.get("src/log/history.txt");
+        Score highestScore = new Score(0, null);
+
+        try {
+            List<String> lines = Files.readAllLines(path);
+            for (String line : lines) {
+                int temp = Integer.parseInt(line.split("")[0]);
+                if (temp > highestScore.getScore()) {
+                    highestScore.setScore(temp);
+                    // highestScore.setRecordTime(line.split("")[1]);
+                    //TODO: include timestamp
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         try ( Connection conn = ConnectToDB.connect();
-        PreparedStatement preparedStatement = conn.prepareStatement(sql)){
+            PreparedStatement preparedStatement = conn.prepareStatement(sql)){
 
-            preparedStatement.setInt(2, score.getScore());
-            preparedStatement.setTimestamp(1, score.getRecordTime());
-
+            preparedStatement.setInt(2, highestScore.getScore());
+            preparedStatement.setTimestamp(1, highestScore.getRecordTime());
             preparedStatement.execute();
+
             System.out.println("Ket noi va ghi diem thanh cong");
         } catch (SQLException e) {
             System.out.println("Failed to Connect.");

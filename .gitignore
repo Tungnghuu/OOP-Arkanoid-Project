@@ -12,3 +12,4 @@ out/production/
 /build
 /lib
 /src/log
+/manifest.mf

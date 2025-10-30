@@ -142,7 +142,7 @@ public class GamePanel extends JPanel implements Runnable {
         }
 
 
-        // Khi Game Over hoặc Clear chờ người chơi nhấn R để reset
+        // When Game is Over or Cleared wait user to press R to reset
         if (gameOver || gameCleared) {
             if (!scoreSaved) {
                 gameManager.gameOver();
@@ -185,7 +185,7 @@ public class GamePanel extends JPanel implements Runnable {
             }
         }
 
-        // Điều kiện để reset hoặc kết thúc game
+        // Condition to reset or end game
         if (gameManager.getLives() <= 0) {
             gameOver = true;
         } else if (brickManager.isAllCleared()) {
