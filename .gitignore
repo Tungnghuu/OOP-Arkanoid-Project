@@ -1,15 +1,29 @@
-#Default Ignored Files
-/shelf/
-/.idea
-/.out
-/.target
-out/production/
+# IntelliJ / JetBrains / VS Code
+.idea/
 *.iml
-/bin
-/.vscode
-/Arkabit.jar
-/build.bat
-/build
-/lib
-/src/log
-/manifest.mf
+shelf/
+.vscode/
+
+# Build outputs
+bin/
+out/
+build/
+target/
+*.class
+*.jar
+*.war
+
+# Temporary / cache
+temp/
+*.log
+
+# Project-specific
+src/log/
+manifest.mf
+build.bat
+lib/
+Arkabit.jar
+
+# System files
+.DS_Store
+Thumbs.db

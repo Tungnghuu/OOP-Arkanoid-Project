@@ -11,6 +11,7 @@ public class ConnectToDB {
 
     public static Connection connect() {
         try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
             return DriverManager.getConnection(URL, USER, PASSWORD);
         } catch (Exception e) {
             System.out.println("Failed to connect");
