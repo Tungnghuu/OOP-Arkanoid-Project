@@ -110,7 +110,7 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     private void doReset(boolean resetScore) {
-        GameManager.level = 1;
+        gameManager.level = 1;
         gameManager.resetGame(resetScore);
         brickManager.reset();
         paddle = gameManager.newDefaultPaddle();
@@ -131,6 +131,11 @@ public class GamePanel extends JPanel implements Runnable {
         gameCleared = false;
     }
     public void update() {
+        if (inputHandler.dPressed) {
+            brickManager.clearAllBricks();
+            inputHandler.dPressed = false;
+        }
+
         if (inMenu) {
             if (inputHandler.mouseClicked) {
                 if (menuPanel.getPlayButton().contains(inputHandler.mouseX, inputHandler.mouseY)) {
@@ -165,15 +170,20 @@ public class GamePanel extends JPanel implements Runnable {
                 gameManager.gameOver();
                 scoreSaved = true;
             }
-
-            if (inputHandler.resetPressed) doReset(true);
+            if (inputHandler.resetPressed)
+                doReset(true);
             return;
         }
 
         // Next Level
         if (gameCleared) {
-            GameManager.level++;
-            doReset();
+            if (gameManager.level < 15) {
+                gameManager.level++;
+                doReset();
+            } else {
+                gameCleared = false;
+                inMenu = true;
+            }
         }
 
         if (inputHandler.leftPressed)

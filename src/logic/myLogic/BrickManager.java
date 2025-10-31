@@ -9,7 +9,7 @@ import logic.entity.Brick;
 
 public class BrickManager {
     private List<List<Brick>> brickList;
-    private int level = GameManager.level;
+    private int level = GameManager.getInstance().level;
 
     public int getLevel() {
         return this.level;
@@ -27,15 +27,24 @@ public class BrickManager {
     private void initBricks(int level) {
         brickList.clear();
         ArrayList<ArrayList<int[]>> layout;
-        
+
         // Lấy layout dựa trên level
         switch (level) {
             case 1 -> layout = BrickLayout.level1();
             case 2 -> layout = BrickLayout.level2();
             case 3 -> layout = BrickLayout.level3();
-            case 4 -> layout  = BrickLayout .level4();
-            case 5 -> layout  = BrickLayout .level5();
-            default -> layout = BrickLayout.level1();
+            case 4 -> layout = BrickLayout.level4();
+            case 5 -> layout = BrickLayout.level5();
+            case 6 -> layout = BrickLayout.level6();
+            case 7 -> layout = BrickLayout.level7();
+            case 8 -> layout = BrickLayout.level8();
+            case 9 -> layout = BrickLayout.level9();
+            case 10 -> layout = BrickLayout.level10();
+            case 11 -> layout = BrickLayout.level11();
+            case 12 -> layout = BrickLayout.level12();
+            case 13 -> layout = BrickLayout.level11();
+            case 14 -> layout = BrickLayout.level12();
+            default -> layout = BrickLayout.level15();
         }
 
         for (ArrayList<int[]> rowData : layout) {
@@ -54,19 +63,11 @@ public class BrickManager {
                     case 4 -> brick = new BonusBrick(x, y);
                     default -> brick = new NormalBrick(x, y);
                 }
-
                 row.add(brick);
             }
-
             brickList.add(row);
         }
-
     }
-
-    // Tải level
-   /* public void loadLevel(int level) {
-        initBricks(level);
-    }*/
 
     // Kiểm tra đã phá hết gạch chưa
     public boolean isAllCleared() {
@@ -79,7 +80,13 @@ public class BrickManager {
     // Reset lại
     public void reset() {
         brickList.clear();
-        this.level = GameManager.level;
+        this.level = GameManager.getInstance().level;
         initBricks(this.level);
+    }
+
+    public void clearAllBricks() {
+        for (List<Brick> row : brickList) {
+            row.clear();
+        }
     }
 }
