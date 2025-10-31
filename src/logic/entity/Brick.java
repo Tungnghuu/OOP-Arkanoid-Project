@@ -36,6 +36,10 @@ public abstract class Brick  extends GameObject {
         this.hitPoints--;
     }
 
+    public void remove() {
+        this.hitPoints = 0;
+    }
+
     /** Phuong thuc kiem tra xem gach da bi pha chua. */
     public boolean isDestroy() {
         return this.hitPoints <= 0;

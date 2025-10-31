@@ -15,7 +15,19 @@ public class Score {
         return score;
     }
 
+    public void setRecordTime(Timestamp recordTime) {
+        this.recordTime = recordTime;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
     public Timestamp getRecordTime() {
         return recordTime;
+    }
+
+    public String toString() {
+        return (score + " " + recordTime + '\n');
     }
 }

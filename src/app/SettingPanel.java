@@ -21,12 +21,9 @@ public class SettingPanel {
         int panelX = (screenWidth - panelW) / 2;
         int panelY = (screenHeight - panelH) / 2;
 
-        // Smooth edges and anti-aliasing
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
         // Panel background with rounded corners
         g2.setColor(new Color(0, 0, 0, 180));
-        g2.fillRoundRect(panelX, panelY, panelW, panelH, 30, 30);
+        g2.fillRoundRect(panelX, panelY, panelW, panelH, 20, 20);
 
         g2.setFont(new Font("Arial", Font.BOLD, panelW / 12));
         g2.setColor(Color.WHITE);
@@ -40,10 +37,10 @@ public class SettingPanel {
         int volY = panelY + panelH / 3;
 
         g2.setColor(Color.DARK_GRAY);
-        g2.fillRoundRect(volX, volY, volW, volH, 10, 10);
+        g2.fillRoundRect(volX, volY, volW, volH, 5, 5);
 
         g2.setColor(Color.GREEN);
-        g2.fillRoundRect(volX, volY, volW * volume / 100, volH, 10, 10);
+        g2.fillRoundRect(volX, volY, volW * volume / 100, volH, 5, 5);
 
         int knobX = volX + volW * volume / 100 - 8;
         int knobY = volY - 5;
@@ -93,6 +90,7 @@ public class SettingPanel {
 
         if (volumeBar.contains(mx, my)) {
             volume = Math.max(0, Math.min(100, (mx - volX) * 100 / volW));
+            exit = false;
         }
 
         if (saveButton.contains(mx, my)) {

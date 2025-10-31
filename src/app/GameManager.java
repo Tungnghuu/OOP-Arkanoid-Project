@@ -21,7 +21,8 @@ public class GameManager {
     private Ball ball;
     private int score;
     private int lives;
-   // private double dropChance;
+    public int level = 1;
+    private double dropChance;
 
     /**
      * Constructor cua GameManager.
@@ -31,7 +32,7 @@ public class GameManager {
         ball = new Ball(374, 506, 1, 1, 8, 5);
         this.score = 0;
         this.lives = 3;
-      //  this.dropChance = 0.4;
+        this.dropChance = 0.4;
     }
 
     public static GameManager getInstance() {
@@ -133,6 +134,22 @@ public class GameManager {
         for (Brick b : hitBricks) {
             b.takeHits();
             if (b.isDestroy()) {
+                if (b.getType() == BrickType.EXPLOSIVE) {
+                    int radius = 1;
+                    int bx = b.getX();
+                    int by = b.getY();
+
+                    for (List<Brick> row : brickList) {
+                        for (Brick other : row) {
+                            if (Math.abs(other.getX() - bx) <= Brick.WIDTH * radius &&
+                                Math.abs(other.getY() - by) <= Brick.HEIGHT * radius &&
+                                other != b) {
+
+                                other.remove();
+                            }
+                        }
+                    }
+                }
                 createPowerUp(b);
                 addScore(b);
             }
@@ -159,17 +176,20 @@ public class GameManager {
 
     public void createPowerUp(Brick brick) {
         if (brick.getType() == BrickType.BONUS) {
-            PowerUp powerUp;
-            switch (new Random().nextInt(3)) {
-                case 0 -> powerUp = new PowerUp(brick.getX(), brick.getY(), 15, 15, PowerUpType.EXPAND_PADDLE);
-                case 1 -> powerUp = new PowerUp(brick.getX(), brick.getY(), 15, 15, PowerUpType.SHRINK_PADDLE);
-                case 2 -> powerUp = new PowerUp(brick.getX(), brick.getY(), 15, 15, PowerUpType.FAST_BALL);
-                default -> powerUp = new PowerUp(brick.getX(), brick.getY(), 15, 15, PowerUpType.EXPAND_PADDLE);
-            }
+            Random rand = new Random();
+            if (rand.nextDouble() < dropChance) {
+                PowerUp powerUp;
+                switch (rand.nextInt(3)) {
+                    case 0 -> powerUp = new PowerUp(brick.getX(), brick.getY(), 15, 15, PowerUpType.EXPAND_PADDLE);
+                    case 1 -> powerUp = new PowerUp(brick.getX(), brick.getY(), 15, 15, PowerUpType.SHRINK_PADDLE);
+                    case 2 -> powerUp = new PowerUp(brick.getX(), brick.getY(), 15, 15, PowerUpType.FAST_BALL);
+                    default -> powerUp = new PowerUp(brick.getX(), brick.getY(), 15, 15, PowerUpType.EXPAND_PADDLE);
+                }
                 powerUpList.add(powerUp);
                 powerUp.setRenderPowerUp(true);
             }
         }
+    }
 
     public void addScore(Brick brick) {
         switch (brick.getType()) {
@@ -260,7 +280,7 @@ public class GameManager {
 
     private void saveScore() {
         Score recordScore = new Score(this.score, Timestamp.valueOf(LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"))));
-        RecordScore.insertScore(recordScore);
+        RecordScore.updateScore(recordScore);
     }
 
     public void gameOver() {

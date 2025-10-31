@@ -1,55 +1,24 @@
 # Arkabit Project
 
 ## Overview
-This is a **Java implementation of the classic Arkanoid game** using Object-oriented Programming principles. The project features:
+This is a Java implementation of the classic Arkanoid game, developed using Object-Oriented Programming principles. Key OOP concepts used in this project include: Inheritance, Encapsulation, Polymorphism, Design patterns, etc.
 
-- Bouncing ball physics
-- Ball and paddle mechanics  
-- Brick collision detection  
-- Score tracking and lives  
-- Multiple game states (menu, playing, game over)  
+---
 
-This project was developed for **learning and practicing OOP concepts** including classes, inheritance, polymorphism, etc.
+## Video Demo
+The video demonstrates:
+
+---
+
+## Design Document
+### Class Diagram
+The system design includes:
+
+(Include a diagram image here if available.)
 
 ---
 
 ## Team Members
-| Name             | Student ID    |
-|------------------|--------------|
-| Tung Nguyen Huu  | 24021663     |
-| Vu Hoang Long    | 24021679     |
-| Quang Nguyen Duc | 24021607     |
-
----
-
-## pre-Release v0.1-alpha 🎮
-
-**Type:** Alpha – First Playable Demo  
-
-### Features
-- Bouncing ball physics  
-- Paddle control via keyboard  
-- Brick collision detection  
-- Score tracking and lives system  
-- Basic game states: **Menu**, **Playing**, **Game Over**  
-
-### Gamerules
-- Player starts with 3 lives  
-- Score increases when bricks are destroyed  
-- Losing all lives ends the game  
-
-### Controls
-- **Left Arrow / Right Arrow OR A / D** – Move paddle  
-- **Space** – Launch ball  
-- **R** – Restart game  
-
-### Known Issues
-- No sound effects yet  
-- Limited brick types and levels  
-- Limited power-ups implemented  
-- No settings or customization options  
-
-### References
-- Inspired by the classic **Arkanoid** game  
-- Developed using Java and OOP principles  
-- Help of ChatGPT (generated pictures and help us understand concept of OOP)
+1. **Team Leader**: Nguyen Huu Tung - 24021663 -
+2. **Member 2**: Hoang Long Vu - 24021679 -
+3. **Member 3**: Nguyen Duc Quang - 24021607 -

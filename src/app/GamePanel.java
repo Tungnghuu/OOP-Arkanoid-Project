@@ -2,13 +2,13 @@ package app;
 
 import java.awt.*;
 import javax.swing.*;
+import java.util.List;
 
 import logic.entity.*;
 import logic.myLogic.*;
 import myInterface.myInterface.*;
 import static app.RenderObject.*;
 
-import java.util.List;
 
 public class GamePanel extends JPanel implements Runnable {
     private static GamePanel instance = null; //Singleton design Pattern
@@ -34,17 +34,21 @@ public class GamePanel extends JPanel implements Runnable {
     static List<PowerUp> powerUpList = gameManager.getPowerUpList();
     private Paddle paddle = gameManager.getPaddle();
     private Ball ball = gameManager.getBall();
-    private DrawObject drawPaddle = new DrawObject(paddle.getX(), paddle.getY(),
-                                            paddle.getWidth(), paddle.getHeight(), Color.orange);
-    private DrawObject drawBall = new DrawObject(ball.getX(), ball.getY(),
-                                            ball.getWidth(), ball.getHeight(), Color.GREEN);
+    private DrawObject drawPaddle = new DrawObject(paddle.getX(), paddle.getY(), paddle.getWidth(), paddle.getHeight(), Color.orange);
+    private DrawObject drawBall = new DrawObject(ball.getX(), ball.getY(), ball.getWidth(), ball.getHeight(), Color.GREEN);
     static List<List<Brick>> brickList = brickManager.getBricks();
     private boolean scoreSaved = false;
     private Thread gameThread;
 
     private ImageIcon ballImage;
     private ImageIcon paddleImage;
-    private ImageIcon level1To5Bg;
+
+    private ImageIcon level1To3Bg;
+    private ImageIcon level4To6Bg;
+    private ImageIcon level7To9Bg;
+    private ImageIcon level10To12Bg;
+    private ImageIcon level13To15Bg;
+
 
     private final Font hudFont = new Font("Arial", Font.PLAIN, 20);
     private final Color hudColor = Color.WHITE;
@@ -59,7 +63,12 @@ public class GamePanel extends JPanel implements Runnable {
 
         menuPanel = new MenuPanel();
 
-        level1To5Bg = LoadImage.get("/assets/Images/level1To5.png", screenWidth, screenHeight);
+        level1To3Bg = LoadImage.get("/assets/Images/level1-3.png", screenWidth, screenHeight);
+        level4To6Bg = LoadImage.get("/assets/Images/level4-6.png", screenWidth, screenHeight);
+        level7To9Bg = LoadImage.get("/assets/Images/level7-9.png", screenWidth, screenHeight);
+        level10To12Bg = LoadImage.get("/assets/Images/level10-12.png", screenWidth, screenHeight);
+        level13To15Bg = LoadImage.get("/assets/Images/level13-15.png", screenWidth, screenHeight);
+
         ballImage = LoadImage.get("/assets/Images/ball.png", 16,16);
         paddleImage = LoadImage.get("/assets/Images/paddle.png", 120,15);
     }
@@ -102,6 +111,7 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     private void doReset(boolean resetScore) {
+        gameManager.level = 1;
         gameManager.resetGame(resetScore);
         brickManager.reset();
         paddle = gameManager.newDefaultPaddle();
@@ -113,7 +123,20 @@ public class GamePanel extends JPanel implements Runnable {
         inputHandler.resetPressed = false;
     }
 
+    private void doReset() {
+        brickManager.reset();
+        paddle = gameManager.newDefaultPaddle();
+        ball = gameManager.newDefaultBall();
+        powerUpList = gameManager.getPowerUpList();
+        ball.setBallStuck(true);
+        gameCleared = false;
+    }
     public void update() {
+        if (inputHandler.dPressed) {
+            brickManager.clearAllBricks();
+            inputHandler.dPressed = false;
+        }
+
         if (inMenu) {
             if (inputHandler.mouseClicked) {
                 if (menuPanel.getPlayButton().contains(inputHandler.mouseX, inputHandler.mouseY)) {
@@ -129,7 +152,7 @@ public class GamePanel extends JPanel implements Runnable {
         if (inputHandler.escapePressed) {
             inSetting = !inSetting;
             inputHandler.escapePressed = false;
-        }   
+        }
 
         if (inSetting) {
              if (inputHandler.mouseClicked) {
@@ -142,19 +165,32 @@ public class GamePanel extends JPanel implements Runnable {
             return;
         }
 
-
-        // Khi Game Over hoặc Clear chờ người chơi nhấn R để reset
-        if (gameOver || gameCleared) {
+        // When Game is Over wait user to press R to reset
+        if (gameOver) {
             if (!scoreSaved) {
                 gameManager.gameOver();
                 scoreSaved = true;
             }
-            if (inputHandler.resetPressed) doReset(true);
+            if (inputHandler.resetPressed)
+                doReset(true);
             return;
         }
 
-        if (inputHandler.leftPressed) paddle.moveLeft();
-        if (inputHandler.rightPressed) paddle.moveRight();
+        // Next Level
+        if (gameCleared) {
+            if (gameManager.level < 15) {
+                gameManager.level++;
+                doReset();
+            } else {
+                gameCleared = false;
+                inMenu = true;
+            }
+        }
+
+        if (inputHandler.leftPressed)
+            paddle.moveLeft();
+        if (inputHandler.rightPressed)
+            paddle.moveRight();
 
         if (inputHandler.spacePressed && ball.isStuck()) {
             ball.startBall();
@@ -186,21 +222,29 @@ public class GamePanel extends JPanel implements Runnable {
             }
         }
 
-        // Điều kiện để reset hoặc kết thúc game
+        // Condition to reset or end game
         if (gameManager.getLives() <= 0) {
             gameOver = true;
         } else if (brickManager.isAllCleared()) {
             gameCleared = true;
         }
-
     }
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
+        int level = brickManager.getLevel();
 
-        if (brickManager.getLevel() <= 5) {
-            g2.drawImage(level1To5Bg.getImage(), 0, 0, null);
+        if (level <= 3) {
+            g2.drawImage(level1To3Bg.getImage(), 0, 0, null);
+        } else if (level >= 4 && level <= 6) {
+            g2.drawImage(level4To6Bg.getImage(), 0, 0, null);
+        } else if (level >= 7 && level <= 9) {
+            g2.drawImage(level7To9Bg.getImage(), 0, 0, null);
+        } else if (level >= 10 && level <= 12) {
+            g2.drawImage(level10To12Bg.getImage(), 0, 0, null);
+        } else if (level >= 13 && level <= 15) {
+            g2.drawImage(level13To15Bg.getImage(), 0, 0, null);
         }
 
         if (inMenu) {
