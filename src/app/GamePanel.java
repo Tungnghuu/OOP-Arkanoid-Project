@@ -27,6 +27,7 @@ public class GamePanel extends JPanel implements Runnable {
     private boolean gameCleared = false;
     private MenuPanel menuPanel;
     private InputHandler inputHandler = new InputHandler();
+    SoundManager soundManager = new SoundManager();
     static GameManager gameManager = GameManager.getInstance();
     private SettingPanel settingPanel = new SettingPanel();
     static BrickManager brickManager = new BrickManager();
@@ -235,5 +236,20 @@ public class GamePanel extends JPanel implements Runnable {
         }
 
         this.setDoubleBuffered(true);
+    }
+
+    public void playMusic(int i) {
+        soundManager.setFile(i);
+        soundManager.play();
+        soundManager.loop();
+    }
+
+    public void stopMusic() {
+        soundManager.stop();
+    }
+
+    public void playSFX(int i) {
+        soundManager.setFile(i);
+        soundManager.play();
     }
 }
