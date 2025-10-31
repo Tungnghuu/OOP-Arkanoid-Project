@@ -1,7 +1,7 @@
 package app;
 
 import java.sql.*;
-import java.util.ArrayList;
+// import java.util.ArrayList;
 import java.util.List;
 import java.io.IOException;
 import java.nio.file.*;
@@ -25,8 +25,16 @@ public class RecordScore {
                 Files.writeString(id_file, String.valueOf(playerId));
                 throw new IOException("File does not exist!");
             } else {
-                String idText = Files.readString(id_file).trim();
-                playerId = Integer.parseInt(idText);
+                if (!Files.exists(id_file)) {
+                    System.out.println("player_id.txt does not exist, creating new one...");
+                    Random rand = new Random();
+                    playerId = 100000 + rand.nextInt(900000);
+                    Files.writeString(id_file, String.valueOf(playerId));
+                } else {
+                    String idText = Files.readString(id_file).trim();
+                    playerId = Integer.parseInt(idText);
+                }
+
                 System.out.println("Đọc playerId từ file: " + playerId);
             }
         } catch (IOException e) {
