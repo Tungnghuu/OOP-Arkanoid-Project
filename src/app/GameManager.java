@@ -270,14 +270,6 @@ public class GameManager {
         this.powerUpList.clear();
     }
 
-    // Khởi tạo lại thanh đỡ và bóng
-    public Paddle newDefaultPaddle() {
-        return new Paddle(324, 526, 1, 0, 80, 15, 5);
-    }
-    public Ball newDefaultBall() {
-        return new Ball(374, 506, 1, 1, 8, 5);
-    }
-
     private void saveScore() {
         Score recordScore = new Score(this.score, Timestamp.valueOf(LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"))));
         RecordScore.updateScore(recordScore);
