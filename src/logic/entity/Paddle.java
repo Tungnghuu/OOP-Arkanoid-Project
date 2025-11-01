@@ -41,6 +41,7 @@ public class Paddle extends MovableObject {
     public void resetPaddle() {
         this.setX(324);
         this.setY(526);
+        this.setWidth(80);
         this.setSpeed(5);
     }
 
