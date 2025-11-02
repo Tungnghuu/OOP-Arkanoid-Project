@@ -148,7 +148,9 @@ public class GamePanel extends JPanel implements Runnable {
                 if (menuPanel.getPlayButton().contains(inputHandler.mouseX, inputHandler.mouseY)) {
                     startGame();
                 } else if (menuPanel.getScoreButton().contains(inputHandler.mouseX, inputHandler.mouseY)) {
-                    SwingUtilities.invokeLater(() -> new LeaderTable(GetHistory.getHistory()).setVisible(true));
+                    SwingUtilities.invokeLater(() -> new LeaderTable(GetLeaderBoard.GetLeaderboard()).setVisible(true));
+                } else if (menuPanel.getHistoryButton().contains(inputHandler.mouseX, inputHandler.mouseY)) {
+                    SwingUtilities.invokeLater(() -> new HistoryTable(GetHistory.getHistory()).setVisible(true));
                 }
                 inputHandler.mouseClicked = false;
             }

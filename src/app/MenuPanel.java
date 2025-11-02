@@ -9,7 +9,7 @@ public class MenuPanel implements DrawBackground {
     private final int buttonHeight = 50;
     private int centerX = GamePanel.screenWidth / 2 - buttonWidth / 2;
     private Rectangle playButton = new Rectangle(centerX, 260, buttonWidth, buttonHeight);
-    private Rectangle guideButton = new Rectangle(centerX, 340, buttonWidth, buttonHeight);
+    private Rectangle historyButton = new Rectangle(centerX, 340, buttonWidth, buttonHeight);
     private Rectangle scoreButton = new Rectangle(centerX, 420, buttonWidth, buttonHeight);
 
     private ImageIcon playImage = LoadImage.get("/assets/Images/playGame.png", buttonWidth, buttonHeight);
@@ -24,6 +24,10 @@ public class MenuPanel implements DrawBackground {
         return scoreButton;
     }
 
+    public Rectangle getHistoryButton() {
+        return historyButton;
+    }
+
     public void draw(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
         g2.drawImage(bgImage.getImage(), 0, 0, null);
@@ -34,10 +38,11 @@ public class MenuPanel implements DrawBackground {
         g.setFont(new Font("Arial", Font.PLAIN, 25));
         g.setColor(Color.LIGHT_GRAY);
 
-        String text = "Tutorial";
+        //TODO:asldfkjas;dfa
+        String text = "History";
         FontMetrics fm = g.getFontMetrics();
-        int textX = guideButton.x + (guideButton.width - fm.stringWidth(text)) / 2;
-        int textY = guideButton.y + (guideButton.height + fm.getAscent()) / 2 - 5;
+        int textX = historyButton.x + (historyButton.width - fm.stringWidth(text)) / 2;
+        int textY = historyButton.y + (historyButton.height + fm.getAscent()) / 2 - 5;
 
         g.drawString(text, textX, textY);
     }
