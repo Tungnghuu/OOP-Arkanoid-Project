@@ -54,6 +54,8 @@ public class GamePanel extends JPanel implements Runnable {
     private final Font hudFont = new Font("Arial", Font.PLAIN, 20);
     private final Color hudColor = Color.WHITE;
 
+    private double drawInterval = 1000000000.0 / 60; // default 60 FPS
+
     private GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setBackground(Color.black);
@@ -90,9 +92,13 @@ public class GamePanel extends JPanel implements Runnable {
         inMenu = false;
     }
 
+    public void setFPS(double fps) {
+        this.drawInterval = 1000000000.0 / fps;
+    } 
+
     @Override
     public void run() {
-        double drawInterval = 1000000000.0 / 60; // 120 FPS
+        drawInterval = 1000000000.0 / 60; // 120 FPS
         double delta = 0;
         long lastTime = System.nanoTime();
         long currentTime;
@@ -245,6 +251,8 @@ public class GamePanel extends JPanel implements Runnable {
                             lives ++;
                             gameManager.setLives(lives);
                         }
+                        break;
+                    default:
                         break;
                 }
             }
