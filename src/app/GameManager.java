@@ -242,6 +242,7 @@ public class GameManager {
         double maxAngle = Math.toRadians(60);
         double bounceAngle = maxAngle * normalizeDistance;
 
+        //double speed = ball.getSpeed();
         double newDx = Math.sin(bounceAngle);
         double newDy = -Math.cos(bounceAngle);
 
@@ -296,7 +297,7 @@ public class GameManager {
        if (PowerUp.isFire) {
            if (shootCooldown <= 0) {
                createBullet(paddle);
-               shootCooldown = 150;
+               shootCooldown = 130;
            } else {
                shootCooldown--;
            }

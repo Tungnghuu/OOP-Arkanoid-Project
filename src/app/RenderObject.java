@@ -28,6 +28,7 @@ public class RenderObject {
     private static ImageIcon extraLife = LoadImage.get("/assets/Images/extraLife.png", 30, 30);
 
     public static void renderBrick(Graphics g) {
+        if (brickList == null || brickList.isEmpty()) return;
         Graphics2D g2 = (Graphics2D) g;
         for (int i = 0; i < brickList.size(); i++) {
             for (int j = 0; j < brickList.get(i).size(); j++) {

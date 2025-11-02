@@ -206,9 +206,9 @@ public class GamePanel extends JPanel implements Runnable {
         }
 
         if (!ball.isStuck()) {
-            ball.updateBall();
             ball.updateLives(gameManager);
             gameManager.updateIfCollision(ball, paddle, brickList);
+            ball.updateBall();
         } else {
             ball.BallFollowPaddle(paddle);
         }

@@ -97,14 +97,8 @@ public class Ball extends MovableObject {
             this.setX(0);
             this.setDx(-this.getDx());
         }
-
-        /*if (ballY >= 576) {
-            int lives = gm.getLives();
-            lives -= 1;
-            gm.setLives(lives);
-            resetBall();
-        }*/
     }
+
 
     public void updateLives(GameManager gm) {
         double ballY = this.getY();
@@ -116,17 +110,4 @@ public class Ball extends MovableObject {
         }
     }
 
-   /* public void bounceOff(double Dx, double Dy) {
-        double minAngle = 0.4;
-        double maxAngle = Math.PI / 2 - minAngle;
-        double angle = minAngle + Math.random() * (maxAngle - minAngle);
-
-        //direction of Dx or Dy (-1 or 1) * speed * new Angle of Attack (0 < x < 90 degree);
-        //min angle slightly bigger and so max angle slightly smaller 
-        double newDx = Math.signum(Dx) * speed * Math.cos(angle);
-        double newDy = Math.signum(Dy) * speed * Math.sin(angle);
-
-        this.setDx(newDx);
-        this.setDy(newDy);
-    }*/
 }

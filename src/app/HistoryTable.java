@@ -1,16 +1,14 @@
 package app;
 
 import javax.swing.*;
-import java.awt.Font;
-import java.awt.Color;
-import java.awt.BorderLayout;
+import java.awt.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import java.awt.Dimension;
 import javax.swing.table.JTableHeader;
 import java.util.List;
 
 class HistoryTable extends JFrame {
-    public HistoryTable(List<String> record) {
+    public HistoryTable(List<Object[]> datas) {
         setSize(600, 400);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -20,12 +18,12 @@ class HistoryTable extends JFrame {
         setLayout(new BorderLayout());
 
         // Cac cot
-        String[] columnNames = {"Score", "Time"};
+        String[] columnNames = {"Time", "Score"};
         DefaultTableModel model = new DefaultTableModel(columnNames, 0);
 
-        // for (String data : record) {
-        //     model.addRow(data);
-        // }
+        for (Object[] data : datas) {
+            model.addRow(data);
+        }
 
         JTable table = new JTable(model);
         table.setFont(new Font("Consolas", Font.BOLD, 16));
@@ -46,6 +44,46 @@ class HistoryTable extends JFrame {
         header.setReorderingAllowed(false);
 
         // Render cac hang
-        //TODO: fix this
+        DefaultTableCellRenderer renderer = new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(
+                    JTable table, Object value, boolean isSelected,
+                    boolean hasFocus, int row, int column) {
+
+                Component c = super.getTableCellRendererComponent(
+                        table, value, isSelected, hasFocus, row, column);
+
+                if (!isSelected) {
+                    if (row % 2 == 0) {
+                        c.setBackground(new Color(35, 35, 55));
+                    } else {
+                        c.setBackground(new Color(45, 45, 70));
+                    }
+                    c.setForeground(new Color(0, 255, 180));
+                } else {
+                    c.setBackground(new Color(0, 200, 255));
+                    c.setForeground(Color.BLACK);
+                }
+                setHorizontalAlignment(SwingConstants.CENTER);
+                return c;
+            }
+        };
+
+        for (int i = 0; i < table.getColumnCount(); i++) {
+            table.getColumnModel().getColumn(i).setCellRenderer(renderer);
+        }
+
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setBorder(BorderFactory.createLineBorder(new Color(0, 200, 255), 2, true));
+        scrollPane.setBackground(new Color(20, 20, 30));
+
+        //  Tieu de
+        JLabel title = new JLabel("History", SwingConstants.CENTER);
+        title.setFont(new Font("Consolas", Font.BOLD, 26));
+        title.setForeground(new Color(0, 255, 180));
+        title.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
+
+        add(title, BorderLayout.NORTH);
+        add(scrollPane, BorderLayout.CENTER);
     }
 } 
