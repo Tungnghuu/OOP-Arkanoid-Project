@@ -79,11 +79,11 @@ public class Ball extends MovableObject {
         this.setDy(this.getSpeed());
     }
 
-    public void updateBall(GameManager gm) {
+    public void updateBall() {
         double ballY = this.getY();
         double ballX = this.getX();
-        ballY += this.getDy();
-        ballX += this.getDx();
+        ballY += this.getDy() * this.getSpeed();
+        ballX += this.getDx() * this.getSpeed();
         this.setY((int)ballY);
         this.setX((int)ballX);
 
@@ -98,6 +98,16 @@ public class Ball extends MovableObject {
             this.setDx(-this.getDx());
         }
 
+        /*if (ballY >= 576) {
+            int lives = gm.getLives();
+            lives -= 1;
+            gm.setLives(lives);
+            resetBall();
+        }*/
+    }
+
+    public void updateLives(GameManager gm) {
+        double ballY = this.getY();
         if (ballY >= 576) {
             int lives = gm.getLives();
             lives -= 1;

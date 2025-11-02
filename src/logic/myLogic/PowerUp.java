@@ -2,17 +2,22 @@ package logic.myLogic;
 
 import logic.entity.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class PowerUp extends GameObject {
     /** Thuoc tinh .*/
+    private List<Bullet> bulletList = new ArrayList<>();
     private PowerUpType type;
     private boolean isPowerUp;
     private int duration;
     private long startTime;
-    private  boolean isRenderPowerUp;
+    private boolean isRenderPowerUp;
+    public static  boolean isFire;
 
     /** Construtor khoi tao.*/
     public PowerUp(int x, int y, int width, int height, PowerUpType type) {
-        super(x, y, height, width);
+        super(x, y, width, height);
         this.type = type;
         // this.duration = duration;
         this.isPowerUp = false;
@@ -58,6 +63,10 @@ public class PowerUp extends GameObject {
                     break;
                 case SHRINK_PADDLE:
                     paddleWidth -= 40;
+                    break;
+                case FIRE_PADDLE:
+                    isFire = true;
+                    break;
                 default:
                     break;
             }
@@ -66,16 +75,19 @@ public class PowerUp extends GameObject {
 
         if (object instanceof Ball) {
             double ballSpeed = ((Ball) object).getSpeed();
+            double ballRadius = ((Ball) object).getRadius();
             switch (this.getType()) {
                 case FAST_BALL:
                     ballSpeed = 7;
                     break;
-                case SLOW_BALL:
-                    ballSpeed = 2;
+                case SMALL_BALL:
+                    ballRadius = 4;
                 default:
                     break;
             }
             object.setSpeed(ballSpeed);
+            ((Ball) object).updateBall();
+            object.setHeight((int)ballRadius * 2);
         }
     }
 
@@ -86,6 +98,7 @@ public class PowerUp extends GameObject {
 
         if (object instanceof Ball) {
             object.setSpeed(5);
+            object.setHeight(16);
         }
     }
 
@@ -100,5 +113,14 @@ public class PowerUp extends GameObject {
 
     public void end() {
         isPowerUp = false;
+        isFire = false;
+    }
+
+    public void createBullet(Paddle paddle) {
+        Bullet b1 = new Bullet(paddle.getX(), paddle.getY(), 15, 15, 3);
+        Bullet b2 = new Bullet(paddle.getX() + paddle.getWidth(), paddle.getY(), 15, 15, 3);
+
+        bulletList.add(b1);
+        bulletList.add(b2);
     }
 }

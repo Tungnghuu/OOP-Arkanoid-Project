@@ -7,8 +7,8 @@ import javax.swing.table.JTableHeader;
 import java.awt.*;
 import java.util.List;
 
-public class GameHistoryTable extends JFrame {
-    public GameHistoryTable(List<Object[]> records) {
+public class LeaderTable extends JFrame {
+    public LeaderTable(List<Object[]> records) {
         setSize(600, 400);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);

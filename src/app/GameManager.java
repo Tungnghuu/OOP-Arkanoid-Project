@@ -17,12 +17,14 @@ public class GameManager {
     private static GameManager instance = null;
 
     private List<PowerUp> powerUpList = new ArrayList<>();
+    private List<Bullet> bulletList = new ArrayList<>();
     private Paddle paddle;
     private Ball ball;
     private int score;
     private int lives;
     public int level = 1;
     private double dropChance;
+    private int shootCooldown;
 
     /**
      * Constructor cua GameManager.
@@ -32,7 +34,8 @@ public class GameManager {
         ball = new Ball(374, 506, 1, 1, 8, 5);
         this.score = 0;
         this.lives = 3;
-        this.dropChance = 0.4;
+        this.dropChance = 0.3;
+        this.shootCooldown = 0;
     }
 
     public static GameManager getInstance() {
@@ -68,6 +71,10 @@ public class GameManager {
         return powerUpList;
     }
 
+    public List<Bullet> getBulletList() {
+        return bulletList;
+    }
+
     // kiem tra va cham.
     public boolean checkCollision(GameObject gameObject, Ball ball) {
         double centerBallX = ball.getX() + ball.getRadius();
@@ -94,16 +101,6 @@ public class GameManager {
         double dy = centerBallY - closestY;
         double radius = ball.getRadius();
 
-        /*
-        if ((dx * dx + dy * dy) <= radius * radius) {
-            if (Math.abs(dx) > Math.abs(dy)) {
-                ball.bounceOff(-ball.getDx(), ball.getDy()); // hit left or right
-            } else {
-                ball.bounceOff(ball.getDx(), -ball.getDy()); // hit top or bottom
-            }
-        }
-        */
-
         return (dx * dx + dy * dy) <= radius * radius;
     }
 
@@ -113,6 +110,8 @@ public class GameManager {
         }
 
         List<Brick> hitBricks = new ArrayList<>();
+        List<Brick> scoreBricks = new ArrayList<>();
+        List<Bullet> hitBullets = new ArrayList<>();
         boolean collided = false;
         // tim gach va cham
         for (List<Brick> row : brickList) {
@@ -126,14 +125,24 @@ public class GameManager {
                     collided = true;
                     break;
                 }
+
+                for (Bullet b : bulletList) {
+                    if (b.getBounds().intersects(brick.getBounds())) {
+                        hitBricks.add(brick);
+                        hitBullets.add(b);
+                        collided = true;
+                        break;
+                    }
+                }
             }
             if (collided) break;
         }
 
-        // tao powerUp va tang diem
+        // kiem tra cac vien gach bi pha huy
         for (Brick b : hitBricks) {
             b.takeHits();
             if (b.isDestroy()) {
+                scoreBricks.add(b);
                 if (b.getType() == BrickType.EXPLOSIVE) {
                     int radius = 1;
                     int bx = b.getX();
@@ -144,15 +153,19 @@ public class GameManager {
                             if (Math.abs(other.getX() - bx) <= Brick.WIDTH * radius &&
                                 Math.abs(other.getY() - by) <= Brick.HEIGHT * radius &&
                                 other != b) {
-
+                                scoreBricks.add(other);
                                 other.remove();
                             }
                         }
                     }
                 }
-                createPowerUp(b);
-                addScore(b);
             }
+        }
+
+        // tang diem va tao powerUp
+        for (Brick brick : scoreBricks) {
+            addScore(brick);
+            createPowerUp(brick);
         }
 
         // xoa gach
@@ -165,8 +178,10 @@ public class GameManager {
                 }
             }
         }
-      //  hitBricks.clear();
-
+        // xoa dan
+        bulletList.removeAll(hitBullets);
+        hitBullets.clear();
+        // ko render powerUp nua khi cham vao paddle
         for (PowerUp p : powerUpList) {
             if (p.getBounds().intersects(paddle.getBounds())) {
                 p.setRenderPowerUp(false);
@@ -179,11 +194,16 @@ public class GameManager {
             Random rand = new Random();
             if (rand.nextDouble() < dropChance) {
                 PowerUp powerUp;
-                switch (rand.nextInt(3)) {
-                    case 0 -> powerUp = new PowerUp(brick.getX(), brick.getY(), 15, 15, PowerUpType.EXPAND_PADDLE);
-                    case 1 -> powerUp = new PowerUp(brick.getX(), brick.getY(), 15, 15, PowerUpType.SHRINK_PADDLE);
-                    case 2 -> powerUp = new PowerUp(brick.getX(), brick.getY(), 15, 15, PowerUpType.FAST_BALL);
-                    default -> powerUp = new PowerUp(brick.getX(), brick.getY(), 15, 15, PowerUpType.EXPAND_PADDLE);
+                switch (rand.nextInt(8)) {
+                    case 0 -> powerUp = new PowerUp(brick.getX(), brick.getY(), 30, 30, PowerUpType.EXPAND_PADDLE);
+                    case 1 -> powerUp = new PowerUp(brick.getX(), brick.getY(), 30, 30, PowerUpType.SHRINK_PADDLE);
+                    case 2 -> powerUp = new PowerUp(brick.getX(), brick.getY(), 30, 30, PowerUpType.FAST_BALL);
+                    case 3 -> powerUp = new PowerUp(brick.getX(), brick.getY(), 30, 30, PowerUpType.FIRE_PADDLE);
+                    case 4 -> powerUp = new PowerUp(brick.getX(), brick.getY(), 30, 30, PowerUpType.SMALL_BALL);
+                    case 5 -> powerUp = new PowerUp(brick.getX(), brick.getY(), 30, 30, PowerUpType.GAME_OVER);
+                    case 6 -> powerUp = new PowerUp(brick.getX(), brick.getY(), 30, 30, PowerUpType.NEXT_LEVEL);
+                    case 7 -> powerUp = new PowerUp(brick.getX(), brick.getY(), 30, 30, PowerUpType.EXTRA_LIFE);
+                    default -> powerUp = new PowerUp(brick.getX(), brick.getY(), 30, 30, PowerUpType.EXPAND_PADDLE);
                 }
                 powerUpList.add(powerUp);
                 powerUp.setRenderPowerUp(true);
@@ -222,9 +242,8 @@ public class GameManager {
         double maxAngle = Math.toRadians(60);
         double bounceAngle = maxAngle * normalizeDistance;
 
-        double speed = ball.getSpeed();
-        double newDx =  speed * Math.sin(bounceAngle);
-        double newDy = -speed * Math.cos(bounceAngle);
+        double newDx = Math.sin(bounceAngle);
+        double newDy = -Math.cos(bounceAngle);
 
         ball.setDx(newDx);
         ball.setDy(newDy);
@@ -263,6 +282,30 @@ public class GameManager {
         }
     }
 
+    // Tao dan
+    public void createBullet(Paddle paddle) {
+        Bullet b1 = new Bullet(paddle.getX(), paddle.getY(), 10, 10, 3);
+        Bullet b2 = new Bullet(paddle.getX() + paddle.getWidth(), paddle.getY(), 10, 10, 3);
+
+        bulletList.add(b1);
+        bulletList.add(b2);
+    }
+
+    // cap nhat dan
+    public void updateBullet(Paddle paddle) {
+       if (PowerUp.isFire) {
+           if (shootCooldown <= 0) {
+               createBullet(paddle);
+               shootCooldown = 150;
+           } else {
+               shootCooldown--;
+           }
+       }
+
+       for (Bullet b : bulletList) {
+           b.update();
+       }
+    }
     // Reset game
     public void resetGame(boolean resetScore) {
         this.lives = 3;
