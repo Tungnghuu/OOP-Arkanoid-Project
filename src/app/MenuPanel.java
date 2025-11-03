@@ -15,6 +15,7 @@ public class MenuPanel implements DrawBackground {
     private ImageIcon playImage = LoadImage.get("/assets/Images/playGame.png", buttonWidth, buttonHeight);
     private ImageIcon bgImage   = LoadImage.get("/assets/Images/background.png", GamePanel.screenWidth, GamePanel.screenHeight);
     private ImageIcon highScoreImg = LoadImage.get("/assets/Images/leaderBoard.png", buttonWidth, buttonHeight);
+    private ImageIcon scoreImg = LoadImage.get("/assets/Images/highScore.png", buttonWidth, buttonHeight);
 
     public Rectangle getPlayButton() {
         return playButton;
@@ -34,16 +35,9 @@ public class MenuPanel implements DrawBackground {
 
         g2.drawImage(playImage.getImage(), playButton.x, playButton.y, null);
         g2.drawImage(highScoreImg.getImage(), scoreButton.x, scoreButton.y, null);
+        g2.drawImage(scoreImg.getImage(), historyButton.x, historyButton.y, null);
 
         g.setFont(new Font("Arial", Font.PLAIN, 25));
         g.setColor(Color.LIGHT_GRAY);
-
-        //TODO:asldfkjas;dfa
-        String text = "History";
-        FontMetrics fm = g.getFontMetrics();
-        int textX = historyButton.x + (historyButton.width - fm.stringWidth(text)) / 2;
-        int textY = historyButton.y + (historyButton.height + fm.getAscent()) / 2 - 5;
-
-        g.drawString(text, textX, textY);
     }
 }
