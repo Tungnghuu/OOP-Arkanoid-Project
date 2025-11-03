@@ -1,7 +1,5 @@
 package app;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -29,7 +27,7 @@ public class GetHistory {
                     datetime = datetime.split("\\.")[0];
                 }
                 Timestamp recordTime = Timestamp.valueOf(datetime);
-                history.add(new Object[] {datetime, score});
+                history.add(new Object[] {recordTime, score});
             }
         } catch (IOException e) {
             e.printStackTrace();
