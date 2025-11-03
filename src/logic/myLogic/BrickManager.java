@@ -77,6 +77,15 @@ public class BrickManager {
         return true;
     }
 
+    // Đếm tổng số gạch còn lại
+    public int getTotalBricksRemaining() {
+        int count = 0;
+        for (List<Brick> row : brickList) {
+            count += row.size();
+        }
+        return count;
+    }
+
     // Reset lại
     public void reset() {
         brickList.clear();

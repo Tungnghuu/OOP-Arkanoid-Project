@@ -40,6 +40,10 @@ public class GamePanel extends JPanel implements Runnable {
     private boolean scoreSaved = false;
     private Thread gameThread;
 
+    private boolean winSoundPlayed = false;
+    private boolean loseSoundPlayed = false;
+    private int currentBgmIndex = -1;
+
     private ImageIcon ballImage;
     private ImageIcon paddleImage;
 
@@ -49,9 +53,8 @@ public class GamePanel extends JPanel implements Runnable {
     private ImageIcon level10To12Bg;
     private ImageIcon level13To15Bg;
 
-
-    private final Font hudFont = new Font("Arial", Font.PLAIN, 20);
-    private final Color hudColor = Color.WHITE;
+    private HUDRenderer hudRenderer = new HUDRenderer();
+    private GameOverOverlay gameOverOverlay = new GameOverOverlay();
 
     private GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -71,6 +74,9 @@ public class GamePanel extends JPanel implements Runnable {
 
         ballImage = LoadImage.get("/assets/Images/ball.png", 16,16);
         paddleImage = LoadImage.get("/assets/Images/paddle.png", 120,15);
+
+        ball.setSoundManager(soundManager);
+        paddle.setSoundManager(soundManager);
     }
 
     public static GamePanel getInstance() {
@@ -87,6 +93,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void startGame() {
         inMenu = false;
+        ensureLevelBgm();
     }
 
     @Override
@@ -114,23 +121,67 @@ public class GamePanel extends JPanel implements Runnable {
         gameManager.level = 1;
         gameManager.resetGame(resetScore);
         brickManager.reset();
-        paddle = gameManager.newDefaultPaddle();
-        ball = gameManager.newDefaultBall();
+        paddle.resetPaddle();
+        ball.resetBall();
         powerUpList = gameManager.getPowerUpList();
         gameOver = false;
         gameCleared = false;
         scoreSaved = false;
+        winSoundPlayed = false;
+        loseSoundPlayed = false;
         inputHandler.resetPressed = false;
+        ensureLevelBgm();
     }
 
     private void doReset() {
         brickManager.reset();
-        paddle = gameManager.newDefaultPaddle();
-        ball = gameManager.newDefaultBall();
+        paddle.resetPaddle();
+        ball.resetBall();
         powerUpList = gameManager.getPowerUpList();
         ball.setBallStuck(true);
         gameCleared = false;
+        winSoundPlayed = false;
+        ensureLevelBgm();
     }
+
+    // Chọn nhạc nền theo level
+    private int chooseBgmForLevel(int level) {
+        if (level >= 1 && level <= 3) {
+            return 0; // earth theme
+        }
+
+        if (level >= 4 && level <= 6) { 
+            return 4; // underwater theme
+        }
+
+        if (level >= 7 && level <= 9) {
+            return 5; // volcano theme
+        }
+
+        if (level >= 10 && level <= 12) {
+            return 3; // space theme
+        }
+
+        if (level >= 13 && level <= 15) {
+            return 2; // neon theme
+        }
+        
+        return 0;
+    }
+
+    // Đảm bảo nhạc nền được chọn đúng với level hiện tại
+    private void ensureLevelBgm() {
+        int level = brickManager.getLevel();
+        int targetIndex = chooseBgmForLevel(level);
+        if (targetIndex != currentBgmIndex) {
+            if (currentBgmIndex != -1) {
+                stopBGM();
+            }
+            playBGM(targetIndex);
+            currentBgmIndex = targetIndex;
+        }
+    }
+    
     public void update() {
         if (inputHandler.dPressed) {
             brickManager.clearAllBricks();
@@ -167,6 +218,12 @@ public class GamePanel extends JPanel implements Runnable {
 
         // When Game is Over wait user to press R to reset
         if (gameOver) {
+            if (!loseSoundPlayed) {
+                stopBGM();
+                currentBgmIndex = -1;
+                playSFX(1); // lose
+                loseSoundPlayed = true;
+            }
             if (!scoreSaved) {
                 gameManager.gameOver();
                 scoreSaved = true;
@@ -184,6 +241,8 @@ public class GamePanel extends JPanel implements Runnable {
             } else {
                 gameCleared = false;
                 inMenu = true;
+                stopBGM();
+                currentBgmIndex = -1;
             }
         }
 
@@ -198,8 +257,18 @@ public class GamePanel extends JPanel implements Runnable {
         }
 
         if (!ball.isStuck()) {
+            int bricksBeforeCollision = brickManager.getTotalBricksRemaining();
+            
             ball.updateBall(gameManager);
             gameManager.updateIfCollision(ball, paddle, brickList);
+
+            int bricksAfterCollision = brickManager.getTotalBricksRemaining();
+
+            paddle.checkBallCollision(ball);
+
+            if (bricksAfterCollision < bricksBeforeCollision) {
+                playSFX(8); // brick_hit
+            }
         } else {
             ball.BallFollowPaddle(paddle);
         }
@@ -227,6 +296,10 @@ public class GamePanel extends JPanel implements Runnable {
             gameOver = true;
         } else if (brickManager.isAllCleared()) {
             gameCleared = true;
+            if (!winSoundPlayed) {
+                playSFX(6); // win
+                winSoundPlayed = true;
+            }
         }
     }
 
@@ -251,7 +324,7 @@ public class GamePanel extends JPanel implements Runnable {
             menuPanel.draw(g2);
             return;
         }
-
+                    
         drawBall.setPosition(ball.getX(), ball.getY(), ball.getWidth(), ball.getHeight());
         drawPaddle.setPosition(paddle.getX(), paddle.getY(), paddle.getWidth(), paddle.getHeight());
         drawBall.drawBall(g2, ballImage);
@@ -259,20 +332,10 @@ public class GamePanel extends JPanel implements Runnable {
         renderBrick(g2);
         renderPowerUp(g2);
 
-        g2.setColor(hudColor);
-        g2.setFont(hudFont);
-        g2.drawString("Score: " + gameManager.getScore(), 600, 20);
-        g2.drawString("Lives: " + gameManager.getLives(), 50, 20);
+        hudRenderer.draw(g2, gameManager.getScore(), gameManager.getLives());
 
         if (gameOver || gameCleared) {
-            g2.setColor(new Color(0,0,0,160));
-            g2.fillRect(0,0,getWidth(),getHeight());
-            g2.setColor(Color.WHITE);
-            g2.setFont(new Font("Arial", Font.BOLD, 28));
-            String msg = gameOver ? "Game Over" : "All Bricks Cleared!";
-            g2.drawString(msg, getWidth()/2 - 120, getHeight()/2 - 10);
-            g2.setFont(new Font("Arial", Font.PLAIN, 22));
-            g2.drawString("Press R to Reset", getWidth()/2 - 110, getHeight()/2 + 30);
+            gameOverOverlay.draw(g2, gameOver, getWidth(), getHeight());
         }
 
         if (inSetting) {
@@ -282,13 +345,13 @@ public class GamePanel extends JPanel implements Runnable {
         this.setDoubleBuffered(true);
     }
 
-    public void playMusic(int i) {
+    public void playBGM(int i) {
         soundManager.setFile(i);
         soundManager.play();
         soundManager.loop();
     }
 
-    public void stopMusic() {
+    public void stopBGM() {
         soundManager.stop();
     }
 

@@ -1,6 +1,7 @@
 package logic.entity;
 
 import app.GameManager;
+import app.SoundManager;
 
 /** Lop dai dien cho bong. */
 public class Ball extends MovableObject {
@@ -8,6 +9,7 @@ public class Ball extends MovableObject {
     private int radius;
     public double angleOfAttack;
     private boolean ballStuck = true;
+    private SoundManager soundManager;
 
     /** Constructor cua Ball.*/
     public Ball(int x, int y, double dx, double dy, int radius, double speed) {
@@ -79,6 +81,10 @@ public class Ball extends MovableObject {
         this.setDy(this.getSpeed());
     }
 
+    public void setSoundManager(SoundManager sm) {
+        this.soundManager = sm;
+    }
+
     public void updateBall(GameManager gm) {
         double ballY = this.getY();
         double ballX = this.getX();
@@ -90,12 +96,24 @@ public class Ball extends MovableObject {
         if (ballY <= 0) {
             this.setY(0);
             this.setDy(-this.getDy());
+            if (soundManager != null) {
+                soundManager.setFile(9); // wall hit
+                soundManager.play();
+            }
         } else if (ballX >= 750) {
             this.setX(750);
             this.setDx(-this.getDx());
+            if (soundManager != null) {
+                soundManager.setFile(9); // wall hit
+                soundManager.play();
+            }
         } else if (ballX <= 0) {
             this.setX(0);
             this.setDx(-this.getDx());
+            if (soundManager != null) {
+                soundManager.setFile(9); // wall hit
+                soundManager.play();
+            }
         }
 
         if (ballY >= 576) {

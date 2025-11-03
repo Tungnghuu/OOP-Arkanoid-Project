@@ -2,6 +2,7 @@ package logic.entity;
 
 import logic.myLogic.PowerUp;
 import logic.myLogic.PowerUpType;
+import app.SoundManager;
 
 /** Lop dai dien cho thanh truot. */
 public class Paddle extends MovableObject {
@@ -59,5 +60,26 @@ public class Paddle extends MovableObject {
     public void endPowerUp(PowerUp powerUp) {
         this.setWidth(100);
         System.out.println("Do dai paddle: " + this.getWidth());
+    }
+
+    private SoundManager soundManager;
+    private boolean ballHitPaddle = false;
+
+    public void setSoundManager(SoundManager sm) {
+        this.soundManager = sm;
+    }
+
+    public void checkBallCollision(Ball ball) {
+        boolean collision = this.getBounds().intersects(ball.getBounds());
+        
+        if (collision && !ballHitPaddle) {
+            if (soundManager != null) {
+                soundManager.setFile(7); // paddle_hit
+                soundManager.play();
+            }
+            ballHitPaddle = true;
+        } else if (!collision) {
+            ballHitPaddle = false;
+        }
     }
 }
