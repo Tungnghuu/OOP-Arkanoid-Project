@@ -23,43 +23,35 @@ public class RecordScore {
                 Random rand = new Random();
                 playerId = 100000 + rand.nextInt(900000);
                 Files.writeString(id_file, String.valueOf(playerId));
-                throw new IOException("File does not exist!");
-            } else {
-                if (!Files.exists(id_file)) {
-                    System.out.println("player_id.txt does not exist, creating new one...");
-                    Random rand = new Random();
-                    playerId = 100000 + rand.nextInt(900000);
-                    Files.writeString(id_file, String.valueOf(playerId));
-                } else {
-                    String idText = Files.readString(id_file).trim();
-                    playerId = Integer.parseInt(idText);
-                }
 
-                System.out.println("Đọc playerId từ file: " + playerId);
+                try ( Connection conn = ConnectToDB.connect();
+                      PreparedStatement preparedStatement = conn.prepareStatement(sql)){
+
+                    preparedStatement.setInt(1, playerId);
+                    preparedStatement.setTimestamp(2, score.getRecordTime());
+                    preparedStatement.setInt(3, score.getScore());
+                    preparedStatement.execute();
+
+                    System.out.println("Ket noi va ghi diem thanh cong");
+
+                } catch (SQLException e) {
+                    System.out.println("Failed to Connect.");
+                }
+                throw new IOException("File does not exist!");
             }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         try {
-            Files.writeString(historyFile, score.toString(), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+            Files.writeString(historyFile, score.toString(), StandardOpenOption.CREATE
+                    , StandardOpenOption.APPEND);
             System.out.println("Wrote to history.txt");
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        try ( Connection conn = ConnectToDB.connect();
-              PreparedStatement preparedStatement = conn.prepareStatement(sql)){
-
-            preparedStatement.setInt(1, playerId);
-            preparedStatement.setTimestamp(2, score.getRecordTime());
-            preparedStatement.setInt(3, score.getScore());
-            preparedStatement.execute();
-
-            System.out.println("Ket noi va ghi diem thanh cong");
-        } catch (SQLException e) {
-            System.out.println("Failed to Connect.");
-        }
     }
 
     public static  void updateScore(Score score) {

@@ -1,14 +1,14 @@
 package app;
 
 import javax.swing.*;
+import java.awt.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
-import java.awt.*;
 import java.util.List;
 
-public class GameHistoryTable extends JFrame {
-    public GameHistoryTable(List<Object[]> records) {
+class HistoryTable extends JFrame {
+    public HistoryTable(List<Object[]> datas) {
         setSize(600, 400);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -18,10 +18,10 @@ public class GameHistoryTable extends JFrame {
         setLayout(new BorderLayout());
 
         // Cac cot
-        String[] columnNames = {"Number","playerId", "Time", "Score"};
+        String[] columnNames = {"Time", "Score"};
         DefaultTableModel model = new DefaultTableModel(columnNames, 0);
 
-        for (Object[] data : records) {
+        for (Object[] data : datas) {
             model.addRow(data);
         }
 
@@ -78,7 +78,7 @@ public class GameHistoryTable extends JFrame {
         scrollPane.setBackground(new Color(20, 20, 30));
 
         //  Tieu de
-        JLabel title = new JLabel("Leaderboard", SwingConstants.CENTER);
+        JLabel title = new JLabel("History", SwingConstants.CENTER);
         title.setFont(new Font("Consolas", Font.BOLD, 26));
         title.setForeground(new Color(0, 255, 180));
         title.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
@@ -86,4 +86,4 @@ public class GameHistoryTable extends JFrame {
         add(title, BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
     }
-}
+} 

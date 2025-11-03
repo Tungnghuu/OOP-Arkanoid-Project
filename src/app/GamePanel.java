@@ -32,6 +32,7 @@ public class GamePanel extends JPanel implements Runnable {
     private SettingPanel settingPanel = new SettingPanel();
     static BrickManager brickManager = new BrickManager();
     static List<PowerUp> powerUpList = gameManager.getPowerUpList();
+    static List<Bullet> bulletList = gameManager.getBulletList();
     private Paddle paddle = gameManager.getPaddle();
     private Ball ball = gameManager.getBall();
     private DrawObject drawPaddle = new DrawObject(paddle.getX(), paddle.getY(), paddle.getWidth(), paddle.getHeight(), Color.orange);
@@ -55,6 +56,8 @@ public class GamePanel extends JPanel implements Runnable {
 
     private HUDRenderer hudRenderer = new HUDRenderer();
     private GameOverOverlay gameOverOverlay = new GameOverOverlay();
+
+    private double drawInterval = 1000000000.0 / 60; // default 60 FPS
 
     private GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -96,9 +99,13 @@ public class GamePanel extends JPanel implements Runnable {
         ensureLevelBgm();
     }
 
+    public void setFPS(double fps) {
+        this.drawInterval = 1000000000.0 / fps;
+    } 
+
     @Override
     public void run() {
-        double drawInterval = 1000000000.0 / 60; // 120 FPS
+        drawInterval = 1000000000.0 / 60; // 120 FPS
         double delta = 0;
         long lastTime = System.nanoTime();
         long currentTime;
@@ -110,10 +117,9 @@ public class GamePanel extends JPanel implements Runnable {
 
             if (delta >= 1) {
                 update();
-                repaint();
                 delta--;
             }
-
+            repaint();
         }
     }
 
@@ -193,7 +199,9 @@ public class GamePanel extends JPanel implements Runnable {
                 if (menuPanel.getPlayButton().contains(inputHandler.mouseX, inputHandler.mouseY)) {
                     startGame();
                 } else if (menuPanel.getScoreButton().contains(inputHandler.mouseX, inputHandler.mouseY)) {
-                    SwingUtilities.invokeLater(() -> new GameHistoryTable(GetHistory.getHistory()).setVisible(true));
+                    SwingUtilities.invokeLater(() -> new LeaderTable(GetLeaderBoard.GetLeaderboard()).setVisible(true));
+                } else if (menuPanel.getHistoryButton().contains(inputHandler.mouseX, inputHandler.mouseY)) {
+                    SwingUtilities.invokeLater(() -> new HistoryTable(GetHistory.getHistory()).setVisible(true));
                 }
                 inputHandler.mouseClicked = false;
             }
@@ -257,6 +265,7 @@ public class GamePanel extends JPanel implements Runnable {
         }
 
         if (!ball.isStuck()) {
+<<<<<<< HEAD
             int bricksBeforeCollision = brickManager.getTotalBricksRemaining();
             
             ball.updateBall(gameManager);
@@ -269,6 +278,11 @@ public class GamePanel extends JPanel implements Runnable {
             if (bricksAfterCollision < bricksBeforeCollision) {
                 playSFX(8); // brick_hit
             }
+=======
+            ball.updateLives(gameManager);
+            gameManager.updateIfCollision(ball, paddle, brickList);
+            ball.updateBall();
+>>>>>>> 203eb359ee12691195911728a97c851371129747
         } else {
             ball.BallFollowPaddle(paddle);
         }
@@ -281,15 +295,14 @@ public class GamePanel extends JPanel implements Runnable {
                 p.applyPowerUp(ball);
                 p.activate();
             }
-        }
 
-        for (PowerUp p: powerUpList) {
             if (p.isPowerUp() && p.isExpired(10000)) {
                 p.endPowerUp(paddle);
                 p.endPowerUp(ball);
                 p.end();
             }
         }
+        gameManager.updateBullet(paddle);
 
         // Condition to reset or end game
         if (gameManager.getLives() <= 0) {
@@ -301,6 +314,31 @@ public class GamePanel extends JPanel implements Runnable {
                 winSoundPlayed = true;
             }
         }
+
+        // nextLevel or gameOver with powerUp
+        for (PowerUp p: powerUpList) {
+            if (paddle.getBounds().intersects(p.getBounds())) {
+                int lives = gameManager.getLives();
+                switch (p.getType()) {
+                    case GAME_OVER:
+                        gameOver = true;
+                        break;
+                    case NEXT_LEVEL:
+                        gameCleared = true;
+                        break;
+                    case EXTRA_LIFE:
+                        if (lives < 3) {
+                            lives ++;
+                            gameManager.setLives(lives);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+           // System.out.println("PowerUp type: " + p.getType());
+        }
+
     }
 
     public void paintComponent(Graphics g) {
@@ -331,6 +369,7 @@ public class GamePanel extends JPanel implements Runnable {
         drawPaddle.drawRect(g2, paddleImage);
         renderBrick(g2);
         renderPowerUp(g2);
+        renderBullet(g2);
 
         hudRenderer.draw(g2, gameManager.getScore(), gameManager.getLives());
 

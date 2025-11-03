@@ -1,36 +1,38 @@
-    package app;
+package app;
 
-    import java.sql.*;
-    import java.util.ArrayList;
-    import java.util.List;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-    public class GetHistory {
+public class GetHistory {
 
-        public static List<Object[]> getHistory() {
-            List<Object[]> records = new ArrayList<>();
+    public static List<Object[]> getHistory() {
+        List<Object[]> history = new ArrayList<>();
+        Path path_history = Paths.get("src/log/history.txt");
 
-            String sql = "SELECT playerId, recordTime, playerScore FROM player ORDER BY playerScore DESC LIMIT 10";
-
-            try (Connection conn = ConnectToDB.connect()) {
-                if (conn == null) {
-                    System.out.println("Connection is null. Cannot fetch history.");
-                    return records;
+        try {
+            List<String> lines = Files.readAllLines(path_history);
+            Collections.reverse(lines);
+            for (String line : lines) {
+                String[] parts = line.split(" ");
+                if (parts.length < 3) continue;
+                int score = Integer.parseInt(parts[0]);
+                String datetime = parts[1] + " " + parts[2];
+                if (datetime.contains(".")) {
+                    datetime = datetime.split("\\.")[0];
                 }
-
-                try (PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
-                    ResultSet record = preparedStatement.executeQuery();
-                    int stt = 1;
-                    while (record.next()) {
-                        int playerId = record.getInt("playerId");
-                        int score = record.getInt("playerScore");
-                        Timestamp recordTime = record.getTimestamp("recordTime");
-                        records.add(new Object[] {stt, playerId, recordTime, score});
-                        stt++;
-                    }
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
+                Timestamp recordTime = Timestamp.valueOf(datetime);
+                history.add(new Object[] {recordTime, score});
             }
-            return records;
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
+        return history;
     }
+}

@@ -81,15 +81,19 @@ public class Ball extends MovableObject {
         this.setDy(this.getSpeed());
     }
 
+<<<<<<< HEAD
     public void setSoundManager(SoundManager sm) {
         this.soundManager = sm;
     }
 
     public void updateBall(GameManager gm) {
+=======
+    public void updateBall() {
+>>>>>>> 203eb359ee12691195911728a97c851371129747
         double ballY = this.getY();
         double ballX = this.getX();
-        ballY += this.getDy();
-        ballX += this.getDx();
+        ballY += this.getDy() * this.getSpeed();
+        ballX += this.getDx() * this.getSpeed();
         this.setY((int)ballY);
         this.setX((int)ballX);
 
@@ -115,7 +119,11 @@ public class Ball extends MovableObject {
                 soundManager.play();
             }
         }
+    }
 
+
+    public void updateLives(GameManager gm) {
+        double ballY = this.getY();
         if (ballY >= 576) {
             int lives = gm.getLives();
             lives -= 1;
@@ -124,17 +132,4 @@ public class Ball extends MovableObject {
         }
     }
 
-   /* public void bounceOff(double Dx, double Dy) {
-        double minAngle = 0.4;
-        double maxAngle = Math.PI / 2 - minAngle;
-        double angle = minAngle + Math.random() * (maxAngle - minAngle);
-
-        //direction of Dx or Dy (-1 or 1) * speed * new Angle of Attack (0 < x < 90 degree);
-        //min angle slightly bigger and so max angle slightly smaller 
-        double newDx = Math.signum(Dx) * speed * Math.cos(angle);
-        double newDy = Math.signum(Dy) * speed * Math.sin(angle);
-
-        this.setDx(newDx);
-        this.setDy(newDy);
-    }*/
 }
