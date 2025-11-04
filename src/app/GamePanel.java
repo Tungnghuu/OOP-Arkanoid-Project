@@ -165,7 +165,7 @@ public class GamePanel extends JPanel implements Runnable {
         ensureLevelBgm();
     }
 
-    // Chọn nhạc nền theo level
+    // Select Bg Music based on level
     private int chooseBgmForLevel(int level) {
         if (level >= 1 && level <= 3) {
             return 0; // earth theme
@@ -190,7 +190,7 @@ public class GamePanel extends JPanel implements Runnable {
         return 0;
     }
 
-    // Đảm bảo nhạc nền được chọn đúng với level hiện tại
+    // Ensure the BG music match the level
     private void ensureLevelBgm() {
         int level = brickManager.getLevel();
         int targetIndex = chooseBgmForLevel(level);
@@ -204,10 +204,11 @@ public class GamePanel extends JPanel implements Runnable {
     }
     
     public void update() {
-        if (inputHandler.dPressed) {
-            brickManager.clearAllBricks();
-            inputHandler.dPressed = false;
-        }
+        //DEBUG:
+        // if (inputHandler.dPressed) {
+        //     brickManager.clearAllBricks();
+        //     inputHandler.dPressed = false;
+        // }
 
         if (gameWin) {
             if (inputHandler.resetPressed) {

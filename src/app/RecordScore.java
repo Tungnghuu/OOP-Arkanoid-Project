@@ -85,7 +85,7 @@ public class RecordScore {
                     highestScore.setRecordTime(recordTime);
                 }
             }
-            System.out.println("diem cao nhat:" + highestScore.getScore());
+            System.out.println("Highest Score: " + highestScore.getScore());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -94,7 +94,7 @@ public class RecordScore {
         try {
             String idText = Files.readString(path_id).trim();
             id = Integer.parseInt(idText);
-            System.out.println("Đọc playerId từ file: " + id);
+            System.out.println("Player_ID " + id);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

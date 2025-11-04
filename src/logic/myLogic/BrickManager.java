@@ -31,7 +31,7 @@ public class BrickManager {
         brickList.clear();
         ArrayList<ArrayList<int[]>> layout;
 
-        // Lấy layout dựa trên level
+        // Layout based on level
         switch (level) {
             case 1 -> layout = BrickLayout.level1();
             case 2 -> layout = BrickLayout.level2();
@@ -72,7 +72,7 @@ public class BrickManager {
         }
     }
 
-    // Kiểm tra đã phá hết gạch chưa
+    // Check if all bricks are destroyed
     public boolean isAllCleared() {
         for (List<Brick> row : brickList) {
             if (!row.isEmpty()) return false;
@@ -80,7 +80,7 @@ public class BrickManager {
         return true;
     }
 
-    // Đếm tổng số gạch còn lại
+    // Count total brick Remaining
     public int getTotalBricksRemaining() {
         int count = 0;
         for (List<Brick> row : brickList) {
@@ -89,7 +89,7 @@ public class BrickManager {
         return count;
     }
 
-    // Reset lại
+    // Reset
     public void reset() {
         brickList.clear();
         this.level = GameManager.getInstance().level;
