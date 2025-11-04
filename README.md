@@ -13,8 +13,7 @@ The video demonstrates:
 ## Design Document
 ### Class Diagram
 The system design includes:
-
-(Include a diagram image here if available.)
+![Class Diagram](README_assets/classDiagram.jpg)
 
 ---
 
