@@ -6,7 +6,9 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Random;
 
 import logic.entity.*;
@@ -138,11 +140,16 @@ public class GameManager {
             if (collided) break;
         }
 
-        // kiem tra cac vien gach bi pha huy
-        for (Brick b : hitBricks) {
+        Queue<Brick> queue = new LinkedList<>(hitBricks);
+        hitBricks.clear();
+
+        while (!queue.isEmpty()) {
+            Brick b = queue.poll();
+
             b.takeHits();
             if (b.isDestroy()) {
                 scoreBricks.add(b);
+
                 if (b.getType() == BrickType.EXPLOSIVE) {
                     int radius = 1;
                     int bx = b.getX();
@@ -150,17 +157,21 @@ public class GameManager {
 
                     for (List<Brick> row : brickList) {
                         for (Brick other : row) {
-                            if (Math.abs(other.getX() - bx) <= Brick.WIDTH * radius &&
+                            if (!other.isDestroy() &&
+                                Math.abs(other.getX() - bx) <= Brick.WIDTH * radius &&
                                 Math.abs(other.getY() - by) <= Brick.HEIGHT * radius &&
                                 other != b) {
+
                                 scoreBricks.add(other);
                                 other.remove();
+                                queue.add(other);
                             }
                         }
                     }
                 }
             }
         }
+
 
         // tang diem va tao powerUp
         for (Brick brick : scoreBricks) {
@@ -178,6 +189,7 @@ public class GameManager {
                 }
             }
         }
+
         // xoa dan
         bulletList.removeAll(hitBullets);
         hitBullets.clear();
@@ -225,8 +237,7 @@ public class GameManager {
             case BONUS:
                 score += 10;
                 break;
-            case UNBREAKABLE:
-                //TODO: Handle UNBREAKABLE brick type if needed
+            default:
                 break;
         }
     }

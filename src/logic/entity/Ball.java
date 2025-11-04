@@ -97,22 +97,19 @@ public class Ball extends MovableObject {
             this.setY(0);
             this.setDy(-this.getDy());
             if (soundManager != null) {
-                soundManager.setFile(9); // wall hit
-                soundManager.play();
+                soundManager.playSFX(9);
             }
         } else if (ballX >= 750) {
             this.setX(750);
             this.setDx(-this.getDx());
             if (soundManager != null) {
-                soundManager.setFile(9); // wall hit
-                soundManager.play();
+                soundManager.playSFX(9);
             }
         } else if (ballX <= 0) {
             this.setX(0);
             this.setDx(-this.getDx());
             if (soundManager != null) {
-                soundManager.setFile(9); // wall hit
-                soundManager.play();
+                soundManager.playSFX(9);
             }
         }
     }

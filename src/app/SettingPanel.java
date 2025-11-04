@@ -5,7 +5,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.JPanel;
 
 public class SettingPanel extends JPanel {
-    private int volume = 50; //Default volume
+    public int volume = 50; //Default volume
     public boolean exit = false;
 
     private final double widthPercent = 0.6;

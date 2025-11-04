@@ -49,7 +49,8 @@ public class RenderObject {
                         img = bonusBrick;
                         break;
                     default:
-                        img = normalBrick;                }
+                        img = normalBrick;
+                    }
 
                 DrawObject drawBrick = new DrawObject(
                         b.getX(),

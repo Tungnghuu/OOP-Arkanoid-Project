@@ -1,13 +1,11 @@
 package app;
 
-// import java.net.URI;
 import java.net.URL;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
+import javax.sound.sampled.*;
 
 public class SoundManager {
-    Clip clip;
+    Clip bgmClip;
+    Clip sfxClip;
     URL soundURL[] = new URL[30];
 
     public SoundManager() {
@@ -23,25 +21,58 @@ public class SoundManager {
         soundURL[9] = getClass().getResource("/assets/sounds/wall_hit-converted.wav");
     }
 
-    public void setFile(int i) {
+    public void playBGM(int i) {
+        stopBGM();
         try {
             AudioInputStream ais = AudioSystem.getAudioInputStream(soundURL[i]);
-            clip = AudioSystem.getClip();
-            clip.open(ais);
+            bgmClip = AudioSystem.getClip();
+            bgmClip.open(ais);
+            bgmClip.loop(Clip.LOOP_CONTINUOUSLY);
+            bgmClip.start();
         } catch (Exception e) {
-            
+            e.printStackTrace();
         }
     }
 
-    public void play() {
-        clip.start();
+    public void stopBGM() {
+        if (bgmClip != null) {
+            if (bgmClip.isRunning()) bgmClip.stop();
+            bgmClip.flush();
+            bgmClip.close();
+            bgmClip = null;
+        }
     }
 
-    public void loop() {
-        clip.loop(Clip.LOOP_CONTINUOUSLY);
+    public void playSFX(int i) {
+        try {
+            AudioInputStream ais = AudioSystem.getAudioInputStream(soundURL[i]);
+            sfxClip = AudioSystem.getClip();
+            sfxClip.open(ais);
+            sfxClip.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    public void stop() {
-        clip.stop();
+    public void setVolume(float value) {
+        setClipVolume(bgmClip, value);
+        setClipVolume(sfxClip, value);
+    }
+
+    private void setClipVolume(Clip clip, float value) {
+        if (clip == null)
+            return;
+        try {
+            FloatControl gain = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+            if (value < 0.0001f) value = 0.0001f;
+
+            float dB = (float) (20.0 * Math.log10(value));
+            if (dB < gain.getMinimum()) dB = gain.getMinimum();
+            if (dB > gain.getMaximum()) dB = gain.getMaximum();
+
+            gain.setValue(dB);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

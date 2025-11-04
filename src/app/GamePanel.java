@@ -105,7 +105,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     @Override
     public void run() {
-        drawInterval = 1000000000.0 / 60; // 120 FPS
+        drawInterval = 1000000000.0 / 60;
         double delta = 0;
         long lastTime = System.nanoTime();
         long currentTime;
@@ -183,7 +183,8 @@ public class GamePanel extends JPanel implements Runnable {
             if (currentBgmIndex != -1) {
                 stopBGM();
             }
-            playBGM(targetIndex);
+
+            soundManager.playBGM(targetIndex);
             currentBgmIndex = targetIndex;
         }
     }
@@ -207,6 +208,8 @@ public class GamePanel extends JPanel implements Runnable {
             }
             return;
         }
+
+        soundManager.setVolume(settingPanel.volume / 100f);
 
         if (inputHandler.escapePressed) {
             inSetting = !inSetting;
@@ -266,20 +269,22 @@ public class GamePanel extends JPanel implements Runnable {
 
         if (!ball.isStuck()) {
             int bricksBeforeCollision = brickManager.getTotalBricksRemaining();
-            
+
             ball.updateBall(gameManager);
             gameManager.updateIfCollision(ball, paddle, brickList);
+            paddle.checkBallCollision(ball);
 
             int bricksAfterCollision = brickManager.getTotalBricksRemaining();
-
-            paddle.checkBallCollision(ball);
 
             if (bricksAfterCollision < bricksBeforeCollision) {
                 playSFX(8); // brick_hit
             }
+
+            if (gameManager.checkCollision(paddle, ball)) {
+                playSFX(7);
+            }
+
             ball.updateLives(gameManager);
-            gameManager.updateIfCollision(ball, paddle, brickList);
-            ball.updateBall(gameManager);
         } else {
             ball.BallFollowPaddle(paddle);
         }
@@ -381,18 +386,11 @@ public class GamePanel extends JPanel implements Runnable {
         this.setDoubleBuffered(true);
     }
 
-    public void playBGM(int i) {
-        soundManager.setFile(i);
-        soundManager.play();
-        soundManager.loop();
-    }
-
     public void stopBGM() {
-        soundManager.stop();
+        soundManager.stopBGM();
     }
 
     public void playSFX(int i) {
-        soundManager.setFile(i);
-        soundManager.play();
+        soundManager.playSFX(i);
     }
 }

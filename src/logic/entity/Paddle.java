@@ -74,8 +74,7 @@ public class Paddle extends MovableObject {
         
         if (collision && !ballHitPaddle) {
             if (soundManager != null) {
-                soundManager.setFile(7); // paddle_hit
-                soundManager.play();
+                soundManager.playSFX(7);
             }
             ballHitPaddle = true;
         } else if (!collision) {
