@@ -1,17 +1,23 @@
 package app;
 
-// import java.awt.*;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Random;
 
-import logic.entity.*;
+import logic.entity.Paddle;
+import logic.entity.Ball;
+import logic.entity.GameObject;
+import logic.entity.Brick;
 import logic.entity.Bullet;
-import logic.myLogic.*;
+import logic.entity.PowerUp;
+import logic.myLogic.PowerUpType;
+import logic.myLogic.BrickType;
 
 /** Lop quan ly game. */
 public class GameManager {
@@ -47,7 +53,6 @@ public class GameManager {
         return instance;
     }
 
-    /** geter cua cac thuoc tinh.*/
     public Paddle getPaddle() {
         return new Paddle(this.paddle);
     }
@@ -136,11 +141,17 @@ public class GameManager {
                     }
                 }
             }
-            if (collided) break;
+            if (collided) {
+                break;
+            }
         }
 
         // kiem tra cac vien gach bi pha huy
-        for (Brick b : hitBricks) {
+        Queue<Brick> queue = new LinkedList<>(hitBricks);
+        hitBricks.clear();
+
+        while (!queue.isEmpty()) {
+            Brick b = queue.poll();
             b.takeHits();
             if (b.isDestroy()) {
                 scoreBricks.add(b);
@@ -148,14 +159,15 @@ public class GameManager {
                     int radius = 1;
                     int bx = b.getX();
                     int by = b.getY();
-
                     for (List<Brick> row : brickList) {
                         for (Brick other : row) {
-                            if (Math.abs(other.getX() - bx) <= Brick.WIDTH * radius &&
-                                Math.abs(other.getY() - by) <= Brick.HEIGHT * radius &&
-                                other != b) {
+                            if (!other.isDestroy()
+                                    && Math.abs(other.getX() - bx) <= Brick.WIDTH * radius
+                                    && Math.abs(other.getY() - by) <= Brick.HEIGHT * radius
+                                    && other != b) {
                                 scoreBricks.add(other);
                                 other.remove();
+                                queue.add(other);
                             }
                         }
                     }
@@ -224,6 +236,8 @@ public class GameManager {
                 break;
             case BONUS:
                 score += 10;
+                break;
+            default:
                 break;
         }
     }
@@ -307,11 +321,14 @@ public class GameManager {
     // Reset game
     public void resetGame(boolean resetScore) {
         this.lives = 3;
-        if (resetScore) this.score = 0;
+        if (resetScore) {
+            this.score = 0;
+        }
+
         this.powerUpList.clear();
     }
 
-    private void saveScore() {
+    public void saveScore() {
         Score recordScore = new Score(this.score, Timestamp.valueOf(LocalDateTime.now(ZoneId.of("Asia/Ho_Chi_Minh"))));
         RecordScore.updateScore(recordScore);
     }

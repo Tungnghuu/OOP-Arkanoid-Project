@@ -1,14 +1,27 @@
 package app;
 
-import java.awt.*;
-import javax.swing.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import javax.swing.JPanel;
+import javax.swing.ImageIcon;
+import javax.swing.SwingUtilities;
+import java.util.ArrayList;
 import java.util.List;
 
-import logic.entity.*;
+import logic.entity.Ball;
+import logic.entity.Paddle;
+import logic.entity.Brick;
+import logic.myLogic.BrickManager;
+import logic.myLogic.PowerUpType;
+import logic.entity.PowerUp;
 import logic.entity.Bullet;
-import logic.myLogic.*;
-import myInterface.myInterface.*;
-import static app.RenderObject.*;
+import myInterface.myInterface.DrawObject;
+
+import static app.RenderObject.renderBrick;
+import static app.RenderObject.renderPowerUp;
+import static app.RenderObject.renderBullet;
 
 
 public class GamePanel extends JPanel implements Runnable {
@@ -22,6 +35,7 @@ public class GamePanel extends JPanel implements Runnable {
     public static final int screenWidth = tileSize * maxScreenCol;
     public static final int screenHeight = tileSize * maxScreenRow;
 
+    private boolean gameWin = false;
     private boolean inSetting = false;
     private boolean inMenu = true;
     private boolean gameOver = false;
@@ -130,7 +144,7 @@ public class GamePanel extends JPanel implements Runnable {
         brickManager.reset();
         paddle.resetPaddle();
         ball.resetBall();
-        powerUpList = gameManager.getPowerUpList();
+        powerUpList.clear();
         gameOver = false;
         gameCleared = false;
         scoreSaved = false;
@@ -195,6 +209,15 @@ public class GamePanel extends JPanel implements Runnable {
             inputHandler.dPressed = false;
         }
 
+        if (gameWin) {
+            if (inputHandler.resetPressed) {
+                gameWin = false;
+                inMenu = true;
+                doReset(true);
+            }
+            return;
+        }
+
         if (inMenu) {
             if (inputHandler.mouseClicked) {
                 if (menuPanel.getPlayButton().contains(inputHandler.mouseX, inputHandler.mouseY)) {
@@ -209,6 +232,8 @@ public class GamePanel extends JPanel implements Runnable {
             return;
         }
 
+        soundManager.setVolume(settingPanel.volume / 100f);
+
         if (inputHandler.escapePressed) {
             inSetting = !inSetting;
             inputHandler.escapePressed = false;
@@ -220,6 +245,12 @@ public class GamePanel extends JPanel implements Runnable {
                 inputHandler.mouseClicked = false;
                 if (settingPanel.exit) {
                     inSetting = false;
+                }
+                if (settingPanel.backToMenu) {
+                    doReset(true);
+                    inMenu = true;
+                    soundManager.stopBGM();
+                    settingPanel.backToMenu = false;
                 }
             }
             return;
@@ -238,7 +269,7 @@ public class GamePanel extends JPanel implements Runnable {
                 scoreSaved = true;
             }
             if (inputHandler.resetPressed)
-                doReset(true);
+                this.doReset(true);
             return;
         }
 
@@ -250,7 +281,8 @@ public class GamePanel extends JPanel implements Runnable {
                 doReset();
             } else {
                 gameCleared = false;
-                inMenu = true;
+                gameWin = true;
+                gameManager.saveScore();
                 stopBGM();
                 currentBgmIndex = -1;
             }
@@ -271,11 +303,15 @@ public class GamePanel extends JPanel implements Runnable {
 
             int bricksAfterCollision = brickManager.getTotalBricksRemaining();
 
-            paddle.checkBallCollision(ball);
-
             if (bricksAfterCollision < bricksBeforeCollision) {
                 playSFX(8); // brick_hit
             }
+
+
+            if (gameManager.checkCollision(paddle, ball)) {
+                playSFX(7);
+            }
+
             ball.updateLives(gameManager);
             gameManager.updateIfCollision(ball, paddle, brickList);
             ball.updateBall();
@@ -312,7 +348,9 @@ public class GamePanel extends JPanel implements Runnable {
         }
 
         // nextLevel or gameOver with powerUp
-        for (PowerUp p: powerUpList) {
+
+        List<PowerUp> toRemove = new ArrayList<>();
+        for (PowerUp p : powerUpList) {
             if (paddle.getBounds().intersects(p.getBounds())) {
                 int lives = gameManager.getLives();
                 if (p.getType() == PowerUpType.GAME_OVER) {
@@ -325,10 +363,11 @@ public class GamePanel extends JPanel implements Runnable {
                         gameManager.setLives(lives);
                     }
                 }
+                toRemove.add(p);
             }
            // System.out.println("PowerUp type: " + p.getType());
         }
-
+        powerUpList.removeAll(toRemove);
     }
 
     public void paintComponent(Graphics g) {

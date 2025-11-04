@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import app.GameManager;
-import logic.myLogic.BrickLayout;
-import logic.entity.*;
+import logic.entity.Brick;
+import logic.entity.ExplosiveBrick;
+import logic.entity.StrongBrick;
+import logic.entity.NormalBrick;
+import logic.entity.BonusBrick;
 
 public class BrickManager {
     private List<List<Brick>> brickList;

@@ -1,18 +1,20 @@
 package app;
 
+import logic.entity.Brick;
+import myInterface.myInterface.DrawObject;
 import logic.entity.Bullet;
 import logic.entity.PowerUp;
-import myInterface.myInterface.*;
 
-import java.awt.*;
+import javax.swing.ImageIcon;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
-import logic.entity.*;
-import logic.myLogic.*;
 
-import javax.swing.*;
-
-import static app.GamePanel.*;
+import static app.GamePanel.brickList;
+import static app.GamePanel.bulletList;
+import static app.GamePanel.powerUpList;
 
 public class RenderObject {
     static boolean isRenderPowerUp = true;
@@ -53,6 +55,7 @@ public class RenderObject {
                         break;
                     default:
                         img = normalBrick;
+                        break;
                 }
 
                 DrawObject drawBrick = new DrawObject(

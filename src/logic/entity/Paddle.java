@@ -1,6 +1,5 @@
 package logic.entity;
 
-import logic.entity.PowerUp;
 import logic.myLogic.PowerUpType;
 import app.SoundManager;
 

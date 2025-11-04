@@ -75,7 +75,6 @@ public class PowerUp extends GameObject {
 
             if (object instanceof Ball) {
                 double ballSpeed = ((Ball) object).getSpeed();
-                double ballRadius = ((Ball) object).getRadius();
                 switch (this.getType()) {
                     case FAST_BALL:
                         ballSpeed = 7;
