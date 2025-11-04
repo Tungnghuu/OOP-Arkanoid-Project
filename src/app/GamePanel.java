@@ -2,6 +2,7 @@ package app;
 
 import java.awt.*;
 import javax.swing.*;
+import java.util.ArrayList;
 import java.util.List;
 
 import logic.entity.*;
@@ -129,7 +130,7 @@ public class GamePanel extends JPanel implements Runnable {
         brickManager.reset();
         paddle.resetPaddle();
         ball.resetBall();
-        powerUpList = gameManager.getPowerUpList();
+        powerUpList.clear();
         gameOver = false;
         gameCleared = false;
         scoreSaved = false;
@@ -171,7 +172,7 @@ public class GamePanel extends JPanel implements Runnable {
         if (level >= 13 && level <= 15) {
             return 2; // neon theme
         }
-        
+
         return 0;
     }
 
@@ -223,6 +224,13 @@ public class GamePanel extends JPanel implements Runnable {
                 if (settingPanel.exit) {
                     inSetting = false;
                 }
+
+                if (settingPanel.backToMenu) {
+                    doReset(true);
+                    inMenu = true;
+                    soundManager.stopBGM();
+                    settingPanel.backToMenu = false;
+                }
             }
             return;
         }
@@ -248,7 +256,7 @@ public class GamePanel extends JPanel implements Runnable {
         if (gameCleared) {
             if (gameManager.level < 15) {
                 gameManager.level++;
-                doReset();
+                this.doReset();
             } else {
                 gameCleared = false;
                 inMenu = true;
@@ -318,7 +326,8 @@ public class GamePanel extends JPanel implements Runnable {
         }
 
         // nextLevel or gameOver with powerUp
-        for (PowerUp p: powerUpList) {
+        List<PowerUp> toRemove = new ArrayList<>();
+        for (PowerUp p : powerUpList) {
             if (paddle.getBounds().intersects(p.getBounds())) {
                 int lives = gameManager.getLives();
                 switch (p.getType()) {
@@ -329,18 +338,18 @@ public class GamePanel extends JPanel implements Runnable {
                         gameCleared = true;
                         break;
                     case EXTRA_LIFE:
-                        if (lives < 3) {
-                            lives ++;
+                        if (lives <= 3) {
+                            lives++;
                             gameManager.setLives(lives);
                         }
                         break;
                     default:
                         break;
                 }
+                toRemove.add(p);
             }
-           // System.out.println("PowerUp type: " + p.getType());
         }
-
+        powerUpList.removeAll(toRemove);
     }
 
     public void paintComponent(Graphics g) {

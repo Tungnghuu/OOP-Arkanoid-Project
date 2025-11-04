@@ -67,49 +67,31 @@ public class RenderObject {
 
     public static void renderPowerUp(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
-        for (PowerUp p : powerUpList) {
-            if (!p.isRenderPowerUp()) {
-                continue;
-            }
-            ImageIcon img;
-            switch (p.getType()) {
-                case EXPAND_PADDLE:
-                    img = expandPaddle;
-                    break;
-                case SHRINK_PADDLE:
-                    img = shrinkPaddle;
-                    break;
-                case FAST_BALL:
-                    img = fastBall;
-                    break;
-                case FIRE_PADDLE:
-                    img = shootingPaddle;
-                    break;
-                case SMALL_BALL:
-                    img = smallBall;
-                    break;
-                case NEXT_LEVEL:
-                    img = nexLevel;
-                    break;
-                case GAME_OVER:
-                    img = death;
-                    break;
-                case EXTRA_LIFE:
-                    img = extraLife;
-                    break;
-                default:
-                    img = expandPaddle;
-                    break;
-            }
-            DrawObject drawPowerUp = new DrawObject(
-                    p.getX(),
-                    p.getY(),
-                    p.getWidth(),
-                    p.getHeight(),
+        synchronized (powerUpList) {
+            for (PowerUp p : powerUpList) {
+                if (!p.isRenderPowerUp()) continue;
+
+                ImageIcon img;
+                switch (p.getType()) {
+                    case EXPAND_PADDLE -> img = expandPaddle;
+                    case SHRINK_PADDLE -> img = shrinkPaddle;
+                    case FAST_BALL -> img = fastBall;
+                    case FIRE_PADDLE -> img = shootingPaddle;
+                    case SMALL_BALL -> img = smallBall;
+                    case NEXT_LEVEL -> img = nexLevel;
+                    case GAME_OVER -> img = death;
+                    case EXTRA_LIFE -> img = extraLife;
+                    default -> img = expandPaddle;
+                }
+
+                DrawObject drawPowerUp = new DrawObject(
+                    p.getX(), p.getY(),
+                    p.getWidth(), p.getHeight(),
                     Color.orange
-            );
-            drawPowerUp.drawRect(g2, img);
-            g2.drawRect(p.getX(), p.getY(), p.getWidth(), p.getHeight());
+                );
+                drawPowerUp.drawRect(g2, img);
+                g2.drawRect(p.getX(), p.getY(), p.getWidth(), p.getHeight());
+            }
         }
     }
 

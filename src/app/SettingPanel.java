@@ -5,8 +5,9 @@ import java.awt.event.MouseEvent;
 import javax.swing.JPanel;
 
 public class SettingPanel extends JPanel {
-    public int volume = 50; //Default volume
+    public int volume = 50; // Default volume
     public boolean exit = false;
+    public boolean backToMenu = false;
 
     private final double widthPercent = 0.6;
     private final double heightPercent = 0.5;
@@ -30,16 +31,18 @@ public class SettingPanel extends JPanel {
         int panelX = (screenWidth - panelW) / 2;
         int panelY = (screenHeight - panelH) / 2;
 
-        // Panel background with rounded corners
+        // Panel
         g2.setColor(new Color(0, 0, 0, 180));
         g2.fillRoundRect(panelX, panelY, panelW, panelH, 20, 20);
 
+        // Title
         g2.setFont(new Font("Arial", Font.BOLD, panelW / 12));
         g2.setColor(Color.WHITE);
         String title = "Settings";
         int titleWidth = g2.getFontMetrics().stringWidth(title);
         g2.drawString(title, panelX + (panelW - titleWidth)/2, panelY + panelH / 8 + 10);
 
+        // Volume bar
         int volW = (int)(panelW * 0.6);
         int volH = 20;
         int volX = panelX + (panelW - volW) / 2;
@@ -47,7 +50,6 @@ public class SettingPanel extends JPanel {
 
         g2.setColor(Color.DARK_GRAY);
         g2.fillRoundRect(volX, volY, volW, volH, 5, 5);
-
         g2.setColor(Color.GREEN);
         g2.fillRoundRect(volX, volY, volW * volume / 100, volH, 5, 5);
 
@@ -61,6 +63,7 @@ public class SettingPanel extends JPanel {
         int volLabelWidth = g2.getFontMetrics().stringWidth(volLabel);
         g2.drawString(volLabel, panelX + (panelW - volLabelWidth)/2, volY - 10);
 
+        // Speed dropdown
         int comboW = 120;
         int comboH = 25;
         int comboX = panelX + (panelW - comboW)/2;
@@ -75,21 +78,33 @@ public class SettingPanel extends JPanel {
                 g2.setColor(Color.DARK_GRAY);
                 g2.fillRect(comboX, comboY + (i+1)*comboH, comboW, comboH);
                 g2.setColor(Color.WHITE);
-                g2.drawString("" + speedOptions[i], comboX + 10, comboY + (i+1)*comboH + 20);
+                g2.drawString(speedOptions[i], comboX + 10, comboY + (i+1)*comboH + 20);
             }
         }
 
-        int btnW = (int)(panelW * 0.4);
+        // Buttons
+        int btnW = (int)(panelW * 0.35);
         int btnH = 40;
-        int btnX = panelX + (panelW - btnW)/2;
         int btnY = panelY + panelH - btnH - 30;
 
+        int leftBtnX = panelX + (panelW / 2) - btnW - 20;
+        int rightBtnX = panelX + (panelW / 2) + 20;
+
+        // Left button: Main Menu
+        g2.setColor(new Color(255, 120, 0));
+        g2.fillRoundRect(leftBtnX, btnY, btnW, btnH, 15, 15);
+        g2.setColor(Color.WHITE);
+        String leftText = "Main Menu";
+        int leftTextW = g2.getFontMetrics().stringWidth(leftText);
+        g2.drawString(leftText, leftBtnX + (btnW - leftTextW)/2, btnY + btnH/2 + 7);
+
+        // Right button: Save & Exit
         g2.setColor(new Color(0, 120, 255));
-        g2.fillRoundRect(btnX, btnY, btnW, btnH, 15, 15);
+        g2.fillRoundRect(rightBtnX, btnY, btnW, btnH, 15, 15);
         g2.setColor(Color.WHITE);
         String btnText = "Save & Exit";
         int btnTextWidth = g2.getFontMetrics().stringWidth(btnText);
-        g2.drawString(btnText, btnX + (btnW - btnTextWidth)/2, btnY + btnH/2 + 7);
+        g2.drawString(btnText, rightBtnX + (btnW - btnTextWidth)/2, btnY + btnH/2 + 7);
     }
 
     public void handleClick(MouseEvent e) {
@@ -109,23 +124,25 @@ public class SettingPanel extends JPanel {
         int volY = panelY + panelH / 3;
         Rectangle volumeBar = new Rectangle(volX, volY, volW, volH);
 
-        int btnW = (int)(panelW * 0.4);
-        int btnH = 40;
-        int btnX = panelX + (panelW - btnW) / 2;
-        int btnY = panelY + panelH - btnH - 30;
-        Rectangle saveButton = new Rectangle(btnX, btnY, btnW, btnH);
-
-        if (volumeBar.contains(mouseX, mouseY)) {
-            volume = Math.max(0, Math.min(100, (mouseX - volX) * 100 / volW));
-            exit = false;
-        }
-
         int comboW = 120;
         int comboH = 25;
         int comboX = panelX + (panelW - comboW) / 2;
         int comboY = volY + 50;
 
         Rectangle fpsRect = new Rectangle(comboX, comboY, comboW, comboH);
+
+        int btnW = (int)(panelW * 0.35);
+        int btnH = 40;
+        int btnY = panelY + panelH - btnH - 30;
+        int leftBtnX = panelX + (panelW / 2) - btnW - 20;
+        int rightBtnX = panelX + (panelW / 2) + 20;
+        Rectangle mainMenuBtn = new Rectangle(leftBtnX, btnY, btnW, btnH);
+        Rectangle saveButton = new Rectangle(rightBtnX, btnY, btnW, btnH);
+
+        if (volumeBar.contains(mouseX, mouseY)) {
+            volume = Math.max(0, Math.min(100, (mouseX - volX) * 100 / volW));
+            exit = false;
+        }
 
         if (fpsRect.contains(mouseX, mouseY)) {
             fpsDropdownOpen = !fpsDropdownOpen;
@@ -147,6 +164,11 @@ public class SettingPanel extends JPanel {
         if (saveButton.contains(mouseX, mouseY)) {
             exit = true;
             System.out.println("Volume saved: " + volume);
+        }
+
+        if (mainMenuBtn.contains(mouseX, mouseY)) {
+            backToMenu = true;
+            System.out.println("Returning to main menu...");
         }
     }
 }
