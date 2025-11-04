@@ -1,6 +1,5 @@
 package app;
 
-// import java.awt.*;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -11,8 +10,14 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Random;
 
-import logic.entity.*;
-import logic.myLogic.*;
+import logic.entity.Paddle;
+import logic.entity.Ball;
+import logic.entity.GameObject;
+import logic.entity.Brick;
+import logic.myLogic.Bullet;
+import logic.myLogic.PowerUp;
+import logic.myLogic.PowerUpType;
+import logic.myLogic.BrickType;
 
 /** Lop quan ly game. */
 public class GameManager {
@@ -48,7 +53,6 @@ public class GameManager {
         return instance;
     }
 
-    /** geter cua cac thuoc tinh.*/
     public Paddle getPaddle() {
         return new Paddle(this.paddle);
     }
@@ -137,7 +141,9 @@ public class GameManager {
                     }
                 }
             }
-            if (collided) break;
+            if (collided) {
+                break;
+            }
         }
 
         Queue<Brick> queue = new LinkedList<>(hitBricks);
@@ -157,11 +163,10 @@ public class GameManager {
 
                     for (List<Brick> row : brickList) {
                         for (Brick other : row) {
-                            if (!other.isDestroy() &&
-                                Math.abs(other.getX() - bx) <= Brick.WIDTH * radius &&
-                                Math.abs(other.getY() - by) <= Brick.HEIGHT * radius &&
-                                other != b) {
-
+                            if (!other.isDestroy()
+                                    && Math.abs(other.getX() - bx) <= Brick.WIDTH * radius
+                                    && Math.abs(other.getY() - by) <= Brick.HEIGHT * radius
+                                    && other != b) {
                                 scoreBricks.add(other);
                                 other.remove();
                                 queue.add(other);
@@ -171,7 +176,6 @@ public class GameManager {
                 }
             }
         }
-
 
         // tang diem va tao powerUp
         for (Brick brick : scoreBricks) {
@@ -217,6 +221,7 @@ public class GameManager {
                     case 7 -> powerUp = new PowerUp(brick.getX(), brick.getY(), 30, 30, PowerUpType.EXTRA_LIFE);
                     default -> powerUp = new PowerUp(brick.getX(), brick.getY(), 30, 30, PowerUpType.EXPAND_PADDLE);
                 }
+
                 powerUpList.add(powerUp);
                 powerUp.setRenderPowerUp(true);
             }
@@ -321,8 +326,10 @@ public class GameManager {
     // Reset game
     public void resetGame(boolean resetScore) {
         this.lives = 3;
-        if (resetScore) this.score = 0;
-        this.powerUpList.clear();
+        if (resetScore) {
+            this.score = 0;
+        }
+            this.powerUpList.clear();
     }
 
     private void saveScore() {

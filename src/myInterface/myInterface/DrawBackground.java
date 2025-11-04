@@ -1,6 +1,6 @@
 package myInterface.myInterface;
 
-import java.awt.*;
+import java.awt.Graphics;
 
 public interface DrawBackground {
     public void draw(Graphics g);

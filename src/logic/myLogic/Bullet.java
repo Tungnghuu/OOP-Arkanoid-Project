@@ -1,4 +1,5 @@
 package logic.myLogic;
+
 import logic.entity.GameObject;
 
 public class Bullet extends GameObject  {

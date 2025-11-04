@@ -1,6 +1,9 @@
 package logic.myLogic;
 
-import logic.entity.*;
+import logic.entity.GameObject;
+import logic.entity.MovableObject;
+import logic.entity.Paddle;
+import logic.entity.Ball;
 
 import java.util.ArrayList;
 import java.util.List;

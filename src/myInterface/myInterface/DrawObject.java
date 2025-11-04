@@ -2,7 +2,8 @@ package myInterface.myInterface;
 
 import java.awt.Graphics2D;
 import java.awt.Color;
-import javax.swing.*;
+import javax.swing.JPanel;
+import javax.swing.ImageIcon;
 
 public class DrawObject extends JPanel {
     private int x;

@@ -1,6 +1,6 @@
 package logic.entity;
 
-import java.awt.*;
+import java.awt.Rectangle;
 
 /** Lop dai dien cho cac doi tuong cua game. **/
 public  abstract class GameObject {

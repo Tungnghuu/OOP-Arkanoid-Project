@@ -1,16 +1,20 @@
 package app;
 
-import myInterface.myInterface.*;
+import logic.entity.Brick;
+import logic.myLogic.Bullet;
+import logic.myLogic.PowerUp;
+import myInterface.myInterface.DrawObject;
 
-import java.awt.*;
+import javax.swing.ImageIcon;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
-import logic.entity.*;
-import logic.myLogic.*;
 
-import javax.swing.*;
-
-import static app.GamePanel.*;
+import static app.GamePanel.brickList;
+import static app.GamePanel.bulletList;
+import static app.GamePanel.powerUpList;
 
 public class RenderObject {
     static boolean isRenderPowerUp = true;

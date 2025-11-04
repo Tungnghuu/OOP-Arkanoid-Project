@@ -1,14 +1,26 @@
 package app;
 
-import java.awt.*;
-import javax.swing.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import javax.swing.JPanel;
+import javax.swing.ImageIcon;
+import javax.swing.SwingUtilities;
 import java.util.ArrayList;
 import java.util.List;
 
-import logic.entity.*;
-import logic.myLogic.*;
-import myInterface.myInterface.*;
-import static app.RenderObject.*;
+import logic.entity.Ball;
+import logic.entity.Paddle;
+import logic.entity.Brick;
+import logic.myLogic.BrickManager;
+import logic.myLogic.PowerUp;
+import logic.myLogic.Bullet;
+import myInterface.myInterface.DrawObject;
+import static app.RenderObject.renderBrick;
+import static app.RenderObject.renderPowerUp;
+import static app.RenderObject.renderBullet;
+
 
 
 public class GamePanel extends JPanel implements Runnable {

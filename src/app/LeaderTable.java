@@ -1,10 +1,19 @@
 package app;
 
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JTable;
+import javax.swing.SwingConstants;
+import javax.swing.JScrollPane;
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Dimension;
+import java.awt.Component;
 import java.util.List;
 
 public class LeaderTable extends JFrame {

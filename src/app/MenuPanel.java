@@ -1,8 +1,13 @@
 package app;
 
-import myInterface.myInterface.*;
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.ImageIcon;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
+
+import myInterface.myInterface.DrawBackground;
 
 public class MenuPanel implements DrawBackground {
     private final int buttonWidth = 175;

@@ -1,9 +1,7 @@
 package  app;
-// import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.awt.*;
-// import java.awt.image.BufferedImage;
-// import java.io.IOException;
+
+import javax.swing.ImageIcon;
+import java.awt.Image;
 import java.util.HashMap;
 import java.util.Map;
 
