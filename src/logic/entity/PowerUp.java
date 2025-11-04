@@ -12,7 +12,7 @@ public class PowerUp extends GameObject {
         private boolean isPowerUp;
         private long startTime;
         private boolean isRenderPowerUp;
-        public static  boolean isFire;
+        public static boolean isFire;
         private long duration;
 
         /** Construtor khoi tao.*/
@@ -103,7 +103,7 @@ public class PowerUp extends GameObject {
         }
 
         public boolean isExpired(long duration) {
-            return isPowerUp && System.currentTimeMillis() - startTime > duration;
+            return System.currentTimeMillis() - startTime > duration;
         }
 
         public void end() {
@@ -112,7 +112,7 @@ public class PowerUp extends GameObject {
         }
 
         public void createBullet(Paddle paddle) {
-            Bullet b1 = new Bullet(paddle.getX(), paddle.getY(), 15, 15, 3);
+            Bullet b1 = new Bullet(paddle.getX(), paddle.getY(), 15, 15, 4);
             Bullet b2 = new Bullet(paddle.getX() + paddle.getWidth(), paddle.getY(), 15, 15, 3);
 
             bulletList.add(b1);

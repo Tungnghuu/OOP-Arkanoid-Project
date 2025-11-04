@@ -6,9 +6,43 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class BrickLayout {
-    // Level 1: classic centered
+    // Level 1: OOP map
     public static ArrayList<ArrayList<int[]>> level1() {
-        int startX = 184;
+        int startX = 40;
+        int startY = 50;
+        int w = Brick.WIDTH;
+        int h = Brick.HEIGHT;
+        int[][] grid = {
+                {3,1,3,1,0,1,3,2,4,0,3,1,2,4},
+                {3,0,0,4,0,2,0,0,1,0,2,0,0,3},
+                {1,0,0,3,0,3,0,0,2,0,1,0,0,2},
+                {3,0,0,2,0,4,0,0,3,0,4,0,0,1},
+                {1,0,0,1,0,1,0,0,2,0,3,4,1,2},
+                {4,0,0,4,0,3,0,0,1,0,2,0,0,0},
+                {2,0,0,2,0,4,0,0,3,0,1,0,0,0},
+                {3,0,0,3,0,1,0,0,2,0,3,0,0,0},
+                {4,2,3,1,0,2,4,1,3,0,1,0,0,0},
+        };
+        ArrayList<ArrayList<int[]>> layout = new ArrayList<>();
+        Random rand = new Random();
+
+        for (int i = 0; i < 9; i++) {
+            ArrayList<int[]> row = new ArrayList<>();
+            for (int j = 0; j < 14; j++) {
+                int x = startX + j * w;
+                int y = startY + i * h;
+                int type = grid[i][j];
+                if (type != 0) {
+                    row.add(new int[]{x, y, type});
+                }
+            }
+            layout.add(row);
+        }
+        return layout;
+    }
+
+    public static ArrayList<ArrayList<int[]>> level2() {
+        int startX = 150;
         int startY = 40;
         int w = Brick.WIDTH;
         int h = Brick.HEIGHT;
@@ -30,32 +64,9 @@ public class BrickLayout {
         return layout;
     }
 
-    // Level 2: wider formation
-    public static ArrayList<ArrayList<int[]>> level2() {
-        int startX = 120;
-        int startY = 50;
-        int w = Brick.WIDTH - 5;
-        int h = Brick.HEIGHT;
-        ArrayList<ArrayList<int[]>> layout = new ArrayList<>();
-        Random rand = new Random();
-
-        for (int i = 0; i < 7; i++) {
-            ArrayList<int[]> row = new ArrayList<>();
-            for (int j = 0; j < 12; j++) {
-                int x = startX + j * w;
-                int y = startY + i * h;
-                int type = (i + j) % 3 + 1;
-                if (rand.nextDouble() < 0.1) type = 4;
-                row.add(new int[]{x, y, type});
-            }
-            layout.add(row);
-        }
-        return layout;
-    }
-
     // Level 3: pyramid shape
     public static ArrayList<ArrayList<int[]>> level3() {
-        int startX = 250;
+        int startX = 200;
         int startY = 40;
         int w = Brick.WIDTH;
         int h = Brick.HEIGHT;
@@ -79,7 +90,7 @@ public class BrickLayout {
 
     // Level 4: compact square pattern
     public static ArrayList<ArrayList<int[]>> level4() {
-        int startX = 200;
+        int startX = 240;
         int startY = 60;
         int w = Brick.WIDTH;
         int h = Brick.HEIGHT;
@@ -107,7 +118,7 @@ public class BrickLayout {
 
     // Level 5: random challenge
     public static ArrayList<ArrayList<int[]>> level5() {
-        int startX = 150;
+        int startX = 120;
         int startY = 40;
         int w = Brick.WIDTH - 3;
         int h = Brick.HEIGHT;
@@ -130,7 +141,7 @@ public class BrickLayout {
 
     // Level 6: diagonal pattern
     public static ArrayList<ArrayList<int[]>> level6() {
-        int startX = 180;
+        int startX = 120;
         int startY = 40;
         int w = Brick.WIDTH;
         int h = Brick.HEIGHT;
@@ -152,7 +163,7 @@ public class BrickLayout {
 
     // Level 7: cross shape
     public static ArrayList<ArrayList<int[]>> level7() {
-        int startX = 160;
+        int startX = 100;
         int startY = 50;
         int w = Brick.WIDTH;
         int h = Brick.HEIGHT;
@@ -192,7 +203,7 @@ public class BrickLayout {
 
     // Level 9: border
     public static ArrayList<ArrayList<int[]>> level9() {
-        int startX = 140;
+        int startX = 100;
         int startY = 40;
         int w = Brick.WIDTH;
         int h = Brick.HEIGHT;
@@ -252,7 +263,7 @@ public class BrickLayout {
 
     // Level 12: hourglass
     public static ArrayList<ArrayList<int[]>> level12() {
-        int startX = 180;
+        int startX = 160;
         int startY = 40;
         int w = Brick.WIDTH;
         int h = Brick.HEIGHT;
@@ -272,7 +283,7 @@ public class BrickLayout {
 
     // Level 13: random clusters
     public static ArrayList<ArrayList<int[]>> level13() {
-        int startX = 140;
+        int startX = 50;
         int startY = 40;
         int w = Brick.WIDTH;
         int h = Brick.HEIGHT;
@@ -292,7 +303,7 @@ public class BrickLayout {
 
     // Level 14: vertical pillars
     public static ArrayList<ArrayList<int[]>> level14() {
-        int startX = 150;
+        int startX = 130;
         int startY = 40;
         int w = Brick.WIDTH;
         int h = Brick.HEIGHT;
@@ -311,7 +322,7 @@ public class BrickLayout {
 
     // Level 15: final chaos
     public static ArrayList<ArrayList<int[]>> level15() {
-        int startX = 140;
+        int startX = 60;
         int startY = 30;
         int w = Brick.WIDTH - 3;
         int h = Brick.HEIGHT;

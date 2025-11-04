@@ -115,13 +115,14 @@ public class Ball extends MovableObject {
     }
 
 
-    public void updateLives(GameManager gm) {
+    public void updateLives(GameManager gm, Paddle paddle) {
         double ballY = this.getY();
         if (ballY >= 576) {
             int lives = gm.getLives();
             lives -= 1;
             gm.setLives(lives);
             resetBall();
+            paddle.resetPaddle();
         }
     }
 

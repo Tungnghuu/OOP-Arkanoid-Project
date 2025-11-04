@@ -1,27 +1,15 @@
 package app;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import javax.swing.JPanel;
-import javax.swing.ImageIcon;
-import javax.swing.SwingUtilities;
-import java.util.ArrayList;
+import java.awt.*;
+import javax.swing.*;
+import java.util.Iterator;
 import java.util.List;
 
-import logic.entity.Ball;
-import logic.entity.Paddle;
-import logic.entity.Brick;
-import logic.myLogic.BrickManager;
-import logic.myLogic.PowerUpType;
-import logic.entity.PowerUp;
+import logic.entity.*;
 import logic.entity.Bullet;
-import myInterface.myInterface.DrawObject;
-
-import static app.RenderObject.renderBrick;
-import static app.RenderObject.renderPowerUp;
-import static app.RenderObject.renderBullet;
+import logic.myLogic.*;
+import myInterface.myInterface.*;
+import static app.RenderObject.*;
 
 
 public class GamePanel extends JPanel implements Runnable {
@@ -35,6 +23,7 @@ public class GamePanel extends JPanel implements Runnable {
     public static final int screenWidth = tileSize * maxScreenCol;
     public static final int screenHeight = tileSize * maxScreenRow;
 
+    private boolean addLives = false;
     private boolean gameWin = false;
     private boolean inSetting = false;
     private boolean inMenu = true;
@@ -144,7 +133,8 @@ public class GamePanel extends JPanel implements Runnable {
         brickManager.reset();
         paddle.resetPaddle();
         ball.resetBall();
-        powerUpList.clear();
+        powerUpList = gameManager.getPowerUpList();
+        PowerUp.isFire = false;
         gameOver = false;
         gameCleared = false;
         scoreSaved = false;
@@ -160,12 +150,13 @@ public class GamePanel extends JPanel implements Runnable {
         ball.resetBall();
         powerUpList = gameManager.getPowerUpList();
         ball.setBallStuck(true);
+        PowerUp.isFire = false;
         gameCleared = false;
         winSoundPlayed = false;
         ensureLevelBgm();
     }
 
-    // Select Bg Music based on level
+    // Chọn nhạc nền theo level
     private int chooseBgmForLevel(int level) {
         if (level >= 1 && level <= 3) {
             return 0; // earth theme
@@ -190,7 +181,7 @@ public class GamePanel extends JPanel implements Runnable {
         return 0;
     }
 
-    // Ensure the BG music match the level
+    // Đảm bảo nhạc nền được chọn đúng với level hiện tại
     private void ensureLevelBgm() {
         int level = brickManager.getLevel();
         int targetIndex = chooseBgmForLevel(level);
@@ -204,12 +195,6 @@ public class GamePanel extends JPanel implements Runnable {
     }
     
     public void update() {
-        //DEBUG:
-        // if (inputHandler.dPressed) {
-        //     brickManager.clearAllBricks();
-        //     inputHandler.dPressed = false;
-        // }
-
         if (gameWin) {
             if (inputHandler.resetPressed) {
                 gameWin = false;
@@ -233,6 +218,22 @@ public class GamePanel extends JPanel implements Runnable {
             return;
         }
 
+        if (inputHandler.escapePressed) {
+            inSetting = !inSetting;
+            inputHandler.escapePressed = false;
+        }
+
+        if (inSetting) {
+             if (inputHandler.mouseClicked) {
+                settingPanel.handleClick(inputHandler.lastMouseEvent);
+                inputHandler.mouseClicked = false;
+                if (settingPanel.exit) {
+                    inSetting = false;
+                }
+            }
+            return;
+        }
+
         soundManager.setVolume(settingPanel.volume / 100f);
 
         if (inputHandler.escapePressed) {
@@ -241,7 +242,7 @@ public class GamePanel extends JPanel implements Runnable {
         }
 
         if (inSetting) {
-             if (inputHandler.mouseClicked) {
+            if (inputHandler.mouseClicked) {
                 settingPanel.handleClick(inputHandler.lastMouseEvent);
                 inputHandler.mouseClicked = false;
                 if (settingPanel.exit) {
@@ -270,20 +271,19 @@ public class GamePanel extends JPanel implements Runnable {
                 scoreSaved = true;
             }
             if (inputHandler.resetPressed)
-                this.doReset(true);
+                doReset(true);
             return;
         }
 
         // Next Level
         if (gameCleared) {
-            gameCleared = false;
             if (gameManager.level < 15) {
                 gameManager.level++;
                 doReset();
+                return;
             } else {
                 gameCleared = false;
-                gameWin = true;
-                gameManager.saveScore();
+                inMenu = true;
                 stopBGM();
                 currentBgmIndex = -1;
             }
@@ -304,37 +304,19 @@ public class GamePanel extends JPanel implements Runnable {
 
             int bricksAfterCollision = brickManager.getTotalBricksRemaining();
 
+            paddle.checkBallCollision(ball);
+
             if (bricksAfterCollision < bricksBeforeCollision) {
                 playSFX(8); // brick_hit
             }
-
-
-            if (gameManager.checkCollision(paddle, ball)) {
-                playSFX(7);
-            }
-
-            ball.updateLives(gameManager);
+            ball.updateLives(gameManager, paddle);
             gameManager.updateIfCollision(ball, paddle, brickList);
             ball.updateBall();
         } else {
             ball.BallFollowPaddle(paddle);
         }
 
-        // PowerUp
-        for (PowerUp p : powerUpList) {
-            p.updatePowerUp();
-            if (!p.isPowerUp() && paddle.getBounds().intersects(p.getBounds())) {
-                p.applyPowerUp(paddle);
-                p.applyPowerUp(ball);
-                p.activate();
-            }
-
-            if (p.isPowerUp() && p.isExpired(p.getDuration())) {
-                p.endPowerUp(paddle);
-                p.endPowerUp(ball);
-                p.end();
-            }
-        }
+        checkPowerUpCollision(paddle, powerUpList);
         gameManager.updateBullet(paddle);
 
         // Condition to reset or end game
@@ -347,29 +329,50 @@ public class GamePanel extends JPanel implements Runnable {
                 winSoundPlayed = true;
             }
         }
-
-        // nextLevel or gameOver with powerUp
-
-        List<PowerUp> toRemove = new ArrayList<>();
-        for (PowerUp p : powerUpList) {
-            if (paddle.getBounds().intersects(p.getBounds())) {
-                int lives = gameManager.getLives();
-                if (p.getType() == PowerUpType.GAME_OVER) {
-                    gameOver = true;
-                } else if (p.getType() == PowerUpType.NEXT_LEVEL) {
-                    gameCleared = true;
-                } else if (p.getType() == PowerUpType.EXTRA_LIFE) {
-                    if (lives < 3) {
-                        lives ++;
-                        gameManager.setLives(lives);
-                    }
-                }
-                toRemove.add(p);
-            }
-           // System.out.println("PowerUp type: " + p.getType());
-        }
-        powerUpList.removeAll(toRemove);
     }
+
+    private void checkPowerUpCollision(Paddle paddle, List<PowerUp> powerUpList) {
+        for (int i = powerUpList.size() - 1; i >= 0; i--) {
+
+            PowerUp p = powerUpList.get(i);
+            p.updatePowerUp();
+            if (paddle.getBounds().intersects(p.getBounds())) {
+                switch (p.getType()) {
+                    case GAME_OVER:
+                        gameOver = true;
+                        powerUpList.remove(i);
+                        break;
+                    case NEXT_LEVEL:
+                        gameCleared = true;
+                        powerUpList.remove(i);
+                        break;
+                    case EXTRA_LIFE:
+                        int lives = gameManager.getLives();
+                        if (lives < 3) {
+                            lives++;
+                            gameManager.setLives(lives);
+                        }
+                        powerUpList.remove(i);
+                        break;
+                    default:
+                        if (!p.isPowerUp()) {
+                            p.applyPowerUp(paddle);
+                            p.applyPowerUp(ball);
+                            p.activate();
+                        }
+                        break;
+                }
+            }
+
+            if (p.isPowerUp() && p.isExpired(p.getDuration())) {
+                p.endPowerUp(paddle);
+                p.endPowerUp(ball);
+                p.end();
+                powerUpList.remove(i);
+            }
+        }
+    }
+
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);

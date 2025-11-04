@@ -133,11 +133,10 @@ public class GameManager {
                 }
 
                 for (Bullet b : bulletList) {
-                    if (b.getBounds().intersects(brick.getBounds())) {
+                    if (isColliding(b.getX(), b.getY(), b.getWidth(), b.getHeight(),
+                            brick.getX(), brick.getY(), brick.getWidth(), brick.getHeight())) {
                         hitBricks.add(brick);
                         hitBullets.add(b);
-                        collided = true;
-                        break;
                     }
                 }
             }
@@ -202,7 +201,7 @@ public class GameManager {
         }
     }
 
-    public void createPowerUp(Brick brick) {
+    private void createPowerUp(Brick brick) {
         if (brick.getType() == BrickType.BONUS) {
             Random rand = new Random();
             if (rand.nextDouble() < dropChance) {
@@ -212,9 +211,9 @@ public class GameManager {
                     case 1 -> powerUp = new PowerUp(brick.getX(), brick.getY(), 30, 30, PowerUpType.SHRINK_PADDLE, 10000);
                     case 2 -> powerUp = new PowerUp(brick.getX(), brick.getY(), 30, 30, PowerUpType.FAST_BALL, 10000);
                     case 3 -> powerUp = new PowerUp(brick.getX(), brick.getY(), 30, 30, PowerUpType.FIRE_PADDLE, 10000);
-                    case 4 -> powerUp = new PowerUp(brick.getX(), brick.getY(), 30, 30, PowerUpType.GAME_OVER, 10000);
-                    case 5 -> powerUp = new PowerUp(brick.getX(), brick.getY(), 30, 30, PowerUpType.NEXT_LEVEL, 10000);
-                    case 6 -> powerUp = new PowerUp(brick.getX(), brick.getY(), 30, 30, PowerUpType.EXTRA_LIFE, 10000);
+                    case 4 -> powerUp = new PowerUp(brick.getX(), brick.getY(), 30, 30, PowerUpType.GAME_OVER, 0);
+                    case 5 -> powerUp = new PowerUp(brick.getX(), brick.getY(), 30, 30, PowerUpType.NEXT_LEVEL, 0);
+                    case 6 -> powerUp = new PowerUp(brick.getX(), brick.getY(), 30, 30, PowerUpType.EXTRA_LIFE, 0);
                     default -> powerUp = new PowerUp(brick.getX(), brick.getY(), 30, 30, PowerUpType.EXPAND_PADDLE, 1000);
                 }
                 powerUpList.add(powerUp);
@@ -223,7 +222,7 @@ public class GameManager {
         }
     }
 
-    public void addScore(Brick brick) {
+    private void addScore(Brick brick) {
         switch (brick.getType()) {
             case NORMAL:
                 score += 10;
@@ -243,7 +242,7 @@ public class GameManager {
     }
 
     /** Xu li va cham paddle va ball.*/
-    public void handlePaddleCollision(Ball ball, Paddle paddle) {
+    private void handlePaddleCollision(Ball ball, Paddle paddle) {
         double ballCenterX = ball.getX() + ball.getRadius();
         double paddleCenterX = paddle.getX() + paddle.getWidth() / 2.0;
 
@@ -263,7 +262,7 @@ public class GameManager {
     }
 
     /** Xu li va cham bong va gach.*/
-    public void handleBrickCollision(Ball ball, Brick brick) {
+    private void handleBrickCollision(Ball ball, Brick brick) {
         double ballCenterX = ball.getX() + ball.getRadius();
         double ballCenterY = ball.getY() + ball.getRadius();
         double brickCenterX = brick.getX() + brick.getWidth() / 2.0;
@@ -294,8 +293,17 @@ public class GameManager {
         }
     }
 
+    // Ham kiem tra va cham giua 2 hcn
+    private boolean isColliding(int x1, int y1, int w1, int h1,
+                        int x2, int y2, int w2, int h2) {
+        return x1 < x2 + w2 &&
+                x1 + w1 > x2 &&
+                y1 < y2 + h2 &&
+                y1 + h1 > y2;
+    }
+
     // Tao dan
-    public void createBullet(Paddle paddle) {
+    private void createBullet(Paddle paddle) {
         Bullet b1 = new Bullet(paddle.getX(), paddle.getY(), 10, 10, 3);
         Bullet b2 = new Bullet(paddle.getX() + paddle.getWidth(), paddle.getY(), 10, 10, 3);
 
@@ -308,7 +316,7 @@ public class GameManager {
        if (PowerUp.isFire) {
            if (shootCooldown <= 0) {
                createBullet(paddle);
-               shootCooldown = 130;
+               shootCooldown = 100;
            } else {
                shootCooldown--;
            }
