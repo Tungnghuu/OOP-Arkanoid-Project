@@ -2,12 +2,12 @@ package app;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 
-
 public class GameOverOverlay {
-    private final Font titleFont = new Font("Arial", Font.BOLD, 28);
-    private final Font instructionFont = new Font("Arial", Font.PLAIN, 22);
+    private final Font titleFont = new Font("SansSerif", Font.BOLD, 36);
+    private final Font instructionFont = new Font("SansSerif", Font.PLAIN, 22);
     private final Color overlayColor = new Color(0, 0, 0, 160);
     private final Color textColor = Color.WHITE;
 
@@ -16,11 +16,21 @@ public class GameOverOverlay {
         g2.fillRect(0, 0, screenWidth, screenHeight);
 
         g2.setColor(textColor);
+
         g2.setFont(titleFont);
-        String msg = isGameOver ? "Game Over" : "All Bricks Cleared!";
-        g2.drawString(msg, screenWidth / 2 - 120, screenHeight / 2 - 10);
+        String msg = isGameOver ? "Game Over!" : "You Won! Congratulation!";
+        FontMetrics fmTitle = g2.getFontMetrics();
+        int titleWidth = fmTitle.stringWidth(msg);
+        int titleX = (screenWidth - titleWidth) / 2;
+        int titleY = screenHeight / 2 - 20;
+        g2.drawString(msg, titleX, titleY);
 
         g2.setFont(instructionFont);
-        g2.drawString("Press R to Reset", screenWidth / 2 - 110, screenHeight / 2 + 30);
+        String instruction = "Press R to Restart";
+        FontMetrics fmInstr = g2.getFontMetrics();
+        int instrWidth = fmInstr.stringWidth(instruction);
+        int instrX = (screenWidth - instrWidth) / 2;
+        int instrY = titleY + 50;
+        g2.drawString(instruction, instrX, instrY);
     }
 }
