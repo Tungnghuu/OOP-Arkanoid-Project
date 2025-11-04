@@ -27,7 +27,7 @@ public class RecordScore {
                 playerId = 100000 + rand.nextInt(900000);
                 Files.writeString(id_file, String.valueOf(playerId));
 
-                try ( Connection conn = ConnectToDB.connect();
+                try ( Connection conn = ConnectToDB.getInstance().getConnection();
                       PreparedStatement preparedStatement = conn.prepareStatement(sql)){
 
                     preparedStatement.setInt(1, playerId);
@@ -57,7 +57,7 @@ public class RecordScore {
 
     }
 
-    public static  void updateScore(Score score) {
+    public static void updateScore(Score score) {
         insert_to_log(score);
 
         String sql = "UPDATE player SET recordTime = ?, playerScore = ? WHERE playerId = ?";
@@ -99,7 +99,7 @@ public class RecordScore {
             throw new RuntimeException(e);
         }
 
-        try ( Connection conn = ConnectToDB.connect();
+        try ( Connection conn = ConnectToDB.getInstance().getConnection();
             PreparedStatement preparedStatement = conn.prepareStatement(sql)){
 
             preparedStatement.setTimestamp(1, highestScore.getRecordTime());

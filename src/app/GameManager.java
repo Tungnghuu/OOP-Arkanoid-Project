@@ -1,23 +1,17 @@
 package app;
 
+// import java.awt.*;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 import java.util.Random;
 
-import logic.entity.Paddle;
-import logic.entity.Ball;
-import logic.entity.GameObject;
-import logic.entity.Brick;
-import logic.myLogic.Bullet;
-import logic.myLogic.PowerUp;
-import logic.myLogic.PowerUpType;
-import logic.myLogic.BrickType;
+import logic.entity.*;
+import logic.entity.Bullet;
+import logic.myLogic.*;
 
 /** Lop quan ly game. */
 public class GameManager {
@@ -29,7 +23,7 @@ public class GameManager {
     private Ball ball;
     private int score;
     private int lives;
-    public int level = 1;
+    public int level;
     private double dropChance;
     private int shootCooldown;
 
@@ -38,9 +32,10 @@ public class GameManager {
      */
     private GameManager() {
         paddle = new Paddle(324, 526, 1, 0, 80, 15, 5);
-        ball = new Ball(374, 506, 1, 1, 8, 5);
+        ball = new Ball(374, 506, 1, 1, 8, 4);
         this.score = 0;
         this.lives = 3;
+        this.level = 1;
         this.dropChance = 0.3;
         this.shootCooldown = 0;
     }
@@ -49,10 +44,10 @@ public class GameManager {
         if (instance == null) {
             instance = new GameManager();
         }
-
         return instance;
     }
 
+    /** geter cua cac thuoc tinh.*/
     public Paddle getPaddle() {
         return new Paddle(this.paddle);
     }
@@ -141,21 +136,14 @@ public class GameManager {
                     }
                 }
             }
-            if (collided) {
-                break;
-            }
+            if (collided) break;
         }
 
-        Queue<Brick> queue = new LinkedList<>(hitBricks);
-        hitBricks.clear();
-
-        while (!queue.isEmpty()) {
-            Brick b = queue.poll();
-
+        // kiem tra cac vien gach bi pha huy
+        for (Brick b : hitBricks) {
             b.takeHits();
             if (b.isDestroy()) {
                 scoreBricks.add(b);
-
                 if (b.getType() == BrickType.EXPLOSIVE) {
                     int radius = 1;
                     int bx = b.getX();
@@ -163,13 +151,11 @@ public class GameManager {
 
                     for (List<Brick> row : brickList) {
                         for (Brick other : row) {
-                            if (!other.isDestroy()
-                                    && Math.abs(other.getX() - bx) <= Brick.WIDTH * radius
-                                    && Math.abs(other.getY() - by) <= Brick.HEIGHT * radius
-                                    && other != b) {
+                            if (Math.abs(other.getX() - bx) <= Brick.WIDTH * radius &&
+                                Math.abs(other.getY() - by) <= Brick.HEIGHT * radius &&
+                                other != b) {
                                 scoreBricks.add(other);
                                 other.remove();
-                                queue.add(other);
                             }
                         }
                     }
@@ -193,7 +179,6 @@ public class GameManager {
                 }
             }
         }
-
         // xoa dan
         bulletList.removeAll(hitBullets);
         hitBullets.clear();
@@ -210,18 +195,16 @@ public class GameManager {
             Random rand = new Random();
             if (rand.nextDouble() < dropChance) {
                 PowerUp powerUp;
-                switch (rand.nextInt(8)) {
-                    case 0 -> powerUp = new PowerUp(brick.getX(), brick.getY(), 30, 30, PowerUpType.EXPAND_PADDLE);
-                    case 1 -> powerUp = new PowerUp(brick.getX(), brick.getY(), 30, 30, PowerUpType.SHRINK_PADDLE);
-                    case 2 -> powerUp = new PowerUp(brick.getX(), brick.getY(), 30, 30, PowerUpType.FAST_BALL);
-                    case 3 -> powerUp = new PowerUp(brick.getX(), brick.getY(), 30, 30, PowerUpType.FIRE_PADDLE);
-                    case 4 -> powerUp = new PowerUp(brick.getX(), brick.getY(), 30, 30, PowerUpType.SMALL_BALL);
-                    case 5 -> powerUp = new PowerUp(brick.getX(), brick.getY(), 30, 30, PowerUpType.GAME_OVER);
-                    case 6 -> powerUp = new PowerUp(brick.getX(), brick.getY(), 30, 30, PowerUpType.NEXT_LEVEL);
-                    case 7 -> powerUp = new PowerUp(brick.getX(), brick.getY(), 30, 30, PowerUpType.EXTRA_LIFE);
-                    default -> powerUp = new PowerUp(brick.getX(), brick.getY(), 30, 30, PowerUpType.EXPAND_PADDLE);
+                switch (rand.nextInt(7)) {
+                    case 0 -> powerUp = new PowerUp(brick.getX(), brick.getY(), 30, 30, PowerUpType.EXPAND_PADDLE, 10000);
+                    case 1 -> powerUp = new PowerUp(brick.getX(), brick.getY(), 30, 30, PowerUpType.SHRINK_PADDLE, 10000);
+                    case 2 -> powerUp = new PowerUp(brick.getX(), brick.getY(), 30, 30, PowerUpType.FAST_BALL, 10000);
+                    case 3 -> powerUp = new PowerUp(brick.getX(), brick.getY(), 30, 30, PowerUpType.FIRE_PADDLE, 10000);
+                    case 4 -> powerUp = new PowerUp(brick.getX(), brick.getY(), 30, 30, PowerUpType.GAME_OVER, 10000);
+                    case 5 -> powerUp = new PowerUp(brick.getX(), brick.getY(), 30, 30, PowerUpType.NEXT_LEVEL, 10000);
+                    case 6 -> powerUp = new PowerUp(brick.getX(), brick.getY(), 30, 30, PowerUpType.EXTRA_LIFE, 10000);
+                    default -> powerUp = new PowerUp(brick.getX(), brick.getY(), 30, 30, PowerUpType.EXPAND_PADDLE, 1000);
                 }
-
                 powerUpList.add(powerUp);
                 powerUp.setRenderPowerUp(true);
             }
@@ -241,8 +224,6 @@ public class GameManager {
                 break;
             case BONUS:
                 score += 10;
-                break;
-            default:
                 break;
         }
     }
@@ -326,10 +307,8 @@ public class GameManager {
     // Reset game
     public void resetGame(boolean resetScore) {
         this.lives = 3;
-        if (resetScore) {
-            this.score = 0;
-        }
-            this.powerUpList.clear();
+        if (resetScore) this.score = 0;
+        this.powerUpList.clear();
     }
 
     private void saveScore() {

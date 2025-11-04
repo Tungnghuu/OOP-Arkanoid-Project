@@ -15,9 +15,6 @@ public abstract  class MovableObject extends GameObject {
         this.speed = speed;
     }
 
-    public MovableObject(int x, int y, int width, int height) {
-        super(x, y, width, height);
-    }
 
     public double getDx() {
         return this.dx;

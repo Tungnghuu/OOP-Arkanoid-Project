@@ -1,6 +1,6 @@
-package logic.myLogic;
+package logic.entity;
 
-import logic.entity.Brick;
+import logic.myLogic.BrickType;
 
 public class StrongBrick extends Brick {
     /** constructor cua strongBrick.*/

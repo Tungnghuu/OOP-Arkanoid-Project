@@ -5,6 +5,7 @@ import java.awt.Color;
 import javax.swing.JPanel;
 import javax.swing.ImageIcon;
 
+
 public class DrawObject extends JPanel {
     private int x;
     private int y;
@@ -67,3 +68,4 @@ public class DrawObject extends JPanel {
         this.height = height;
     }
 }
+

@@ -1,26 +1,14 @@
 package app;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import javax.swing.JPanel;
-import javax.swing.ImageIcon;
-import javax.swing.SwingUtilities;
-import java.util.ArrayList;
+import java.awt.*;
+import javax.swing.*;
 import java.util.List;
 
-import logic.entity.Ball;
-import logic.entity.Paddle;
-import logic.entity.Brick;
-import logic.myLogic.BrickManager;
-import logic.myLogic.PowerUp;
-import logic.myLogic.Bullet;
-import myInterface.myInterface.DrawObject;
-import static app.RenderObject.renderBrick;
-import static app.RenderObject.renderPowerUp;
-import static app.RenderObject.renderBullet;
-
+import logic.entity.*;
+import logic.entity.Bullet;
+import logic.myLogic.*;
+import myInterface.myInterface.*;
+import static app.RenderObject.*;
 
 
 public class GamePanel extends JPanel implements Runnable {
@@ -142,7 +130,7 @@ public class GamePanel extends JPanel implements Runnable {
         brickManager.reset();
         paddle.resetPaddle();
         ball.resetBall();
-        powerUpList.clear();
+        powerUpList = gameManager.getPowerUpList();
         gameOver = false;
         gameCleared = false;
         scoreSaved = false;
@@ -184,7 +172,7 @@ public class GamePanel extends JPanel implements Runnable {
         if (level >= 13 && level <= 15) {
             return 2; // neon theme
         }
-
+        
         return 0;
     }
 
@@ -196,7 +184,6 @@ public class GamePanel extends JPanel implements Runnable {
             if (currentBgmIndex != -1) {
                 stopBGM();
             }
-
             soundManager.playBGM(targetIndex);
             currentBgmIndex = targetIndex;
         }
@@ -213,7 +200,7 @@ public class GamePanel extends JPanel implements Runnable {
                 if (menuPanel.getPlayButton().contains(inputHandler.mouseX, inputHandler.mouseY)) {
                     startGame();
                 } else if (menuPanel.getScoreButton().contains(inputHandler.mouseX, inputHandler.mouseY)) {
-                    SwingUtilities.invokeLater(() -> new LeaderTable(GetLeaderBoard.GetLeaderboard()).setVisible(true));
+                    SwingUtilities.invokeLater(() -> new LeaderTable(GetLeader.GetLeaderBoard()).setVisible(true));
                 } else if (menuPanel.getHistoryButton().contains(inputHandler.mouseX, inputHandler.mouseY)) {
                     SwingUtilities.invokeLater(() -> new HistoryTable(GetHistory.getHistory()).setVisible(true));
                 }
@@ -221,8 +208,6 @@ public class GamePanel extends JPanel implements Runnable {
             }
             return;
         }
-
-        soundManager.setVolume(settingPanel.volume / 100f);
 
         if (inputHandler.escapePressed) {
             inSetting = !inSetting;
@@ -235,13 +220,6 @@ public class GamePanel extends JPanel implements Runnable {
                 inputHandler.mouseClicked = false;
                 if (settingPanel.exit) {
                     inSetting = false;
-                }
-
-                if (settingPanel.backToMenu) {
-                    doReset(true);
-                    inMenu = true;
-                    soundManager.stopBGM();
-                    settingPanel.backToMenu = false;
                 }
             }
             return;
@@ -266,9 +244,10 @@ public class GamePanel extends JPanel implements Runnable {
 
         // Next Level
         if (gameCleared) {
+            gameCleared = false;
             if (gameManager.level < 15) {
                 gameManager.level++;
-                this.doReset();
+                doReset();
             } else {
                 gameCleared = false;
                 inMenu = true;
@@ -290,21 +269,16 @@ public class GamePanel extends JPanel implements Runnable {
         if (!ball.isStuck()) {
             int bricksBeforeCollision = brickManager.getTotalBricksRemaining();
 
-            ball.updateBall(gameManager);
-            gameManager.updateIfCollision(ball, paddle, brickList);
-            paddle.checkBallCollision(ball);
-
             int bricksAfterCollision = brickManager.getTotalBricksRemaining();
+
+            paddle.checkBallCollision(ball);
 
             if (bricksAfterCollision < bricksBeforeCollision) {
                 playSFX(8); // brick_hit
             }
-
-            if (gameManager.checkCollision(paddle, ball)) {
-                playSFX(7);
-            }
-
             ball.updateLives(gameManager);
+            gameManager.updateIfCollision(ball, paddle, brickList);
+            ball.updateBall();
         } else {
             ball.BallFollowPaddle(paddle);
         }
@@ -318,7 +292,7 @@ public class GamePanel extends JPanel implements Runnable {
                 p.activate();
             }
 
-            if (p.isPowerUp() && p.isExpired(10000)) {
+            if (p.isPowerUp() && p.isExpired(p.getDuration())) {
                 p.endPowerUp(paddle);
                 p.endPowerUp(ball);
                 p.end();
@@ -338,30 +312,23 @@ public class GamePanel extends JPanel implements Runnable {
         }
 
         // nextLevel or gameOver with powerUp
-        List<PowerUp> toRemove = new ArrayList<>();
-        for (PowerUp p : powerUpList) {
+        for (PowerUp p: powerUpList) {
             if (paddle.getBounds().intersects(p.getBounds())) {
                 int lives = gameManager.getLives();
-                switch (p.getType()) {
-                    case GAME_OVER:
-                        gameOver = true;
-                        break;
-                    case NEXT_LEVEL:
-                        gameCleared = true;
-                        break;
-                    case EXTRA_LIFE:
-                        if (lives <= 3) {
-                            lives++;
-                            gameManager.setLives(lives);
-                        }
-                        break;
-                    default:
-                        break;
+                if (p.getType() == PowerUpType.GAME_OVER) {
+                    gameOver = true;
+                } else if (p.getType() == PowerUpType.NEXT_LEVEL) {
+                    gameCleared = true;
+                } else if (p.getType() == PowerUpType.EXTRA_LIFE) {
+                    if (lives < 3) {
+                        lives ++;
+                        gameManager.setLives(lives);
+                    }
                 }
-                toRemove.add(p);
             }
+           // System.out.println("PowerUp type: " + p.getType());
         }
-        powerUpList.removeAll(toRemove);
+
     }
 
     public void paintComponent(Graphics g) {

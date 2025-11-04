@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import app.GameManager;
-import logic.brickLayout.BrickLayout;
-import logic.entity.Brick;
+import logic.myLogic.BrickLayout;
+import logic.entity.*;
 
 public class BrickManager {
     private List<List<Brick>> brickList;

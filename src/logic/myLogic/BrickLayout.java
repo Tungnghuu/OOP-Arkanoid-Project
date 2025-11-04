@@ -1,6 +1,7 @@
-package logic.brickLayout;
+package logic.myLogic;
 
 import logic.entity.Brick;
+
 import java.util.ArrayList;
 import java.util.Random;
 

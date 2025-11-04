@@ -6,7 +6,6 @@ public enum PowerUpType {
     FAST_BALL,
     FIRE_PADDLE,
     GAME_OVER,
-    SMALL_BALL,
     NEXT_LEVEL,
     EXTRA_LIFE
 }

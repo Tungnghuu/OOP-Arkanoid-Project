@@ -85,7 +85,7 @@ public class Ball extends MovableObject {
         this.soundManager = sm;
     }
 
-    public void updateBall(GameManager gm) {
+    public void updateBall() {
         double ballY = this.getY();
         double ballX = this.getX();
         ballY += this.getDy() * this.getSpeed();

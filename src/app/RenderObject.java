@@ -1,20 +1,18 @@
 package app;
 
-import logic.entity.Brick;
-import logic.myLogic.Bullet;
-import logic.myLogic.PowerUp;
-import myInterface.myInterface.DrawObject;
+import logic.entity.Bullet;
+import logic.entity.PowerUp;
+import myInterface.myInterface.*;
 
-import javax.swing.ImageIcon;
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import logic.entity.*;
+import logic.myLogic.*;
 
-import static app.GamePanel.brickList;
-import static app.GamePanel.bulletList;
-import static app.GamePanel.powerUpList;
+import javax.swing.*;
+
+import static app.GamePanel.*;
 
 public class RenderObject {
     static boolean isRenderPowerUp = true;
@@ -26,8 +24,7 @@ public class RenderObject {
     private static ImageIcon shrinkPaddle = LoadImage.get("/assets/Images/shrinkPaddle.png", 30, 30);
     private static ImageIcon shootingPaddle = LoadImage.get("/assets/Images/shootingPaddle.png", 30, 30);
     private static ImageIcon fastBall = LoadImage.get("/assets/Images/fastBall.png", 30, 30);
-    private static ImageIcon smallBall = LoadImage.get("/assets/Images/smallBall.png", 30, 30);
-    private static ImageIcon nexLevel = LoadImage.get("/assets/Images/nextLevelPowerUp.png", 30, 30);
+    private static ImageIcon nextLevel = LoadImage.get("/assets/Images/nextLevelPowerUp.png", 30, 30);
     private static ImageIcon death = LoadImage.get("/assets/Images/death.png", 30, 30);
     private static ImageIcon extraLife = LoadImage.get("/assets/Images/extraLife.png", 30, 30);
 
@@ -35,8 +32,10 @@ public class RenderObject {
         if (brickList == null || brickList.isEmpty()) return;
         Graphics2D g2 = (Graphics2D) g;
         for (int i = 0; i < brickList.size(); i++) {
-            for (int j = 0; j < brickList.get(i).size(); j++) {
-                Brick b = brickList.get(i).get(j);
+            List<Brick> row = brickList.get(i);
+            if (row == null || row.isEmpty()) continue;
+            for (int j = 0; j < row.size(); j++) {
+                Brick b = row.get(j);
                 ImageIcon img;
 
                 switch (b.getType()) {
@@ -54,7 +53,7 @@ public class RenderObject {
                         break;
                     default:
                         img = normalBrick;
-                    }
+                }
 
                 DrawObject drawBrick = new DrawObject(
                         b.getX(),
@@ -71,31 +70,47 @@ public class RenderObject {
 
     public static void renderPowerUp(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
-        synchronized (powerUpList) {
-            for (PowerUp p : powerUpList) {
-                if (!p.isRenderPowerUp()) continue;
-
-                ImageIcon img;
-                switch (p.getType()) {
-                    case EXPAND_PADDLE -> img = expandPaddle;
-                    case SHRINK_PADDLE -> img = shrinkPaddle;
-                    case FAST_BALL -> img = fastBall;
-                    case FIRE_PADDLE -> img = shootingPaddle;
-                    case SMALL_BALL -> img = smallBall;
-                    case NEXT_LEVEL -> img = nexLevel;
-                    case GAME_OVER -> img = death;
-                    case EXTRA_LIFE -> img = extraLife;
-                    default -> img = expandPaddle;
-                }
-
-                DrawObject drawPowerUp = new DrawObject(
-                    p.getX(), p.getY(),
-                    p.getWidth(), p.getHeight(),
-                    Color.orange
-                );
-                drawPowerUp.drawRect(g2, img);
-                g2.drawRect(p.getX(), p.getY(), p.getWidth(), p.getHeight());
+        for (int i = 0; i < powerUpList.size(); i++) {
+            PowerUp p = powerUpList.get(i);
+            if (!p.isRenderPowerUp()) {
+                continue;
             }
+            ImageIcon img;
+            switch (p.getType()) {
+                case EXPAND_PADDLE:
+                    img = expandPaddle;
+                    break;
+                case SHRINK_PADDLE:
+                    img = shrinkPaddle;
+                    break;
+                case FAST_BALL:
+                    img = fastBall;
+                    break;
+                case FIRE_PADDLE:
+                    img = shootingPaddle;
+                    break;
+                case NEXT_LEVEL:
+                    img = nextLevel;
+                    break;
+                case GAME_OVER:
+                    img = death;
+                    break;
+                case EXTRA_LIFE:
+                    img = extraLife;
+                    break;
+                default:
+                    img = expandPaddle;
+                    break;
+            }
+            DrawObject drawPowerUp = new DrawObject(
+                    p.getX(),
+                    p.getY(),
+                    p.getWidth(),
+                    p.getHeight(),
+                    Color.orange
+            );
+            drawPowerUp.drawRect(g2, img);
+            g2.drawRect(p.getX(), p.getY(), p.getWidth(), p.getHeight());
         }
     }
 

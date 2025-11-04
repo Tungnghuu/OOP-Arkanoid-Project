@@ -8,13 +8,13 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GetLeaderBoard {
-    public static List<Object[]> GetLeaderboard() {
+public class GetLeader {
+    public static List<Object[]> GetLeaderBoard() {
         List<Object[]> records = new ArrayList<>();
 
         String sql = "SELECT playerId, recordTime, playerScore FROM player ORDER BY playerScore DESC LIMIT 10";
 
-        try (Connection conn = ConnectToDB.connect()) {
+        try (Connection conn = ConnectToDB.getInstance().getConnection()) {
             if (conn == null) {
                 System.out.println("Connection is null. Cannot fetch history.");
                 return records;
