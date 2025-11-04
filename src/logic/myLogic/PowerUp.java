@@ -74,20 +74,21 @@ public class PowerUp extends GameObject {
         }
 
         if (object instanceof Ball) {
-            double ballSpeed = ((Ball) object).getSpeed();
-            double ballRadius = ((Ball) object).getRadius();
+            double ballSpeed = object.getSpeed();
+            int ballRadius = object.getHeight() / 2;
             switch (this.getType()) {
                 case FAST_BALL:
                     ballSpeed = 7;
                     break;
                 case SMALL_BALL:
                     ballRadius = 4;
+                    break;
                 default:
                     break;
             }
             object.setSpeed(ballSpeed);
-            ((Ball) object).updateBall();
-            object.setHeight((int)ballRadius * 2);
+            object.setWidth(ballRadius * 2);
+            object.setHeight(ballRadius * 2);
         }
     }
 
@@ -98,6 +99,7 @@ public class PowerUp extends GameObject {
 
         if (object instanceof Ball) {
             object.setSpeed(5);
+            object.setWidth(16);
             object.setHeight(16);
         }
     }

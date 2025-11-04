@@ -16,8 +16,8 @@ public class Ball extends MovableObject {
         super(x, y, dx, dy, radius * 2, radius * 2, speed);
         this.radius = radius;
 
-        int rand = (int) Math.random() * 2; // rand is either 0 or 1
-        if(rand == 0) {
+        int rand = (int) (Math.random() * 2); // rand is either 0 or 1
+        if (rand == 0) {
             this.setDx(0.1);
         } else {
             this.setDx(-0.1);
@@ -72,8 +72,8 @@ public class Ball extends MovableObject {
         this.setSpeed(4);
         this.radius = 8;
 
-        int rand = (int) Math.random() * 2; // rand is either 0 or 1
-        if(rand == 0) {
+        int rand = (int) (Math.random() * 2); // rand is either 0 or 1
+        if (rand == 0) {
             this.setDx(0.1);
         } else {
             this.setDx(-0.1);
@@ -81,15 +81,11 @@ public class Ball extends MovableObject {
         this.setDy(this.getSpeed());
     }
 
-<<<<<<< HEAD
     public void setSoundManager(SoundManager sm) {
         this.soundManager = sm;
     }
 
     public void updateBall(GameManager gm) {
-=======
-    public void updateBall() {
->>>>>>> 203eb359ee12691195911728a97c851371129747
         double ballY = this.getY();
         double ballX = this.getX();
         ballY += this.getDy() * this.getSpeed();

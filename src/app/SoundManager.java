@@ -1,9 +1,6 @@
 package app;
 
-<<<<<<< HEAD
-=======
 // import java.net.URI;
->>>>>>> 203eb359ee12691195911728a97c851371129747
 import java.net.URL;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;

@@ -223,7 +223,7 @@ public class GameManager {
                 score += 50;
                 break;
             case BONUS:
-                //TODO: Handle BONUS brick type if needed
+                score += 10;
                 break;
             case UNBREAKABLE:
                 //TODO: Handle UNBREAKABLE brick type if needed

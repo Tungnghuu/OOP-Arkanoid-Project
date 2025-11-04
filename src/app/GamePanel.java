@@ -265,7 +265,6 @@ public class GamePanel extends JPanel implements Runnable {
         }
 
         if (!ball.isStuck()) {
-<<<<<<< HEAD
             int bricksBeforeCollision = brickManager.getTotalBricksRemaining();
             
             ball.updateBall(gameManager);
@@ -278,11 +277,9 @@ public class GamePanel extends JPanel implements Runnable {
             if (bricksAfterCollision < bricksBeforeCollision) {
                 playSFX(8); // brick_hit
             }
-=======
             ball.updateLives(gameManager);
             gameManager.updateIfCollision(ball, paddle, brickList);
-            ball.updateBall();
->>>>>>> 203eb359ee12691195911728a97c851371129747
+            ball.updateBall(gameManager);
         } else {
             ball.BallFollowPaddle(paddle);
         }
