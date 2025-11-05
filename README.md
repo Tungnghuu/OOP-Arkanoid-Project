@@ -7,7 +7,7 @@ This is a Java implementation of the classic Arkanoid game, developed using Obje
 
 ## Video Demo
 The video demonstrates:
-[![Watch the demo](thumbnail.png)](demo_video.mp4)
+[![Watch the demo](README_assets/thumbnail.png)](README_assets/demo_video.mp4)
 ---
 
 ## Design Document
