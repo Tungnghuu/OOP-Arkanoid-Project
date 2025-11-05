@@ -49,8 +49,12 @@ public class GamePanel extends JPanel implements Runnable {
     static List<Bullet> bulletList = gameManager.getBulletList();
     private Paddle paddle = gameManager.getPaddle();
     private Ball ball = gameManager.getBall();
-    private DrawObject drawPaddle = new DrawObject(paddle.getX(), paddle.getY(), paddle.getWidth(), paddle.getHeight(), Color.orange);
-    private DrawObject drawBall = new DrawObject(ball.getX(), ball.getY(), ball.getWidth(), ball.getHeight(), Color.GREEN);
+
+    private ImageIcon ballImage;
+    private ImageIcon paddleImage;
+
+    private DrawObject drawPaddle = new DrawObject(paddle.getX(), paddle.getY(), paddle.getWidth(), paddle.getHeight(), Color.GREEN);
+    private DrawObject drawBall = new DrawObject(ball.getX(), ball.getY(), ball.getWidth(), ball.getHeight(), Color.WHITE);
     static List<List<Brick>> brickList = brickManager.getBricks();
     private boolean scoreSaved = false;
     private Thread gameThread;
@@ -59,8 +63,6 @@ public class GamePanel extends JPanel implements Runnable {
     private boolean loseSoundPlayed = false;
     private int currentBgmIndex = -1;
 
-    private ImageIcon ballImage;
-    private ImageIcon paddleImage;
 
     private ImageIcon level1To3Bg;
     private ImageIcon level4To6Bg;
@@ -145,6 +147,7 @@ public class GamePanel extends JPanel implements Runnable {
         paddle.resetPaddle();
         ball.resetBall();
         powerUpList = gameManager.getPowerUpList();
+        bulletList.clear();
         PowerUp.isFire = false;
         gameOver = false;
         gameCleared = false;
@@ -161,6 +164,7 @@ public class GamePanel extends JPanel implements Runnable {
         ball.resetBall();
         powerUpList = gameManager.getPowerUpList();
         ball.setBallStuck(true);
+        bulletList.clear();
         PowerUp.isFire = false;
         gameCleared = false;
         winSoundPlayed = false;
@@ -345,11 +349,11 @@ public class GamePanel extends JPanel implements Runnable {
                     case GAME_OVER:
                         gameOver = true;
                         powerUpList.remove(i);
-                        break;
+                        return;
                     case NEXT_LEVEL:
                         brickManager.clearAllBricks();
                         powerUpList.remove(i);
-                        break;
+                        return;
                     case EXTRA_LIFE:
                         int lives = gameManager.getLives();
                         if (lives < 3) {
@@ -357,7 +361,7 @@ public class GamePanel extends JPanel implements Runnable {
                             gameManager.setLives(lives);
                         }
                         powerUpList.remove(i);
-                        break;
+                        return;
                     default:
                         if (!p.isPowerUp()) {
                             p.applyPowerUp(paddle);

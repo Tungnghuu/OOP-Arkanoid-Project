@@ -66,7 +66,6 @@ public class RenderObject {
                         Color.orange
                 );
                 drawBrick.drawRect(g2, img);
-                g2.drawRect(b.getX(), b.getY(), b.getWidth(), b.getHeight());
             }
         }
     }
@@ -110,10 +109,9 @@ public class RenderObject {
                     p.getY(),
                     p.getWidth(),
                     p.getHeight(),
-                    Color.orange
+                    Color.GREEN
             );
             drawPowerUp.drawRect(g2, img);
-            g2.drawRect(p.getX(), p.getY(), p.getWidth(), p.getHeight());
         }
     }
 
@@ -127,8 +125,9 @@ public class RenderObject {
                     b.getWidth(),
                     b.getHeight(),
                     Color.ORANGE
+
             );
-            drawBullet.drawRect(g2);
+           drawBullet.drawRect(g2);
         }
     }
 }

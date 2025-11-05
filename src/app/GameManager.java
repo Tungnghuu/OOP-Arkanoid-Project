@@ -32,6 +32,8 @@ public class GameManager {
     public int level;
     private double dropChance;
     private int shootCooldown;
+    private static Random rand = new Random();
+    private static final int MAX_POWERUPS = 3;
 
     /**
      * Constructor cua GameManager.
@@ -42,7 +44,7 @@ public class GameManager {
         this.score = 0;
         this.lives = 3;
         this.level = 1;
-        this.dropChance = 0.3;
+        this.dropChance = 0.5;
         this.shootCooldown = 0;
     }
 
@@ -203,7 +205,7 @@ public class GameManager {
 
     private void createPowerUp(Brick brick) {
         if (brick.getType() == BrickType.BONUS) {
-            Random rand = new Random();
+            if (powerUpList.size() >= MAX_POWERUPS) return;
             if (rand.nextDouble() < dropChance) {
                 PowerUp powerUp;
                 switch (rand.nextInt(7)) {
@@ -316,7 +318,7 @@ public class GameManager {
        if (PowerUp.isFire) {
            if (shootCooldown <= 0) {
                createBullet(paddle);
-               shootCooldown = 100;
+               shootCooldown = 50;
            } else {
                shootCooldown--;
            }
