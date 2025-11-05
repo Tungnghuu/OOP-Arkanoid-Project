@@ -18,6 +18,9 @@ The system design includes:
 ---
 
 ## Team Members
-1. **Team Leader**: Nguyen Huu Tung - 24021663 -
-2. **Member 2**: Hoang Long Vu - 24021679 -
-3. **Member 3**: Nguyen Duc Quang - 24021607 -
+1. **Team Leader**: Nguyen Huu Tung - 24021663
+- Responsible for Physics, Levels, Setting Panel, History Log, Draw Object, build Project.
+2. **Member 2**: Hoang Long Vu - 24021679
+- Responsible for Physics, Objects, SQL leaderboard, Main Menu, Load Image, PowerUps.
+3. **Member 3**: Nguyen Duc Quang
+- 24021607 - Responsible for Game Thread, Sound Manager, GameState, GameLoop, Input Handler.
