@@ -12,7 +12,7 @@ The video demonstrates:
 ## Feature:
 
 - Levels added with unique brick layouts
-- Power-ups: Expand Paddle, Extra Life, Multi-ball, etc
+- Power-ups: Expand Paddle, Extra Life, etc
 - Leaderboard system to track high scores
 - Main menu and settings panel
 - Game history log to review previous sessions
