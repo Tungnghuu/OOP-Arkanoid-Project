@@ -13,7 +13,7 @@ public class GetHistory {
 
     public static List<Object[]> getHistory() {
         List<Object[]> history = new ArrayList<>();
-        Path path_history = Paths.get("src/log/history.txt");
+        Path path_history = Paths.get("log/history.txt");
 
         try {
             List<String> lines = Files.readAllLines(path_history);

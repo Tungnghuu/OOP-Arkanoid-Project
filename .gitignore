@@ -17,6 +17,7 @@ target/
 temp/
 *.log
 launch4j/
+log/
 
 # Project-specific
 src/log/
