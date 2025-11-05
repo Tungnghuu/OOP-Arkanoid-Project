@@ -207,10 +207,10 @@ public class GamePanel extends JPanel implements Runnable {
     
     public void update() {
         //DEBUG:
-        if (inputHandler.dPressed) {
-            brickManager.clearAllBricks();
-            inputHandler.dPressed = false;
-        }
+        // if (inputHandler.dPressed) {
+        //     brickManager.clearAllBricks();
+        //     inputHandler.dPressed = false;
+        // }
 
         if (gameWin) {
             if (inputHandler.resetPressed) {

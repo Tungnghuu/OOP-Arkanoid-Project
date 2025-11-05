@@ -28,7 +28,7 @@ The system design includes:
    🔗 [GitHub: @](https://github.com/)
 
 3. **Member 3**: Nguyen Duc Quang – 24021607  
-   Implemented game thread and loop, sound management, SFXs and musics, game state handling, input processing, and reset functionality.
+   Implemented game thread and loop, sound management, SFXs and musics, game state handling, input processing, and reset functionality.  
    🔗 [GitHub: @](https://github.com/)
 
 ---
