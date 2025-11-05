@@ -9,6 +9,13 @@ This is a Java implementation of the classic Arkanoid game, developed using Obje
 The video demonstrates:  
 [![Watch the demo on Google Drive](README_assets/thumbnail.png)](https://drive.google.com/file/d/1IlPz9r6eOOoHhwLm782lfVcVoZlk6Z1q/view?usp=sharing)
 
+## Feature:
+
+- Levels added with unique brick layouts
+- Power-ups: Expand Paddle, Extra Life, Multi-ball, etc
+- Leaderboard system to track high scores
+- Main menu and settings panel
+- Game history log to review previous sessions
 ---
 
 ## Design Document
