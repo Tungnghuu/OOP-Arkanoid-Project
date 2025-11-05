@@ -24,7 +24,6 @@ public class BrickLayout {
                 {4,2,3,1,0,2,4,1,3,0,1,0,0,0},
         };
         ArrayList<ArrayList<int[]>> layout = new ArrayList<>();
-        Random rand = new Random();
 
         for (int i = 0; i < 9; i++) {
             ArrayList<int[]> row = new ArrayList<>();

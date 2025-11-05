@@ -1,15 +1,25 @@
 package app;
 
-import java.awt.*;
-import javax.swing.*;
-import java.util.Iterator;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import javax.swing.JPanel;
+import javax.swing.ImageIcon;
+import javax.swing.SwingUtilities;
 import java.util.List;
 
-import logic.entity.*;
+import logic.entity.Ball;
+import logic.entity.Paddle;
+import logic.entity.Brick;
+import logic.myLogic.BrickManager;
+import logic.entity.PowerUp;
 import logic.entity.Bullet;
-import logic.myLogic.*;
-import myInterface.myInterface.*;
-import static app.RenderObject.*;
+import myInterface.myInterface.DrawObject;
+
+import static app.RenderObject.renderBrick;
+import static app.RenderObject.renderPowerUp;
+import static app.RenderObject.renderBullet;
 
 
 public class GamePanel extends JPanel implements Runnable {
@@ -23,7 +33,7 @@ public class GamePanel extends JPanel implements Runnable {
     public static final int screenWidth = tileSize * maxScreenCol;
     public static final int screenHeight = tileSize * maxScreenRow;
 
-    private boolean addLives = false;
+    // private boolean addLives = false;
     private boolean gameWin = false;
     private boolean inSetting = false;
     private boolean inMenu = true;
@@ -100,6 +110,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void startGame() {
         inMenu = false;
+        currentBgmIndex = -1;
         ensureLevelBgm();
     }
 
@@ -156,7 +167,7 @@ public class GamePanel extends JPanel implements Runnable {
         ensureLevelBgm();
     }
 
-    // Chọn nhạc nền theo level
+    // Select Bg Music based on level
     private int chooseBgmForLevel(int level) {
         if (level >= 1 && level <= 3) {
             return 0; // earth theme
@@ -181,7 +192,7 @@ public class GamePanel extends JPanel implements Runnable {
         return 0;
     }
 
-    // Đảm bảo nhạc nền được chọn đúng với level hiện tại
+    // Ensure the BG music match the level
     private void ensureLevelBgm() {
         int level = brickManager.getLevel();
         int targetIndex = chooseBgmForLevel(level);
@@ -195,6 +206,12 @@ public class GamePanel extends JPanel implements Runnable {
     }
     
     public void update() {
+        //DEBUG:
+        if (inputHandler.dPressed) {
+            brickManager.clearAllBricks();
+            inputHandler.dPressed = false;
+        }
+
         if (gameWin) {
             if (inputHandler.resetPressed) {
                 gameWin = false;
@@ -218,22 +235,6 @@ public class GamePanel extends JPanel implements Runnable {
             return;
         }
 
-        if (inputHandler.escapePressed) {
-            inSetting = !inSetting;
-            inputHandler.escapePressed = false;
-        }
-
-        if (inSetting) {
-             if (inputHandler.mouseClicked) {
-                settingPanel.handleClick(inputHandler.lastMouseEvent);
-                inputHandler.mouseClicked = false;
-                if (settingPanel.exit) {
-                    inSetting = false;
-                }
-            }
-            return;
-        }
-
         soundManager.setVolume(settingPanel.volume / 100f);
 
         if (inputHandler.escapePressed) {
@@ -248,9 +249,11 @@ public class GamePanel extends JPanel implements Runnable {
                 if (settingPanel.exit) {
                     inSetting = false;
                 }
+
                 if (settingPanel.backToMenu) {
                     doReset(true);
                     inMenu = true;
+                    inSetting = false;
                     soundManager.stopBGM();
                     settingPanel.backToMenu = false;
                 }
@@ -283,7 +286,8 @@ public class GamePanel extends JPanel implements Runnable {
                 return;
             } else {
                 gameCleared = false;
-                inMenu = true;
+                gameWin = true;
+                gameManager.saveScore();
                 stopBGM();
                 currentBgmIndex = -1;
             }
@@ -343,7 +347,7 @@ public class GamePanel extends JPanel implements Runnable {
                         powerUpList.remove(i);
                         break;
                     case NEXT_LEVEL:
-                        gameCleared = true;
+                        brickManager.clearAllBricks();
                         powerUpList.remove(i);
                         break;
                     case EXTRA_LIFE:
