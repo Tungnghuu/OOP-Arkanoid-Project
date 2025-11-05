@@ -7,7 +7,7 @@ import java.util.Random;
 
 public class BrickLayout {
     // Level 1: OOP map
-    public static ArrayList<ArrayList<int[]>> level2() {
+    public static ArrayList<ArrayList<int[]>> level1() {
         int startX = 40;
         int startY = 50;
         int w = Brick.WIDTH;
@@ -40,7 +40,7 @@ public class BrickLayout {
         return layout;
     }
 
-    public static ArrayList<ArrayList<int[]>> level1() {
+    public static ArrayList<ArrayList<int[]>> level2() {
         int startX = 150;
         int startY = 40;
         int w = Brick.WIDTH;
